@@ -1,5 +1,7 @@
 # Main entry point for the program
 
+import utils
+
 '''
 Word Structure:
     word
@@ -11,7 +13,12 @@ Word Structure:
 '''
 
 path = '../data/word_list.json'
-def add_word_to_vocabulary():
+def add_word_to_vocabulary(word):
+    meaning = None
+    translation = None
+    example = None
+    review_count = None
+    added_date = utils.current_datetime()
     pass
 
 def list_word():
