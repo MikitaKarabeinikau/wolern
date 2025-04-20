@@ -1,8 +1,9 @@
 # Main entry point for the program
 
-import utils
-
-'''
+from wolern.wolern.utils import current_datetime
+from nltk.corpus import wordnet
+import requests
+"""
 {
   "word": "example",
   "translation": {
@@ -28,12 +29,47 @@ import utils
   "audio_url": null,
   "known": false
 }
-'''
+"""
 
 path = '../data/word_list.json'
-def add_word_to_vocabulary(word):
-    source_text = None
-    added_date = utils.current_datetime()
+
+def get_word_input():
+    word = input("Enter the English word").strip().lower()
+    return word
+
+def get_synonyms_from_nltk(word):
+    synonyms = set()
+    for syn in wordnet.synsets(word):
+        for lemma in syn.lemmas():
+            if lemma.name().replace('_',' ') !=word:
+                synonyms.add(lemma.name().replace('_', ' '))
+
+    return list(synonyms)
+
+def get_synonyms_datamuse(word):
+    try:
+        response = requests.get(f"https://api.datamuse.com/words?rel_syn={word}")
+        if response.status_code == 200:
+            return [item['word'] for item in response.json()]
+        else:
+            print(f"[Datamuse] Error: Status {response.status_code}")
+    except Exception as e:
+        print(f"[Datamuse] Request failed: {e}")
+    return []
+
+
+def get_synonyms(word):
+    s1 = get_synonyms_from_nltk(word)
+
+    s2 = get_synonyms_datamuse(word)
+
+    return s1,s2
+
+
+
+def add_word_to_vocabulary(word,source_text):
+    source_text = source_text
+    added_date = current_datetime()
 
     part_of_speech = None
     definitions = None

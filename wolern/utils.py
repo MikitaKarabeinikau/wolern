@@ -1,4 +1,4 @@
-'''
+"""
 utils.py is meant for small, reusable helper functions that are not specific to business logic.
 
 Date formatting is a general-purpose helper — you will probably want to reuse this for:
@@ -11,7 +11,8 @@ Date formatting is a general-purpose helper — you will probably want to reuse 
 
     Displaying last update time in GUI.
 
-'''
+"""
+
 from time import gmtime,strftime
 
 def current_datetime():

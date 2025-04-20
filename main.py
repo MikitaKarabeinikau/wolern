@@ -1,5 +1,7 @@
 # Main entry point for the program
 
+from wolern.vocabulary import get_word_input, add_word_to_vocabulary
+
 def main():
     while True:
         print("\n=== Wolern Vocabulary Assistant ===")
@@ -13,6 +15,7 @@ def main():
 
         if choice == "1":
             # call add_word_to_vocabulary()
+            add_word_to_vocabulary(get_word_input())
             pass
         elif choice == "2":
             # call text scanning logic

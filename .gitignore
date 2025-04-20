@@ -2,6 +2,10 @@
 for_gpt.txt
 think_about.txt
 
+*.pyc
+*.pyo
+
+
 #dirs
 venv
-
+__pycache__/
