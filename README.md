@@ -45,13 +45,19 @@ As a non-native English speaker and programming learner, I created Wolern to:
 
 ## 📌 Roadmap
 
-- [ ] Create basic word list management.
-- [ ] Integrate word definitions (dictionary API or local file).
-- [ ] Add example sentence fetcher.
-- [ ] Develop quiz module.
-- [ ] Design simple interface.
-- [ ] Add progress tracking.
 
+- [x] Define project goal — create a tool to help learn English words from real texts.
+- [x] Design JSON vocabulary structure — store words, translations, synonyms, and meanings.
+- [ ] Implement core logic:
+    - [ ] Load text from file.
+    - [ ] Split and check words against saved vocabulary.
+    - [ ] Fetch missing data using external libraries (translation, synonyms, meanings).
+    - [ ] Save updated vocabulary.
+- [ ] Add basic CLI (console) version — to test functionality without GUI.
+- [ ] Develop simple Tkinter GUI — for local testing and learning interaction.
+- [ ] Implement real-time quiz mode — check if you know new words before saving them.
+- [ ] Write unit tests — for core logic stability.
+- [ ] Plan web version — once local app is fully functional.
 ---
 
 ## 🧑‍💻 Contributing
