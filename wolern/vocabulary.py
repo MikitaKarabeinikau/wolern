@@ -1,8 +1,11 @@
 # Main entry point for the program
+import nltk
 
 from wolern.wolern.utils import current_datetime
 from nltk.corpus import wordnet
 import requests
+from wolern.wolern.utils import convert_pos
+
 """
 {
   "word": "example",
@@ -59,21 +62,28 @@ def get_synonyms_datamuse(word):
 
 
 def get_synonyms(word):
-    s1 = get_synonyms_from_nltk(word)
+    synonyms_from_nltk = get_synonyms_from_nltk(word)
 
-    s2 = get_synonyms_datamuse(word)
+    synonyms_from_datamuse = get_synonyms_datamuse(word)
+    filtered_synonyms = synonyms_filter(synonyms_from_nltk,synonyms_from_datamuse,word)
+    return filtered_synonyms
 
-    return s1,s2
+def synonyms_filter(synonyms_arr1,synonyms_arr2,original_word):
+    return []
 
-
+def get_parts_of_speech(word):
+    pos_tags = set()
+    for synset in wordnet.synsets(word):
+        pos_tags.add(convert_pos(synset.pos()))
+    return list(pos_tags)
 
 def add_word_to_vocabulary(word,source_text):
     source_text = source_text
     added_date = current_datetime()
 
-    part_of_speech = None
+    part_of_speech = get_part_of_speech(word)
     definitions = None
-    synonyms = None
+    synonyms = get_synonyms(word)
     translation = None
     example = None
     level = None
