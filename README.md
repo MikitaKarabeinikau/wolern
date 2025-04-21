@@ -67,14 +67,14 @@ pip install -r requirements.txt
   - [ ] Definitions (WordNet, POS-aware)
   - [ ] Translation (user-defined, free)
   - [ ] CEFR level (scraper)
-  - [ ] Part of speech (multiple POS support via WordNet)
+  - [x] Part of speech (multiple POS support via WordNet)
   - [ ] Audio pronunciation (planned)
 - [ ] Store multiple definitions grouped by POS.
-- [ ] Implement `POS_TAG_MAP` for tag conversion.
+- [x] Implement `POS_TAG_MAP` for tag conversion.
 - [ ] Implement repeat time calculation based on learning stage:
   - Higher learning stage = longer delay.
   - Streak of correct answers multiplies delay.
-- [ ] Store `learning_stage` with descriptive meaning (0 = new, 4 = mastered).
+- [x] Store `learning_stage` with descriptive meaning (0 = new, 4 = mastered).
 - [ ] Define learning parameters to influence frequency and priority.
 - [ ] TODO: Review and expand `POS_TAG_MAP` after more testing.
 - [ ] TODO: Create `synonyms_filter()` to remove similar forms (e.g. "focus" vs "focusing").
