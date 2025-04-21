@@ -81,29 +81,29 @@ def add_word_to_vocabulary(word,source_text):
     source_text = source_text
     added_date = current_datetime()
 
-    part_of_speech = get_part_of_speech(word)
+    part_of_speech = get_parts_of_speech(word)
     definitions = None
     synonyms = get_synonyms(word)
     translation = None
-    example = None
+    examples = None
     level = None
 
-    review_count = None
-    last_reviewed = None
-    learning_stage = None
+    review_count = 0
+    last_reviewed = current_datetime()
+    learning_stage = 0
     time_to_repeat = None
 
     audio_url = None
 
-    known = None
-    tags = None
+    known = False
+    tags = []
 
     word = {
         "word": word,
         "translation": translation,
         "synonyms": [],
         "definition": definitions if definitions else [] ,
-        "examples": [example] if example else [],
+        "examples": [examples] if examples else [],
         "part_of_speech": part_of_speech,
         "source_text": source_text,
         "date_added": added_date,

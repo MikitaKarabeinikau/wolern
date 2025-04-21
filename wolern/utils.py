@@ -28,8 +28,23 @@ POS_TAG_MAP = {
     'RB': 'adverb'
 }
 
+LEARNING_STAGE_DESCRIPTION = {
+    0: "New word – not yet reviewed",
+    1: "Recognized – seen once or twice",
+    2: "Familiar – answered correctly once",
+    3: "Learned – answered correctly multiple times",
+    4: "Mastered – reviewed over time, rarely forgotten",
+    5: "Archived – fully known, rarely shown unless reset"
+}
+
 def current_datetime():
     return strftime("%d-%m-%Y %H:%M:%S",gmtime())
+
+def initial_datetime_to_repeat():
+    current = current_datetime()
+    when = None
+
+    return when
 
 def convert_pos(tag):
     return POS_TAG_MAP.get(tag, "unknown")
