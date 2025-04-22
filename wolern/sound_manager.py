@@ -12,6 +12,7 @@ def generate_audio(word: str) -> Path:
     gt_file = _filename(word, "gt")  # data/audio/focus_gt.mp3
     try:
         gTTS(text=word, lang="en").save(gt_file.as_posix())
+        time.sleep(1)
         return gt_file               # ✅ success with gTTS
     except Exception:
         # gTTS failed → fallback

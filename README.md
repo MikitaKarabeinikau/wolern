@@ -64,12 +64,12 @@ pip install -r requirements.txt
 - [ ] Compare words with saved vocabulary.
 - [ ] Fetch missing data using external libraries:
   - [x] Synonyms (NLTK + Datamuse)
-  - [ ] Definitions (WordNet, POS-aware)
+  - [x] Definitions (WordNet, POS-aware)
   - [ ] Translation (user-defined, free)
   - [ ] CEFR level (scraper)
   - [x] Part of speech (multiple POS support via WordNet)
-  - [ ] Audio pronunciation (planned)
-- [ ] Store multiple definitions grouped by POS.
+  - [x] Audio pronunciation (planned)
+- [x] Store multiple definitions grouped by POS.
 - [x] Implement `POS_TAG_MAP` for tag conversion.
 - [ ] Implement repeat time calculation based on learning stage:
   - Higher learning stage = longer delay.
