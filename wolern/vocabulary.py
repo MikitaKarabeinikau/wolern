@@ -1,39 +1,12 @@
 # Main entry point for the program
 import nltk
 
+from wolern.sound_manager import generate_audio, get_audio_path
 from wolern.utils import current_datetime
 from nltk.corpus import wordnet
 import requests
-from wolern.utils import convert_pos
+from wolern.utils import convert_pos,initial_repeat_time
 from wolern.utils import POS_TAG_MAP
-
-"""
-{
-  "word": "example",
-  "translation": {
-    "ru": "пример",
-    "pl": "przykład"
-  },
-  "synonyms": ["sample", "instance", "case"],
-  "definition": "A representative form or pattern.",
-  "examples": [
-    "This is a good example of clean code.",
-    "For example, water freezes at 0°C."
-  ],
-  "part_of_speech": "noun",
-  "source_text": "my_english_article.txt",
-  "date_added": "20-04-2025 14:30:00",
-  "last_reviewed": "20-04-2025 15:00:00",
-  "review_count": 3,
-  "learning_stage": 2,
-  "time_to_repeat": "22-04-2025 16:00:00",
-  "notes": "",
-  "level": "B1",
-  "tags": ["general", "daily"],
-  "audio_url": null,
-  "known": false
-}
-"""
 
 path = '../data/word_list.json'
 
@@ -111,8 +84,7 @@ def get_tags_from_wordnet(word):
         # tags.add(lexname)
     return list(tags)
 
-def add_word_to_vocabulary(word,source_text):
-    source_text = source_text
+def add_word_to_vocabulary(word):
     added_date = current_datetime()
 
     part_of_speech = get_parts_of_speech(word)
@@ -125,9 +97,9 @@ def add_word_to_vocabulary(word,source_text):
     review_count = 0
     last_reviewed = current_datetime()
     learning_stage = 0
-    time_to_repeat = None
+    time_to_repeat = initial_repeat_time()
 
-    audio_url = None
+    audio_url = generate_audio(word)
 
     known = False
     tags = get_tags_from_wordnet(word)
@@ -135,11 +107,10 @@ def add_word_to_vocabulary(word,source_text):
     word = {
         "word": word,
         "translation": translation,
-        "synonyms": [],
+        "synonyms": synonyms,
         "definition": definitions if definitions else [] ,
         "examples": [examples] if examples else [],
         "part_of_speech": part_of_speech,
-        "source_text": source_text,
         "date_added": added_date,
         "last_reviewed": last_reviewed,
         "review_count": review_count,
@@ -148,7 +119,7 @@ def add_word_to_vocabulary(word,source_text):
         "notes": "",
         "level": level,
         "tags": tags if tags else [],
-        "audio_url": audio_url,
+        "audio_url": get_audio_path(word),
         "known": known
     }
     pass

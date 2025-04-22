@@ -4,6 +4,8 @@ think_about.txt
 
 *.pyc
 *.pyo
+*.wav
+*.mp3
 
 
 #dirs
