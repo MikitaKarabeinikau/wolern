@@ -95,11 +95,18 @@ def get_definitions_by_pos(word):
 
     return definitions
 
+def get_examples_from_wordnet(word):
+    examples = set()
+    for syn in wordnet.synsets(word):
+        for ex in syn.examples():
+            examples.add(ex)
+    return list(examples)
+
 def get_tags_from_wordnet(word):
     tags = set()
     for syn in wordnet.synsets(word):
         lexname = syn.lexname()  # e.g., 'noun.food', 'noun.animal'
-        main_tag = lexname.split('.')s[-1]
+        main_tag = lexname.split('.')[-1]
         tags.add(main_tag)
     return list(tags)
 
@@ -111,7 +118,7 @@ def add_word_to_vocabulary(word,source_text):
     definitions = get_definitions_by_pos(word)
     synonyms = get_synonyms(word)
     translation = None
-    examples = None
+    examples = get_examples_from_wordnet(word)
     level = None
 
     review_count = 0
