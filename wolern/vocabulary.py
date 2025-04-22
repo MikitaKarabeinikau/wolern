@@ -7,11 +7,18 @@ Host all functions that:
 """
 import nltk
 from fetchers import *
-
+from pathlib import Path
+import json
 from wolern.sound_manager import generate_audio, get_audio_path
 from wolern.utils import current_datetime
 
-path = '../data/word_list.json'
+VOCABULARY_PATH = Path('../data/word_list.json')
+CEFR_CACHE_PATH = Path("../data/cefr_cache.json")
+
+_cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
+
+def get_cefr_level(word):
+    return _cefr_cache.get(word.lower())
 
 def get_word_input():
     word = input("Enter the English word").strip().lower()
@@ -26,7 +33,7 @@ def add_word_to_vocabulary(word):
     synonyms = get_synonyms(word)
     translation = None
     examples = get_examples_from_wordnet(word)
-    level = None
+    level = get_cefr_level(word)
 
     review_count = 0
     last_reviewed = current_datetime()

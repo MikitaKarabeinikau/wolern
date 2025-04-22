@@ -1,11 +1,18 @@
-
 from nltk.corpus import wordnet
 import requests
 from wolern.utils import convert_pos,initial_repeat_time
 from wolern.utils import POS_TAG_MAP
 import requests, warnings
 from bs4 import BeautifulSoup
+import csv, json
+from pathlib import Path
 
+CSV_PATH_1 = Path("../data/cefr_sources/cefrj-vocabulary-profile-1.5.csv")
+CSV_PATH_2 = Path("../data/cefr_sources/octanove-vocabulary-profile-c1c2-1.0.csv")
+CACHE_PATH = Path("../data/cefr_cache.json")
+
+# CEFR progression scale
+CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1", "C2"]
 
 def get_synonyms_from_nltk(word):
     synonyms = set()
@@ -89,3 +96,26 @@ def fetch_cefr_from_evp(word):
     except Exception as e:
         print("[EVP] error:", e)
         return None
+
+def highest_cefr(existing, new):
+    """Return whichever CEFR is later (higher) in the scale."""
+    if existing is None:
+        return new
+    return new if CEFR_ORDER.index(new) > CEFR_ORDER.index(existing) else existing
+
+def build_cefr_dict(files):
+    cefr = {}
+    for CSV_PATH in files:
+        with CSV_PATH.open(encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                word  = row["headword"].strip().lower()
+                level = row["CEFR"].strip().upper()
+                cefr[word] = highest_cefr(cefr.get(word), level)
+    return cefr
+
+if __name__ == "__main__":
+    data = build_cefr_dict([CSV_PATH_1,CSV_PATH_2])
+    CACHE_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2),
+                          encoding="utf-8")
+    print(f"Wrote {len(data)} entries → {CACHE_PATH}")
