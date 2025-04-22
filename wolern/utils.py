@@ -14,6 +14,7 @@ Date formatting is a general-purpose helper — you will probably want to reuse 
 """
 
 from time import gmtime,strftime
+from datetime import datetime,timedelta
 
 #Could be expand in future
 POS_TAG_MAP = {
@@ -38,7 +39,18 @@ LEARNING_STAGE_DESCRIPTION = {
 }
 
 def current_datetime():
-    return strftime("%d-%m-%Y %H:%M:%S",gmtime())
+    return datetime.utcnow()
+
+def format_time_to_str(time):
+    return time.strftime("%d-%m-%Y %H:%M:%S")
+
+def initial_repeat_time():
+    return datetime.utcnow() + timedelta(minutes=5)
+
+def change_repeat_time(minutes,time=None):
+    if time is None:
+        time = datetime.utcnow()
+    return time + timedelta(minutes=minutes)
 
 def initial_datetime_to_repeat():
     current = current_datetime()

@@ -108,6 +108,7 @@ def get_tags_from_wordnet(word):
         lexname = syn.lexname()  # e.g., 'noun.food', 'noun.animal'
         main_tag = lexname.split('.')[-1]
         tags.add(main_tag)
+        # tags.add(lexname)
     return list(tags)
 
 def add_word_to_vocabulary(word,source_text):
