@@ -3,6 +3,9 @@ from nltk.corpus import wordnet
 import requests
 from wolern.utils import convert_pos,initial_repeat_time
 from wolern.utils import POS_TAG_MAP
+import requests, warnings
+from bs4 import BeautifulSoup
+
 
 def get_synonyms_from_nltk(word):
     synonyms = set()
@@ -73,3 +76,16 @@ def get_tags_from_wordnet(word):
         tags.add(main_tag)
         # tags.add(lexname)
     return list(tags)
+
+def fetch_cefr_from_evp(word):
+    url = f"https://vocabulary.englishprofile.org/wordlist/EVP?word={word}"
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")        # hide InsecureRequestWarning
+            r = requests.get(url, verify=False, timeout=10)
+        soup = BeautifulSoup(r.text, "html.parser")
+        badge = soup.select_one("span.label-cefr")
+        return badge.text.strip() if badge else None
+    except Exception as e:
+        print("[EVP] error:", e)
+        return None

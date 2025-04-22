@@ -98,3 +98,19 @@ Right now this is a solo learning project, but contributions are welcome for fee
 
 ---
 
+## Release Milestones
+MVP CLI – can add word, save JSON, enrich (synonyms, defs, tags, CEFR, audio).
+
+CLIv1 – adds text‑scanner and quiz menu.
+
+Tkinter prototype – simple windows for add / quiz.
+
+Web beta – Flask or Django with same backend logic.
+
+---
+
+### Data sources 
+** CEFR‑J Vocabulary & Grammar Profile
+* ** — © Tono Laboratory, TUFS.  Used under the terms: “CEFR‑J vocabulary and grammar profile datasets can be used for research and commercial purposes with no charge, provided that you cite the dataset properly.” 
+* **Octanove Vocabulary Profile (C1/C2)
+* ** — Licensed under CC BY‑SA 4.0.

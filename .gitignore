@@ -1,6 +1,7 @@
 #files
 for_gpt.txt
 think_about.txt
+STUDING.md
 
 *.pyc
 *.pyo
