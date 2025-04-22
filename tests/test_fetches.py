@@ -1,5 +1,5 @@
-from wolern.wolern.vocabulary  import get_synonyms
-from wolern.wolern.vocabulary import get_parts_of_speech
+from wolern.vocabulary  import get_synonyms,get_definitions_by_pos
+from wolern.vocabulary import get_parts_of_speech
 
 
 def test_get_synonyms():
@@ -13,4 +13,6 @@ def test_get_part_of_speech():
     print(f'Word: {word} => Part of speech {part_of_speech}')
 
 if __name__ == "__main__":
-    test_get_part_of_speech()
+    for v,d in get_definitions_by_pos('focus').items():
+        for i in d:
+            print(f'{v}:{i}')
