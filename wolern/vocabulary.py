@@ -95,6 +95,14 @@ def get_definitions_by_pos(word):
 
     return definitions
 
+def get_tags_from_wordnet(word):
+    tags = set()
+    for syn in wordnet.synsets(word):
+        lexname = syn.lexname()  # e.g., 'noun.food', 'noun.animal'
+        main_tag = lexname.split('.')s[-1]
+        tags.add(main_tag)
+    return list(tags)
+
 def add_word_to_vocabulary(word,source_text):
     source_text = source_text
     added_date = current_datetime()
@@ -114,7 +122,7 @@ def add_word_to_vocabulary(word,source_text):
     audio_url = None
 
     known = False
-    tags = []
+    tags = get_tags_from_wordnet(word)
 
     word = {
         "word": word,
