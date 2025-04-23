@@ -2,7 +2,7 @@ from gtts import gTTS
 import pyttsx3,time
 from pathlib import Path
 
-AUDIO_DIR = Path("data/audio")
+AUDIO_DIR = Path("../data/audio")
 AUDIO_DIR.mkdir(parents=True, exist_ok=True)
 
 def _filename(word: str, suffix: str) -> Path:

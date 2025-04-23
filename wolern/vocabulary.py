@@ -6,39 +6,44 @@ Host all functions that:
 
 """
 import nltk
-from fetchers import *
+from wolern.fetchers import *
 from pathlib import Path
 import json
 from wolern.sound_manager import generate_audio, get_audio_path
-from wolern.utils import current_datetime
+from wolern.utils import current_datetime,parse_time_to_str
 
-VOCABULARY_PATH = Path('../data/word_list.json')
+VOCABULARY_PATH = Path(__file__).resolve().parent.parent / "data" / "vocabulary.json"
 CEFR_CACHE_PATH = Path("../data/cefr_cache.json")
 
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
 
+if VOCABULARY_PATH.exists():
+    vocab = json.loads(VOCABULARY_PATH.read_text(encoding="utf-8"))
+else:
+    vocab = {}
+
 def get_cefr_level(word):
-    return _cefr_cache.get(word.lower())
+    return _cefr_cache.get(word.lower(),"UNKNOWN")
 
 def get_word_input():
     word = input("Enter the English word").strip().lower()
     return word
 
 
-def add_word_to_vocabulary(word):
-    added_date = current_datetime()
+def add_word_to_vocabulary(word,vocab):
+    added_date = parse_time_to_str(current_datetime())
 
     part_of_speech = get_parts_of_speech(word)
     definitions = get_definitions_by_pos(word)
     synonyms = get_synonyms(word)
-    translation = None
+    translation = get_translation(word)
     examples = get_examples_from_wordnet(word)
     level = get_cefr_level(word)
 
     review_count = 0
-    last_reviewed = current_datetime()
+    last_reviewed = parse_time_to_str(current_datetime())
     learning_stage = 0
-    time_to_repeat = initial_repeat_time()
+    time_to_repeat = parse_time_to_str(initial_repeat_time())
 
     audio_url = generate_audio(word)
 
@@ -46,8 +51,8 @@ def add_word_to_vocabulary(word):
     tags = get_tags_from_wordnet(word)
 
     word = {
-        "word": word,
-        "translation": translation,
+        "word": word.lower(),
+        "translation": get_transtaltion_from_cache(word),
         "synonyms": synonyms,
         "definition": definitions if definitions else [] ,
         "examples": [examples] if examples else [],
@@ -60,10 +65,11 @@ def add_word_to_vocabulary(word):
         "notes": "",
         "level": level,
         "tags": tags if tags else [],
-        "audio_url": get_audio_path(word),
+        "audio_url": str(get_audio_path(word)),
         "known": known
     }
-    pass
+    vocab[word["word"]] = word
+    VOCABULARY_PATH.write_text(json.dumps(vocab,ensure_ascii=False,indent=2),encoding="utf-8")
 
 def list_word():
     pass

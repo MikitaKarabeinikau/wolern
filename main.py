@@ -1,8 +1,12 @@
 # Main entry point for the program
-
+import os.path
+from wolern.fetchers import cefr_from_csv_to_json
 from wolern.vocabulary import get_word_input, add_word_to_vocabulary
 
 def main():
+    if os.path.exists('data/cefr_cache.json'):
+        cefr_from_csv_to_json()
+
     while True:
         print("\n=== Wolern Vocabulary Assistant ===")
         print("1. Add a new word manually")

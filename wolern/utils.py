@@ -41,7 +41,7 @@ LEARNING_STAGE_DESCRIPTION = {
 def current_datetime():
     return datetime.utcnow()
 
-def format_time_to_str(time):
+def parse_time_to_str(time):
     return time.strftime("%d-%m-%Y %H:%M:%S")
 
 def initial_repeat_time():
@@ -52,11 +52,8 @@ def change_repeat_time(minutes,time=None):
         time = datetime.utcnow()
     return time + timedelta(minutes=minutes)
 
-def initial_datetime_to_repeat():
-    current = current_datetime()
-    when = None
-
-    return when
+def parse_str_to_time(time_str: str) -> datetime:
+    return datetime.strptime(time_str, "%d-%m-%Y %H:%M:%S")
 
 def convert_pos(tag):
     return POS_TAG_MAP.get(tag, "unknown")

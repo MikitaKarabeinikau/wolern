@@ -1,1 +1,0 @@
-# Interact with external APIs for definitions, translations, etc.

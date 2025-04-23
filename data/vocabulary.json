@@ -1,0 +1,58 @@
+{
+  "file": {
+    "word": "file",
+    "translation": {
+      "russian": [
+        "файл",
+        "документ",
+        "регистрировать"
+      ]
+    },
+    "synonyms": [],
+    "definition": {
+      "noun": [
+        "a set of related records (either written or electronic) kept together",
+        "a line of persons or things ranged one behind the other",
+        "office furniture consisting of a container for keeping papers in order",
+        "a steel hand tool with small sharp teeth on some or all of its surfaces; used for smoothing wood or metal"
+      ],
+      "verb": [
+        "record in a public office or in a court of law",
+        "smooth with a file",
+        "proceed in line",
+        "file a formal charge against",
+        "place in a container for keeping records"
+      ]
+    },
+    "examples": [
+      [
+        "The students filed into the classroom",
+        "The suspect was charged with murdering his wife",
+        "File these bills, please",
+        "file a complaint",
+        "file for divorce",
+        "file one's fingernails"
+      ]
+    ],
+    "part_of_speech": [
+      "noun",
+      "verb"
+    ],
+    "date_added": "23-04-2025 01:17:36",
+    "last_reviewed": "23-04-2025 01:17:39",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "23-04-2025 01:22:39",
+    "notes": "",
+    "level": "B2",
+    "tags": [
+      "communication",
+      "contact",
+      "artifact",
+      "group",
+      "motion"
+    ],
+    "audio_url": "..\\data\\audio\\file_gt.mp3",
+    "known": false
+  }
+}

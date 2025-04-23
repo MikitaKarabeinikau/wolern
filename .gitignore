@@ -1,6 +1,4 @@
 #files
-for_gpt.txt
-think_about.txt
 STUDING.md
 
 *.pyc
@@ -12,3 +10,4 @@ STUDING.md
 #dirs
 venv
 __pycache__/
+doc/
