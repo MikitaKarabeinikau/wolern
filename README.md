@@ -153,15 +153,37 @@ pip install -r requirements.txt
 
 ---
 
-# 🎯 MVP Target
-✅ CLI where you can:
-- Add new words.
-- Save and load vocabulary.
-- Quiz yourself.
-- Track learning stages.
-- Scan `.txt` files for unknown words.
+## 🧠 Phase 3: Unchecked Words Processing
+> **Goal: Build a system to manage unknown scanned words.**
 
+### Unchecked Words
+- [ ] Save newly scanned unknown words into `unchecked_words.json`.
+- [ ] CLI function to review unchecked words manually:
+  - Show one word at a time.
+  - Options:
+    - [a] Accept → fetch full data → add to vocabulary.
+    - [r] Reject → move to ignored words.
+    - [s] Skip → decide later.
+
+
+1. Scan text → find unknown words → save into `unchecked_words.json`
+
+2. Open a CLI menu:
+   [1] Review Unchecked Words
+   - Show next word
+   - Options:
+     - [a] Accept and add to Vocabulary
+     - [r] Reject and move to Ignored Words
+     - [s] Skip (decide later)
+
+3. If Accepted:
+   - Fetch data (synonyms, definitions, CEFR level, audio) automatically
+   - Save fully into Vocabulary
+
+4. If Rejected:
+   - Move to Ignored Words list
 ---
+
 
 # 🛣️ Project Phases Summary
 | Phase | Name | Description                                                          |
@@ -177,17 +199,6 @@ pip install -r requirements.txt
 ## 🧑‍💻 Contributing
 
 Right now this is a solo learning project, but contributions are welcome for feedback, ideas, or suggestions.
-
----
-
-## Release Milestones
-MVP CLI – can add word, save JSON, enrich (synonyms, defs, tags, CEFR, audio).
-
-CLIv1 – adds text‑scanner and quiz menu.
-
-Tkinter prototype – simple windows for add / quiz.
-
-Web beta – Flask or Django with same backend logic.
 
 ---
 

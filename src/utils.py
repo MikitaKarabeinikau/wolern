@@ -12,7 +12,10 @@ Date formatting is a general-purpose helper — you will probably want to reuse 
     Displaying last update time in GUI.
 
 """
+from pathlib import Path
 
+STANDART_VOCABULARY_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabulary.json'
+STANDART_UNCHECKED_PATH = Path(__file__).resolve().parent.parent / 'data' / 'unchecked.json'
 from time import gmtime,strftime
 from datetime import datetime,timedelta
 
