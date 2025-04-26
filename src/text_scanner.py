@@ -31,6 +31,7 @@ def load_txt_file(file_path,load_limit):
     else:
         for word in unknown_words:
             add_word_to_vocabulary(word)
+
 def load_docx(file_path):
     pass
 
