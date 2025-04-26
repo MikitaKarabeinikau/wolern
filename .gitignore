@@ -1,5 +1,6 @@
 #files
-doc/STUDING.md
+
+text_for_scanner_test
 
 *.pyc
 *.pyo
@@ -11,3 +12,4 @@ doc/STUDING.md
 venv
 __pycache__/
 doc/
+tests/data

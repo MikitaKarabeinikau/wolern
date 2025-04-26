@@ -1,6 +1,6 @@
 from nltk.corpus import wordnet
 import requests
-from wolern.wolern.utils import convert_pos,initial_repeat_time,POS_TAG_MAP
+from wolern.src.utils import convert_pos,initial_repeat_time,POS_TAG_MAP
 import requests, warnings
 from bs4 import BeautifulSoup
 import csv, json
@@ -11,11 +11,11 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 TRANSLATION_CACHE_PATH = DATA_DIR / "translation_cache.json"
 TRANSLATION_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-CSV_PATH_1 = CEFR_DIR / "cefrj-vocabulary-profile-1.5.csv"
-CSV_PATH_2 = CEFR_DIR / "cefr_sources/octanove-vocabulary-profile-c1c2-1.0.csv"
+CSV_PATH_1 = Path(__file__).resolve().parent.parent / "data" / "cefr_sources" / "cefrj-vocabulary-profile-1.5.csv"
+CSV_PATH_2 = Path(__file__).resolve().parent.parent / "data" / "cefr_sources" / "octanove-vocabulary-profile-c1c2-1.0.csv"
 
 
-CACHE_PATH = DATA_DIR/ "cefr_cache.json"
+CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cefr_cache.json"
 TRANSLATION_CACHE_PATH = DATA_DIR / "translation_cache.json"
 if TRANSLATION_CACHE_PATH.exists():
     _translation_cache: dict[str: dict] = json.loads(TRANSLATION_CACHE_PATH.read_text(encoding="utf-8"))

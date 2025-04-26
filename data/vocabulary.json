@@ -256,5 +256,164 @@
     ],
     "audio_url": "..\\data\\audio\\main_gt.mp3",
     "known": false
+  },
+  "class": {
+    "word": "class",
+    "translation": {
+      "russian": [
+        "класс",
+        "урок",
+        "занятие"
+      ]
+    },
+    "synonyms": [
+      "division",
+      "course",
+      "course of study",
+      "course of instruction",
+      "stratum",
+      "sort",
+      "family",
+      "assort",
+      "socio-economic class",
+      "classify",
+      "category",
+      "separate",
+      "form",
+      "sort out",
+      "grade",
+      "year",
+      "social class"
+    ],
+    "definition": {
+      "noun": [
+        "a collection of things sharing a common attribute",
+        "a body of students who are taught together",
+        "people having the same social, economic, or educational status",
+        "education imparted in a series of lessons or meetings",
+        "a league ranked by quality",
+        "a body of students who graduate together",
+        "(biology) a taxonomic group containing one or more orders",
+        "elegance in dress or behavior"
+      ],
+      "verb": [
+        "arrange or order by classes or categories"
+      ]
+    },
+    "examples": [
+      [
+        "she has a lot of class",
+        "he took a course in basket weaving",
+        "Princeton is in the NCAA Division 1-AA",
+        "there are two classes of detergents",
+        "the class of '97",
+        "early morning classes are always sleepy",
+        "she was in my year at Hoehandle High",
+        "flirting is not unknown in college classes",
+        "the working class",
+        "How would you classify these pottery shards--are they prehistoric?",
+        "an emerging professional class",
+        "he played baseball in class D for two years"
+      ]
+    ],
+    "part_of_speech": [
+      "noun",
+      "verb"
+    ],
+    "date_added": "26-04-2025 18:59:13",
+    "last_reviewed": "26-04-2025 18:59:16",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "26-04-2025 19:04:16",
+    "notes": "",
+    "level": "C1",
+    "tags": [
+      "cognition",
+      "act",
+      "group",
+      "attribute"
+    ],
+    "audio_url": "..\\data\\audio\\class_gt.mp3",
+    "known": false
+  },
+  "bot": {
+    "word": "bot",
+    "translation": {
+      "russian": [
+        "бот",
+        "робот",
+        "гельминтоз"
+      ]
+    },
+    "synonyms": [],
+    "definition": {
+      "noun": [
+        "botfly larva; typically develops inside the body of a horse or sheep or human"
+      ]
+    },
+    "examples": [],
+    "part_of_speech": [
+      "noun"
+    ],
+    "date_added": "26-04-2025 19:01:28",
+    "last_reviewed": "26-04-2025 19:01:30",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "26-04-2025 19:06:30",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "animal"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\bot_gt.mp3",
+    "known": false
+  },
+  "possibility": {
+    "word": "possibility",
+    "translation": {
+      "russian": [
+        "возможность"
+      ]
+    },
+    "synonyms": [
+      "possible action",
+      "opening",
+      "possibleness",
+      "theory",
+      "hypothesis"
+    ],
+    "definition": {
+      "noun": [
+        "a future prospect or potential",
+        "capability of existing or happening or being true",
+        "a tentative insight into the natural world; a concept that is not yet verified but that if true would explain certain facts or phenomena",
+        "a possible alternative"
+      ]
+    },
+    "examples": [
+      [
+        "bankruptcy is always a possibility",
+        "he proposed a fresh theory of alkalis that later was accepted in chemical practices",
+        "this room has great possibilities",
+        "a scientific hypothesis that survives experimental testing becomes a scientific theory",
+        "there is a possibility that his sense of smell has been impaired"
+      ]
+    ],
+    "part_of_speech": [
+      "noun"
+    ],
+    "date_added": "26-04-2025 19:03:36",
+    "last_reviewed": "26-04-2025 19:03:38",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "26-04-2025 19:08:38",
+    "notes": "",
+    "level": "B1",
+    "tags": [
+      "cognition",
+      "state"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\possibility_gt.mp3",
+    "known": false
   }
 }

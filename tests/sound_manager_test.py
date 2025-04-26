@@ -1,5 +1,5 @@
 
-from wolern.sound_manager import generate_audio, get_audio_path, sync_audio_files
+from wolern.src.sound_manager import generate_audio, get_audio_path, sync_audio_files
 
 sync_audio_files()
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 from dataclasses import replace
 
-from wolern.wolern.fetchers import get_translation, get_synonyms, get_definitions_by_pos, get_tags_from_wordnet, \
+from wolern.src.fetchers import get_translation, get_synonyms, get_definitions_by_pos, get_tags_from_wordnet, \
     get_examples_from_wordnet, get_parts_of_speech, replace_part, get_index_of_similar_part, hide_similar_parts
 
 

@@ -2,8 +2,8 @@ import json
 
 from pygments.lexer import words
 
-from wolern.wolern.sound_manager import get_audio_path
-from wolern.wolern.vocabulary import word_in_vocabulary, VOCABULARY_PATH
+from wolern.src.sound_manager import get_audio_path
+from wolern.src.vocabulary import word_in_vocabulary, VOCABULARY_PATH
 
 
 class Word:

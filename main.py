@@ -1,7 +1,7 @@
 # Main entry point for the program
 import os.path
-from wolern.fetchers import cefr_from_csv_to_json
-from wolern.vocabulary import get_word_input, add_word_to_vocabulary
+from wolern.src.fetchers import cefr_from_csv_to_json
+from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary
 
 def main():
     if os.path.exists('data/cefr_cache.json'):

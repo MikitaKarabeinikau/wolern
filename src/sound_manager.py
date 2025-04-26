@@ -3,7 +3,7 @@ import pyttsx3
 import time
 from pathlib import Path
 
-AUDIO_DIR = Path("../data/audio")
+AUDIO_DIR = Path(__file__).resolve().parent.parent / "data" / 'audio'
 AUDIO_DIR.mkdir(parents=True, exist_ok=True)
 
 def _filename(word: str, suffix: str) -> Path:
@@ -14,7 +14,7 @@ def generate_audio(word: str) -> Path:
     try:
         gTTS(text=word, lang="pl").save(gt_file.as_posix())
         time.sleep(1)
-        return gt_file               # ✅ success with gTTS
+        return gt_file
     except Exception:
         # gTTS failed → fallback
         pytt_file = _filename(word, "pytt")

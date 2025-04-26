@@ -8,12 +8,12 @@ Host all functions that:
 import nltk
 from pathlib import Path
 import json
-from wolern.wolern.sound_manager import generate_audio, get_audio_path
-from wolern.wolern.utils import current_datetime, parse_time_to_str
-from wolern.wolern.fetchers import *
+from wolern.src.sound_manager import generate_audio, get_audio_path
+from wolern.src.utils import current_datetime, parse_time_to_str
+from wolern.src.fetchers import *
 
 VOCABULARY_PATH = Path(__file__).resolve().parent.parent / "data" / "vocabulary.json"
-CEFR_CACHE_PATH = Path("../data/cefr_cache.json")
+CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cefr_cache.json"
 
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
 
@@ -36,7 +36,7 @@ def get_word_input():
     return word
 
 
-def add_word_to_vocabulary(word,vocab):
+def add_word_to_vocabulary(word,vocabulary=vocab):
     if word in vocab.keys():
         print(f'Word : {word} already in vocabulary')
         return
