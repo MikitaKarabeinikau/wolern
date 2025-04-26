@@ -1,6 +1,7 @@
-from wolern.fetchers import get_translation
-from wolern.vocabulary  import get_synonyms,get_definitions_by_pos,get_tags_from_wordnet,get_examples_from_wordnet
-from wolern.vocabulary import get_parts_of_speech
+from dataclasses import replace
+
+from wolern.wolern.fetchers import get_translation, get_synonyms, get_definitions_by_pos, get_tags_from_wordnet, \
+    get_examples_from_wordnet, get_parts_of_speech, replace_part, get_index_of_similar_part, hide_similar_parts
 
 
 def test_get_synonyms():
@@ -14,4 +15,8 @@ def test_get_part_of_speech():
     print(f'Word: {word} => Part of speech {part_of_speech}')
 
 if __name__ == "__main__":
-    get_translation("focus")
+    # print(get_synonyms('focus'))
+    hide_similar_parts('focus',get_synonyms('focus'))
+    assert replace_part('synonym',2,5) == 'sy...ym'
+    assert get_index_of_similar_part('non','synonym') == (2,5)
+    print(get_examples_from_wordnet('focus'))

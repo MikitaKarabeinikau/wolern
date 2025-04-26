@@ -1,7 +1,6 @@
 from nltk.corpus import wordnet
 import requests
-from wolern.utils import convert_pos,initial_repeat_time
-from wolern.utils import POS_TAG_MAP
+from wolern.wolern.utils import convert_pos,initial_repeat_time,POS_TAG_MAP
 import requests, warnings
 from bs4 import BeautifulSoup
 import csv, json
@@ -57,6 +56,38 @@ def get_synonyms_datamuse(word):
         print(f"[Datamuse] Request failed: {e}")
     return []
 
+def replace_part(word,f_index,s_index):
+    if f_index is not None and s_index is not None:
+        return word[:f_index] + '...' + word[s_index:]
+    return word
+
+def get_index_of_similar_part(word,other_word):
+    s_index = None
+    l_index = None
+    for i in range(0,len(word)):
+        for j in range(0,len(other_word)):
+            if word[i] == other_word[j]:
+                l = 1
+                while len(word)>i+l and len(other_word) >j+l:
+                    if word[i+l] == other_word[j+l]:
+                        l+=1
+                    else:
+                        break
+                if l>=3:
+                    if (s_index is None and l_index is None) or  l_index-s_index<l:
+                        s_index=j
+                        l_index=j+l
+    return (s_index,l_index)
+
+
+def hide_similar_parts(word,synonyms):
+    lim = 3
+    result = []
+    for synonym in synonyms:
+        a,b = get_index_of_similar_part(word,synonym)
+        result.append(replace_part(synonym,a,b))
+    print(result)
+    return result
 
 def get_synonyms(word):
     synonyms_from_nltk = get_synonyms_from_nltk(word)
@@ -67,7 +98,8 @@ def get_synonyms(word):
 
 #todo
 def synonyms_filter(synonyms_arr1,synonyms_arr2,original_word):
-    return []
+    result = set(synonyms_arr1).union(set(synonyms_arr2))
+    return list(result)
 
 def get_parts_of_speech(word):
     pos_tags = set()

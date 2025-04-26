@@ -54,5 +54,207 @@
     ],
     "audio_url": "..\\data\\audio\\file_gt.mp3",
     "known": false
+  },
+  "artificial": {
+    "word": "artificial",
+    "translation": {
+      "russian": [
+        "искусственный",
+        "неестественный",
+        "надуманный",
+        "ненастоящий",
+        "притворный"
+      ]
+    },
+    "synonyms": [
+      "semisynthetic",
+      "dyed",
+      "false",
+      "synthetic",
+      "simulated",
+      "affected",
+      "conventionalized",
+      "cardboard",
+      "stilted",
+      "painted",
+      "stylized",
+      "inorganic",
+      "celluloid",
+      "factitious",
+      "colored",
+      "fake",
+      "contrived",
+      "faux",
+      "stylised",
+      "bleached",
+      "near",
+      "ersatz",
+      "imitation",
+      "dummy",
+      "unlifelike",
+      "arranged",
+      "unnatural",
+      "hokey",
+      "staged",
+      "unreal",
+      "man-made"
+    ],
+    "definition": {
+      "adjective": [
+        "contrived by art rather than nature"
+      ],
+      "adjective satellite": [
+        "artificially formal",
+        "not arising from natural growth or characterized by vital processes"
+      ]
+    },
+    "examples": [
+      [
+        "contrived coyness",
+        "an artificial diamond",
+        "artificial sweeteners",
+        "a stilted letter of acknowledgment",
+        "when people try to correct their speech they develop a stilted pronunciation",
+        "artificial fibers",
+        "that artificial humility that her husband hated",
+        "artificial flavoring",
+        "artificial flowers"
+      ]
+    ],
+    "part_of_speech": [
+      "adjective",
+      "adjective satellite"
+    ],
+    "date_added": "26-04-2025 16:26:18",
+    "last_reviewed": "26-04-2025 16:26:23",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "26-04-2025 16:31:23",
+    "notes": "",
+    "level": "A2",
+    "tags": [
+      "all"
+    ],
+    "audio_url": "..\\data\\audio\\artificial_gt.mp3",
+    "known": false
+  },
+  "contribute": {
+    "word": "contribute",
+    "translation": {
+      "russian": [
+        "содействовать"
+      ]
+    },
+    "synonyms": [
+      "impart",
+      "bestow",
+      "give",
+      "lead",
+      "conduce",
+      "put up",
+      "chip in",
+      "bring",
+      "lend",
+      "add",
+      "kick in"
+    ],
+    "definition": {
+      "verb": [
+        "bestow a quality on",
+        "contribute to some cause",
+        "be conducive to",
+        "provide"
+      ]
+    },
+    "examples": [
+      [
+        "She brings a special atmosphere to our meetings",
+        "Her presence lends a certain cachet to the company",
+        "The use of computers in the classroom lead to better writing",
+        "The city has to put up half the required amount",
+        "I gave at the office",
+        "The music added a lot to the play",
+        "This adds a light note to the program"
+      ]
+    ],
+    "part_of_speech": [
+      "verb"
+    ],
+    "date_added": "26-04-2025 16:27:50",
+    "last_reviewed": "26-04-2025 16:27:52",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "26-04-2025 16:32:52",
+    "notes": "",
+    "level": "B1",
+    "tags": [
+      "social",
+      "possession"
+    ],
+    "audio_url": "..\\data\\audio\\contribute_gt.mp3",
+    "known": false
+  },
+  "main": {
+    "word": "main",
+    "translation": {
+      "russian": [
+        "основной",
+        "главный",
+        "центральный"
+      ]
+    },
+    "synonyms": [
+      "master",
+      "chief",
+      "principal",
+      "primary",
+      "independent",
+      "briny"
+    ],
+    "definition": {
+      "noun": [
+        "any very large body of (salt) water",
+        "a principal pipe in a system that distributes water or gas or electricity or that collects sewage"
+      ],
+      "adjective satellite": [
+        "most important element",
+        "of force; of the greatest possible intensity"
+      ],
+      "adjective": [
+        "(of a clause) capable of standing syntactically alone as a complete sentence"
+      ]
+    },
+    "examples": [
+      [
+        "the main doors were of solid glass",
+        "the chief aim of living",
+        "the master bedroom",
+        "the principal rivers of America",
+        "the principal example",
+        "by main strength",
+        "policemen were primary targets",
+        "the main (or independent) clause in a complex sentence has at least a subject and a verb",
+        "a master switch"
+      ]
+    ],
+    "part_of_speech": [
+      "noun",
+      "adjective",
+      "adjective satellite"
+    ],
+    "date_added": "26-04-2025 16:30:03",
+    "last_reviewed": "26-04-2025 16:30:05",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "26-04-2025 16:35:05",
+    "notes": "",
+    "level": "B1",
+    "tags": [
+      "all",
+      "object",
+      "artifact"
+    ],
+    "audio_url": "..\\data\\audio\\main_gt.mp3",
+    "known": false
   }
 }

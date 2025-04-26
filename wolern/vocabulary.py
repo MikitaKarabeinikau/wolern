@@ -6,24 +6,30 @@ Host all functions that:
 
 """
 import nltk
-from wolern.fetchers import *
 from pathlib import Path
 import json
-from wolern.sound_manager import generate_audio, get_audio_path
-from wolern.utils import current_datetime,parse_time_to_str
+from wolern.wolern.sound_manager import generate_audio, get_audio_path
+from wolern.wolern.utils import current_datetime, parse_time_to_str
+from wolern.wolern.fetchers import *
 
 VOCABULARY_PATH = Path(__file__).resolve().parent.parent / "data" / "vocabulary.json"
 CEFR_CACHE_PATH = Path("../data/cefr_cache.json")
 
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
 
-if VOCABULARY_PATH.exists():
-    vocab = json.loads(VOCABULARY_PATH.read_text(encoding="utf-8"))
-else:
-    vocab = {}
+def get_vocabulary(path=VOCABULARY_PATH):
+    if VOCABULARY_PATH.exists():
+        return json.loads(VOCABULARY_PATH.read_text(encoding="utf-8"))
+    else:
+        return {}
+
+vocab = get_vocabulary()
 
 def get_cefr_level(word):
     return _cefr_cache.get(word.lower(),"UNKNOWN")
+
+def word_in_vocabulary(word,vocabulary):
+    return True if word in vocabulary.keys() else False
 
 def get_word_input():
     word = input("Enter the English word").strip().lower()
@@ -31,6 +37,9 @@ def get_word_input():
 
 
 def add_word_to_vocabulary(word,vocab):
+    if word in vocab.keys():
+        print(f'Word : {word} already in vocabulary')
+        return
     added_date = parse_time_to_str(current_datetime())
 
     part_of_speech = get_parts_of_speech(word)

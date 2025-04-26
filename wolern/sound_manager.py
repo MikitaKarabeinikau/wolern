@@ -1,5 +1,6 @@
 from gtts import gTTS
-import pyttsx3,time
+import pyttsx3
+import time
 from pathlib import Path
 
 AUDIO_DIR = Path("../data/audio")
