@@ -80,7 +80,8 @@ def add_word_to_vocabulary(word,vocabulary=vocab):
     vocab[word["word"]] = word
     VOCABULARY_PATH.write_text(json.dumps(vocab,ensure_ascii=False,indent=2),encoding="utf-8")
 
-
+def get_list_of_words(vocabulary):
+    return list(vocabulary.keys())
 
 def show_vocabulary_list(vocabulary):
     return '\n'.join(list(vocabulary.keys()))
