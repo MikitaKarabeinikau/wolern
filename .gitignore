@@ -1,5 +1,6 @@
 #files
-
+data/cache/frequencies_cache.json
+data/source/frequencies_source/en_50k.txt
 text_for_scanner_test
 
 *.pyc
