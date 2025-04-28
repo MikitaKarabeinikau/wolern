@@ -5,7 +5,7 @@
 <table>
 <tr>
 <td width="40%">
-  <img src="images/wide_version.png" alt="Wolern Banner" width=100% height="300"/>
+  <img src="data/images/wide_version.png" alt="Wolern Banner" width=100% height="300"/>
 </td>
 <td>
   <p><strong>Wolern is a Python-based personal project designed to help me (and others) learn English vocabulary effectively using technology.</strong></p>
