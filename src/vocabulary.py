@@ -102,7 +102,7 @@ def add_word_to_vocabulary(word,vocabulary):
         "audio_url": str(get_audio_path(word))
     }
     vocabulary[word["word"]] = word
-    VOCABULARY_PATH.write_text(json.dumps(vocabulary,ensure_ascii=False,indent=2),encoding="utf-8")
+    vocabulary.write_text(json.dumps(vocabulary,ensure_ascii=False,indent=2),encoding="utf-8")
 
 def get_list_of_words(vocabulary):
     return list(vocabulary.keys())
@@ -120,8 +120,6 @@ def update_word():
 
     pass
 
-def is_word(word):
-    pass
 
 def reset_vocabulary_file():
     pass

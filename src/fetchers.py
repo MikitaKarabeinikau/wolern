@@ -1,3 +1,4 @@
+from charset_normalizer.constant import FREQUENCIES
 from nltk.corpus import wordnet
 import requests
 from wolern.src.utils import convert_pos,initial_repeat_time,POS_TAG_MAP
@@ -6,15 +7,21 @@ from bs4 import BeautifulSoup
 import csv, json
 from pathlib import Path
 from deep_translator import LingueeTranslator
-CEFR_DIR = Path(__file__).resolve().parent.parent / 'data/cefr_sources'
+import pandas as pd
+
+
+CEFR_DIR = Path(__file__).resolve().parent.parent / 'data/sources/cefr_sources'
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 TRANSLATION_CACHE_PATH = DATA_DIR / "cache"/ "translation_cache.json"
 TRANSLATION_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-CSV_PATH_1 = Path(__file__).resolve().parent.parent / "data" / "cefr_sources" / "cefrj-vocabulary-profile-1.5.csv"
-CSV_PATH_2 = Path(__file__).resolve().parent.parent / "data" / "cefr_sources" / "octanove-vocabulary-profile-c1c2-1.0.csv"
+FREQUENCIES_CACHE_PATH = Path(__file__).resolve().parent.parent/"data" / "cache"/ "frequencies_cache.json"
 
 
+CSV_PATH_1 = Path(__file__).resolve().parent.parent / "data" /"sources"/ "cefr_sources" / "cefrj-vocabulary-profile-1.5.csv"
+CSV_PATH_2 = Path(__file__).resolve().parent.parent / "data" / "sources"/"cefr_sources" / "octanove-vocabulary-profile-c1c2-1.0.csv"
+
+PATH_TO_SUBTLEXus = Path(__file__).resolve().parent.parent / "data" / "source"/"frequencies_source"/ "SUBTLEXusfrequencyabove1.xls"
 CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache"/ "cefr_cache.json"
 TRANSLATION_CACHE_PATH = DATA_DIR / "translation_cache.json"
 if TRANSLATION_CACHE_PATH.exists():
@@ -23,8 +30,29 @@ else:
     _translation_cache = {}
 
 
-# CEFR progression scale
-CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1", "C2"]
+def build_frequency_dict():
+    subtlex = pd.read_excel(PATH_TO_SUBTLEXus)
+    frequency_dict = dict(zip(subtlex['Word'], subtlex['SUBTLCD']))
+    with open(FREQUENCIES_CACHE_PATH,'w',encoding="utf-8") as f:
+        json.dump(frequency_dict,f, ensure_ascii=False, indent=2)
+    print(f'{FREQUENCIES_CACHE_PATH} file was created.')
+
+if not FREQUENCIES_CACHE_PATH.exists():
+    build_frequency_dict()
+_frequency_cache = json.loads(FREQUENCIES_CACHE_PATH.read_text(encoding="utf-8"))
+
+
+
+
+def get_frequencies(word):
+   return _frequency_cache[word]
+
+def set_frequency(vocabulary,word):
+    pass
+
+
+
+
 
 def _save_translation_cache():
     TRANSLATION_CACHE_PATH.write_text(

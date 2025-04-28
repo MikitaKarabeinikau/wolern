@@ -19,6 +19,10 @@ STANDART_UNCHECKED_PATH = Path(__file__).resolve().parent.parent / 'data' / 'voc
 from time import gmtime,strftime
 from datetime import datetime,timedelta
 
+
+# CEFR progression scale
+CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1", "C2"]
+
 #Could be expand in future
 POS_TAG_MAP = {
     'n': 'noun',
