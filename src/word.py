@@ -1,7 +1,5 @@
 import json
 
-from pygments.lexer import words
-
 from wolern.src.sound_manager import get_audio_path
 from wolern.src.vocabulary import word_in_vocabulary, VOCABULARY_PATH
 
