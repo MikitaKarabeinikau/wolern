@@ -68,133 +68,112 @@ pip install -r requirements.txt
 > Work in progress — command-line and GUI examples will be added.
 
 ## 📌 Roadmap
-# 📍 Wolern Project Roadmap
+# 📍 Wolern Project Roadmap (Updated)
 
 ## ✅ Phase 1: Core CLI App
 - [x] Define project goal.
 - [x] Design vocabulary JSON structure.
-- [x] Set up virtual environment and basic files.
-- [x] Implement word addition (with saving to JSON).
+- [x] Set up virtual environment and base folders.
+- [x] Implement manual word adding.
 - [x] Load and display existing vocabulary from JSON.
-- [x] Fetch synonyms (NLTK + Datamuse).
-- [x] Fetch definitions and parts of speech (WordNet).
-- [x] Add CEFR level checker (scraper).
-- [x] Add audio pronunciation saving.
-- [ ] Track learning stage and update based on correct answers.
+- [x] Fetch synonyms, definitions, POS, CEFR level.
+- [x] Save audio pronunciation paths.
+- [x] Build basic text scanner for `.txt` files.
 
 ---
 
 ## ✅ Phase 2: CLI Main Features
-- [x] Create main menu (text-based).
-- [ ] Option to add new word manually.
-- [ ] Option to scan text file for unknown words (`.txt` support first).
-- [ ] Text scanner - support `.docx` files (future).
-- [ ] Text scanner - support `.pdf` files (future).
-- [ ] Option to show full vocabulary list (nicely formatted).
-- [ ] Option to launch quiz (multiple choice / writing).
-- [ ] Save all changes reliably.
-- [ ] Implement clean and graceful exit.
-
----
-
-## 🔵 Phase 3: GUI Prototype (Tkinter)
-- [ ] Build simple window for adding new words.
-- [ ] Build window for doing quizzes.
-- [ ] Show basic stats: number of words, learning progress.
-- [ ] Handle JSON operations via GUI buttons.
-
----
-
-## 🔵 Phase 4: Web App (Flask or FastAPI)
-- [ ] Set up backend API for word operations.
-- [ ] Create simple web frontend (Bootstrap or TailwindCSS).
-- [ ] Add login system (optional).
-- [ ] Show stats and quizzes online.
-- [ ] Deploy to free hosting service (Render, Vercel, etc.).
-
----
-
-## ✍️ Phase 5: Documentation & Polish
-- [ ] Polish README (add CLI usage examples and screenshots).
-- [ ] Add LICENSE file (MIT License or similar).
-- [ ] Write CONTRIBUTING.md (optional if you want to allow open contributions).
-- [ ] Prepare small promotional materials (like demo GIFs).
-
----
-
-## 🧪 Phase 6: Testing & Stability
-> Goal: Ensure that Wolern works correctly, reliably, and is easy to maintain.
-
-### Unit tests
-- [ ] Load and save vocabulary (JSON reading/writing).
-- [ ] Add word to vocabulary.
-- [ ] Fetch synonyms, definitions, translations (mocked API responses).
-- [ ] Track learning stage updates.
-
-### Integration tests
-- [ ] End-to-end test: Add word manually.
-- [ ] End-to-end test: Scan `.txt` file for unknown words.
-
-### Error handling tests
-- [ ] Handle missing files (e.g., missing `cefr_cache.json`).
-- [ ] Handle corrupted or invalid JSON.
-- [ ] Handle unsupported file formats during scanning.
-
-### Performance tests (optional)
-- [ ] Measure time for scanning large text files.
-- [ ] Measure time for loading large vocabulary files.
-
-### CLI menu stability
-- [ ] Test all menu options for clean exit and no crashes, even with empty or minimal data.
-
-### Testing tools
-- Standard: `unittest`
-- (Optional upgrade later) `pytest` for better reports.
+- [x] CLI menu with 5 options: add, scan, show vocab, quiz, exit.
+- [ ] Show vocabulary list (pretty format).
+- [ ] Quiz mode (multiple choice planned).
+- [ ] Save and load vocabulary reliably.
+- [ ] Clean and graceful exit.
 
 ---
 
 ## 🧠 Phase 3: Unchecked Words Processing
-> **Goal: Build a system to manage unknown scanned words.**
+> **Goal: Manage unknown scanned words smartly.**
 
-### Unchecked Words
-- [ ] Save newly scanned unknown words into `unchecked_words.json`.
+### Unchecked Words Management
+- [x] Save scanned unknown words into `unchecked_words.json`.
 - [ ] CLI function to review unchecked words manually:
-  - Show one word at a time.
-  - Options:
-    - [a] Accept → fetch full data → add to vocabulary.
-    - [r] Reject → move to ignored words.
-    - [s] Skip → decide later.
+  - Accept → fetch full data → add to vocabulary.
+  - Reject → move to ignored words.
+  - Skip → leave for later.
+- [ ] Save rejected words (`ignored_words.json`) with reason tags.
+- [ ] Allow CLI to set dynamic `load_limit` for scanning.
 
+### Popularity/Frequency Tracking
+- [ ] Add `frequency_rank` and `popularity` fields to word structure.
+- [ ] Fetch frequency data along with other word info.
+- [ ] Store popularity info for smarter processing.
 
-1. Scan text → find unknown words → save into `unchecked_words.json`
+### Smart Unloading System
+- [ ] Create popularity-sorted array (`unchecked_priority_list`).
+- [ ] During CLI idle time (between user actions), process a few unchecked words:
+  - Prioritize easy/common words first.
+  - Fetch and complete their info automatically.
+- [ ] Allow settings like "Process 5 words per idle pause."
 
-2. Open a CLI menu:
-   [1] Review Unchecked Words
-   - Show next word
-   - Options:
-     - [a] Accept and add to Vocabulary
-     - [r] Reject and move to Ignored Words
-     - [s] Skip (decide later)
-
-3. If Accepted:
-   - Fetch data (synonyms, definitions, CEFR level, audio) automatically
-   - Save fully into Vocabulary
-
-4. If Rejected:
-   - Move to Ignored Words list
 ---
 
+## 🔵 Phase 4: GUI Prototype (Tkinter)
+- [ ] Build simple GUI for adding and managing words.
+- [ ] GUI to launch quizzes.
+- [ ] Show stats and progress in GUI.
+- [ ] Handle vocabulary file operations from GUI.
+
+---
+
+## 🔵 Phase 5: Web App Version (Flask or FastAPI)
+- [ ] Set up backend API for vocabulary management.
+- [ ] Create frontend (HTML/Bootstrap/TailwindCSS).
+- [ ] Add optional login/authentication system.
+- [ ] Deploy Web App to free hosting (Render, Vercel, etc.).
+
+---
+
+## ✍️ Phase 6: Documentation & Polish
+- [ ] Expand README with usage examples, screenshots.
+- [ ] Add LICENSE file (MIT or similar).
+- [ ] Write CONTRIBUTING.md (optional).
+- [ ] Add small promotional materials (like GIFs, demo videos).
+
+---
+
+## 🧪 Phase 7: Testing & Stability
+> **Goal: Ensure reliability and maintainability.**
+
+- [ ] Unit tests for vocabulary loading/saving.
+- [ ] Tests for text scanning and word processing.
+- [ ] Tests for CLI interaction flow.
+- [ ] Error handling tests (missing files, wrong input).
+- [ ] Performance tests (large vocabulary, big text scans).
+
+---
+
+# 🎯 MVP Target
+✅ CLI where you can:
+- Add new words.
+- Scan `.txt` files for unknown words.
+- Manage unchecked and ignored words.
+- Save full vocabulary enriched with POS, CEFR, synonyms, popularity.
+- Take quizzes on learned words.
+
+---
 
 # 🛣️ Project Phases Summary
-| Phase | Name | Description                                                          |
-|:------|:-----|:---------------------------------------------------------------------|
-| Phase 1 | Core CLI App | can add word, save JSON, enrich (synonyms, defs, tags, CEFR, audio). |
-| Phase 2 | CLI Main Features | adds text‑scanner and quiz menu.                                     |                                
-| Phase 3 | GUI Prototype (Tkinter) | simple windows for add / quiz.                                       |
-| Phase 4 | Web App (Flask or FastAPI) | Flask or Django with same backend logic.                             |
-| Phase 5 | Documentation & Polish |                                                                      |
-| Phase 6 | Testing & Stability |                                                                      |
+| Phase | Name |
+|:------|:-----|
+| Phase 1 | Core CLI App |
+| Phase 2 | CLI Main Features |
+| Phase 3 | Unchecked Words Processing (priority-based) |
+| Phase 4 | GUI Prototype (Tkinter) |
+| Phase 5 | Web App Version (Flask/FastAPI) |
+| Phase 6 | Documentation & Polish |
+| Phase 7 | Testing & Stability |
 
+---
 ---
 ## 🧑‍💻 Contributing
 
