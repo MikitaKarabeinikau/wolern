@@ -26,7 +26,6 @@ def main():
         if choice == "1":
             # call add_word_to_vocabulary()
             add_word_to_vocabulary(get_word_input())
-
         elif choice == "2":
             # call text scanning logic
             limit = int(input("How many new words you want to add\nPrint zero to no limit\Write a number : "))
@@ -35,7 +34,6 @@ def main():
                 load_text(path_to)
             else:
                 load_text(path_to,limit)
-
         elif choice == "3":
             # display saved words
             vocabulary = input(f'write a name of vocabulary to show there contant :{show_all_vocabularies()}\nPress Enter to show defualt vocabulary')

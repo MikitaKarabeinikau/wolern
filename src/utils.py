@@ -14,8 +14,8 @@ Date formatting is a general-purpose helper — you will probably want to reuse 
 """
 from pathlib import Path
 
-STANDART_VOCABULARY_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabulary.json'
-STANDART_UNCHECKED_PATH = Path(__file__).resolve().parent.parent / 'data' / 'unchecked.json'
+STANDART_VOCABULARY_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'vocabulary.json'
+STANDART_UNCHECKED_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'unchecked.json'
 from time import gmtime,strftime
 from datetime import datetime,timedelta
 

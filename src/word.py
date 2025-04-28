@@ -1,7 +1,7 @@
 import json
 
 from wolern.src.sound_manager import get_audio_path
-from wolern.src.vocabulary import word_in_vocabulary, VOCABULARY_PATH
+from wolern.src.vocabulary import word_in_vocabulary
 
 
 class Word:
@@ -44,5 +44,5 @@ class Word:
     def save_word_in_vocabulary(self,vocabulary):
         if not word_in_vocabulary(self.word,vocabulary):
                 vocabulary[self.word] = self.to_dict()
-                with open(VOCABULARY_PATH,"w",encoding="utf-8") as f:
+                with open(vocabulary,"w",encoding="utf-8") as f:
                         json.dump(vocabulary,f,ensure_ascii=False,indent=2)

@@ -11,10 +11,9 @@ import nltk
 from pathlib import Path
 import json
 from wolern.src.sound_manager import generate_audio, get_audio_path
-from wolern.src.utils import current_datetime, parse_time_to_str
+from wolern.src.utils import current_datetime, parse_time_to_str, STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH
 from wolern.src.fetchers import *
 
-VOCABULARY_PATH = Path(__file__).resolve().parent.parent / "data" /"vocabularies"/ "vocabulary.json"
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"
 
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
@@ -25,9 +24,27 @@ def show_all_vocabularies():
     print('\n'.join(list(vocabulary)))
     return vocabulary
 
-def get_vocabulary(path=VOCABULARY_PATH):
-    if VOCABULARY_PATH.exists():
-        return json.loads(VOCABULARY_PATH.read_text(encoding="utf-8"))
+def pop_word_from_vocabulary(word, vocabulary_name):
+    vocabulary = get_vocabulary(vocabulary_name)  # 1. Load vocab from file
+    if vocabulary_name != STANDART_UNCHECKED_PATH:
+        deleted_word_data = vocabulary.pop(word, None) # 2. Remove word if exists
+        with open(vocabulary_name, 'w', encoding='utf-8') as fl: # 3. Save updated vocab
+            json.dump(vocabulary, fl, ensure_ascii=False, indent=2)
+        print(f'Word : {word} was deleted. {vocabulary_name} is rewrote.')
+        return deleted_word_data
+    else:
+        vocabulary.remove(word)  # 2. Remove word if exists
+        with open(vocabulary_name, 'w', encoding='utf-8') as fl:  # 3. Save updated vocab
+            json.dump(vocabulary, fl, ensure_ascii=False, indent=2)
+        print(f'Word : {word} was deleted. {vocabulary_name} is rewrote.')
+        return word
+
+
+
+
+def get_vocabulary(path):
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
     else:
         return {}
 
@@ -45,7 +62,7 @@ def get_word_input():
     word = input("Enter the English word").strip().lower()
     return word
 
-def add_word_to_vocabulary(word,vocabulary=get_vocabulary()):
+def add_word_to_vocabulary(word,vocabulary):
     if word in vocabulary.keys():
         print(f'Word : {word} already in vocabulary')
         return
@@ -91,7 +108,10 @@ def get_list_of_words(vocabulary):
     return list(vocabulary.keys())
 
 def show_vocabulary(vocabulary):
-    return '\n'.join(list(vocabulary.keys()))
+    if isinstance(vocabulary,dict):
+        return '\n'.join(list(vocabulary.keys()))
+    elif isinstance(vocabulary,list):
+        return '\n'.join(list(vocabulary))
 
 def remove_word_from_vocabulary():
     pass

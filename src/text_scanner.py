@@ -28,7 +28,7 @@ def load_txt_file(file_path,load_limit=0):
         to_vocabulary,rest = unknown_words[:load_limit],unknown_words[load_limit:]
         for word in to_vocabulary:
             add_word_to_vocabulary(word)
-        save_unknown_unchecked_words(rest,STANDART_UNCHECKED_PATH)
+        save_unknown_unchecked_words(rest)
     else:
         for word in unknown_words:
             add_word_to_vocabulary(word)
@@ -55,10 +55,10 @@ def find_unknown_words(words_in_text, known_words):
     """Compare text words with known words."""
     return words_in_text-known_words
 
-def save_unknown_unchecked_words(words,path_to):
-    path_to.parent.mkdir(parents=True, exist_ok=True)
+def save_unknown_unchecked_words(words):
+    STANDART_UNCHECKED_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-    with path_to.open("w", encoding="utf-8") as f:
+    with STANDART_UNCHECKED_PATH.open("w", encoding="utf-8") as f:
         json.dump(list(words), f, ensure_ascii=False, indent=2)
 
-    print(f"Saved {len(words)} words into {path_to}")
+    print(f"Saved {len(words)} words into {STANDART_VOCABULARY_PATH}")

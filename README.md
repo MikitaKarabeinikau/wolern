@@ -187,3 +187,6 @@ Right now this is a solo learning project, but contributions are welcome for fee
 * ** — © Tono Laboratory, TUFS.  Used under the terms: “CEFR‑J vocabulary and grammar profile datasets can be used for research and commercial purposes with no charge, provided that you cite the dataset properly.” 
 * **Octanove Vocabulary Profile (C1/C2)
 * ** — Licensed under CC BY‑SA 4.0.
+* - SUBTLEX-US: Frequency data based on American English subtitle corpora.
+  - Source: Brysbaert & New (2009)
+  - Usage: Free for research and educational purposes.
