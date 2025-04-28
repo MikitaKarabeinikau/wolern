@@ -4,7 +4,9 @@ from pathlib import Path
 
 from wolern.src.fetchers import cefr_from_csv_to_json
 from wolern.src.text_scanner import load_text
-from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary
+from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary, show_vocabulary_list, get_vocabulary, \
+    show_all_vocabularies
+
 
 def main():
     if os.path.exists('data/cefr_cache.json'):
@@ -32,7 +34,11 @@ def main():
 
         elif choice == "3":
             # display saved words
-            pass
+            vocabulary = input(f'write a name of vocabulary to show there contant :{show_all_vocabularies()}\nPress Enter to show defualt vocabulary')
+            if len(vocabulary) == 0:
+                show_vocabulary_list(get_vocabulary())
+            else:
+                show_vocabulary_list(get_vocabulary(vocabulary))
         elif choice == "4":
             # call quiz module
             pass

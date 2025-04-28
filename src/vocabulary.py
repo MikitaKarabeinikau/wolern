@@ -5,6 +5,8 @@ Host all functions that:
 • update stats (update_learning_stage, update_repeat_time).
 
 """
+import os
+
 import nltk
 from pathlib import Path
 import json
@@ -12,10 +14,16 @@ from wolern.src.sound_manager import generate_audio, get_audio_path
 from wolern.src.utils import current_datetime, parse_time_to_str
 from wolern.src.fetchers import *
 
-VOCABULARY_PATH = Path(__file__).resolve().parent.parent / "data" / "vocabulary.json"
+VOCABULARY_PATH = Path(__file__).resolve().parent.parent / "data" /"vocabularies"/ "vocabulary.json"
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cefr_cache.json"
 
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
+
+def show_all_vocabularies():
+    """List all vocabulary files."""
+    vocabulary = os.listdir(Path(__file__).resolve().parent.parent / "data" /"vocabularies")
+    print('\n'.join(list(vocabulary)))
+    return vocabulary
 
 def get_vocabulary(path=VOCABULARY_PATH):
     if VOCABULARY_PATH.exists():
