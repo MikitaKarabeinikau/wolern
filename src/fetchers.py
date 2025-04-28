@@ -8,14 +8,14 @@ from pathlib import Path
 from deep_translator import LingueeTranslator
 CEFR_DIR = Path(__file__).resolve().parent.parent / 'data/cefr_sources'
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-TRANSLATION_CACHE_PATH = DATA_DIR / "translation_cache.json"
+TRANSLATION_CACHE_PATH = DATA_DIR / "cache"/ "translation_cache.json"
 TRANSLATION_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 CSV_PATH_1 = Path(__file__).resolve().parent.parent / "data" / "cefr_sources" / "cefrj-vocabulary-profile-1.5.csv"
 CSV_PATH_2 = Path(__file__).resolve().parent.parent / "data" / "cefr_sources" / "octanove-vocabulary-profile-c1c2-1.0.csv"
 
 
-CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cefr_cache.json"
+CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache"/ "cefr_cache.json"
 TRANSLATION_CACHE_PATH = DATA_DIR / "translation_cache.json"
 if TRANSLATION_CACHE_PATH.exists():
     _translation_cache: dict[str: dict] = json.loads(TRANSLATION_CACHE_PATH.read_text(encoding="utf-8"))
@@ -31,7 +31,6 @@ def _save_translation_cache():
         json.dumps(_translation_cache, ensure_ascii=False, indent=2),
         encoding="utf-8"
     )
-
 
 def check_translation_in_cache(word):
     return _translation_cache.get(word.lower(), None)

@@ -21,7 +21,6 @@ class Word:
             self.level = word_data.get("level",None)
             self.tags = word_data.get("tags",[])
             self.audio_url = word_data.get("audio_url",get_audio_path(self.word))
-            self.known = word_data.get("known",False)
 
     def to_dict(self):
         return {
@@ -40,7 +39,6 @@ class Word:
             "level": self.level,
             "tags": self.tags,
             "audio_url": self.audio_url,
-            "known": self.known
         }
 
     def save_word_in_vocabulary(self,vocabulary):

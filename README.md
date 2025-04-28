@@ -84,7 +84,7 @@ pip install -r requirements.txt
 
 ## ✅ Phase 2: CLI Main Features
 - [x] CLI menu with 5 options: add, scan, show vocab, quiz, exit.
-- [ ] Show vocabulary list (pretty format).
+- [x] Show vocabulary list (pretty format).
 - [ ] Quiz mode (multiple choice planned).
 - [ ] Save and load vocabulary reliably.
 - [ ] Clean and graceful exit.

@@ -15,7 +15,7 @@ from wolern.src.utils import current_datetime, parse_time_to_str
 from wolern.src.fetchers import *
 
 VOCABULARY_PATH = Path(__file__).resolve().parent.parent / "data" /"vocabularies"/ "vocabulary.json"
-CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cefr_cache.json"
+CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"
 
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
 
@@ -64,7 +64,6 @@ def add_word_to_vocabulary(word,vocabulary=vocab):
 
     audio_url = generate_audio(word)
 
-    known = False
     tags = get_tags_from_wordnet(word)
 
     word = {
@@ -82,8 +81,7 @@ def add_word_to_vocabulary(word,vocabulary=vocab):
         "notes": "",
         "level": level,
         "tags": tags if tags else [],
-        "audio_url": str(get_audio_path(word)),
-        "known": known
+        "audio_url": str(get_audio_path(word))
     }
     vocab[word["word"]] = word
     VOCABULARY_PATH.write_text(json.dumps(vocab,ensure_ascii=False,indent=2),encoding="utf-8")

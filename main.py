@@ -9,7 +9,7 @@ from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary, show_v
 
 
 def main():
-    if os.path.exists('data/cefr_cache.json'):
+    if os.path.exists('data/cache/cefr_cache.json'):
         cefr_from_csv_to_json()
 
     while True:
