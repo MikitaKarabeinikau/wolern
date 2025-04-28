@@ -84,7 +84,9 @@ pip install -r requirements.txt
 
 ## ✅ Phase 2: CLI Main Features
 - [x] CLI menu with 5 options: add, scan, show vocab, quiz, exit.
-- [x] Show vocabulary list (pretty format).
+- [x] Added support for choosing vocabulary files.
+- [x] Dynamic load_limit input during scanning.
+- [x] Show vocabulary list (default and user-chosen).
 - [ ] Quiz mode (multiple choice planned).
 - [ ] Save and load vocabulary reliably.
 - [ ] Clean and graceful exit.
@@ -96,12 +98,11 @@ pip install -r requirements.txt
 
 ### Unchecked Words Management
 - [x] Save scanned unknown words into `unchecked_words.json`.
-- [ ] CLI function to review unchecked words manually:
-  - Accept → fetch full data → add to vocabulary.
-  - Reject → move to ignored words.
-  - Skip → leave for later.
+- [x] Create `get_list_new_words()` to list words with learning_stage == 0.
+- [x] CLI new option: "Review New Words":
+  - [x] Display new (unchecked) words one-by-one.
+  - [x] Allow user to assign initial learning_stage (Recognized, Familiar, etc.).
 - [ ] Save rejected words (`ignored_words.json`) with reason tags.
-- [ ] Allow CLI to set dynamic `load_limit` for scanning.
 
 ### Popularity/Frequency Tracking
 - [ ] Add `frequency_rank` and `popularity` fields to word structure.
@@ -157,6 +158,7 @@ pip install -r requirements.txt
 - Add new words.
 - Scan `.txt` files for unknown words.
 - Manage unchecked and ignored words.
+- Review and set learning stages manually.
 - Save full vocabulary enriched with POS, CEFR, synonyms, popularity.
 - Take quizzes on learned words.
 
@@ -172,7 +174,6 @@ pip install -r requirements.txt
 | Phase 5 | Web App Version (Flask/FastAPI) |
 | Phase 6 | Documentation & Polish |
 | Phase 7 | Testing & Stability |
-
 ---
 ---
 ## 🧑‍💻 Contributing

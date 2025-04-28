@@ -19,11 +19,12 @@ def load_text(file_path,load_limit):
     else:
         raise ValueError("Unsupported file type.")
 
-def load_txt_file(file_path,load_limit):
+def load_txt_file(file_path,load_limit=0):
     vocabulary = load_vocabulary(STANDART_VOCABULARY_PATH)
     text = load_text_from_file(file_path)
     unknown_words = list(find_unknown_words(text,vocabulary))
-    if len(unknown_words) >load_limit:
+
+    if len(unknown_words) > load_limit != 0:
         to_vocabulary,rest = unknown_words[:load_limit],unknown_words[load_limit:]
         for word in to_vocabulary:
             add_word_to_vocabulary(word)

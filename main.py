@@ -29,9 +29,12 @@ def main():
 
         elif choice == "2":
             # call text scanning logic
-            limit = int(input("How many new words you want to add: "))
+            limit = int(input("How many new words you want to add\nPrint zero to no limit\Write a number : "))
             path_to = Path(input("Write a path to file: "))
-            load_text(path_to,limit)
+            if limit == 0:
+                load_text(path_to)
+            else:
+                load_text(path_to,limit)
 
         elif choice == "3":
             # display saved words

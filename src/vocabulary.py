@@ -35,7 +35,6 @@ def get_list_of_new_words(vocabulary):
     words = [word for word in vocabulary.keys() if vocabulary[word]['learning_stage'] == 0]
     return list(words)
 
-
 def get_cefr_level(word):
     return _cefr_cache.get(word.lower(),"UNKNOWN")
 
@@ -45,8 +44,6 @@ def word_in_vocabulary(word,vocabulary):
 def get_word_input():
     word = input("Enter the English word").strip().lower()
     return word
-
-
 
 def add_word_to_vocabulary(word,vocabulary=get_vocabulary()):
     if word in vocabulary.keys():
