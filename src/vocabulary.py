@@ -31,7 +31,10 @@ def get_vocabulary(path=VOCABULARY_PATH):
     else:
         return {}
 
-vocab = get_vocabulary()
+def get_list_of_new_words(vocabulary):
+    words = [word for word in vocabulary.keys() if vocabulary[word]['learning_stage'] == 0]
+    return list(words)
+
 
 def get_cefr_level(word):
     return _cefr_cache.get(word.lower(),"UNKNOWN")
@@ -44,8 +47,9 @@ def get_word_input():
     return word
 
 
-def add_word_to_vocabulary(word,vocabulary=vocab):
-    if word in vocab.keys():
+
+def add_word_to_vocabulary(word,vocabulary=get_vocabulary()):
+    if word in vocabulary.keys():
         print(f'Word : {word} already in vocabulary')
         return
     added_date = parse_time_to_str(current_datetime())
@@ -83,13 +87,13 @@ def add_word_to_vocabulary(word,vocabulary=vocab):
         "tags": tags if tags else [],
         "audio_url": str(get_audio_path(word))
     }
-    vocab[word["word"]] = word
-    VOCABULARY_PATH.write_text(json.dumps(vocab,ensure_ascii=False,indent=2),encoding="utf-8")
+    vocabulary[word["word"]] = word
+    VOCABULARY_PATH.write_text(json.dumps(vocabulary,ensure_ascii=False,indent=2),encoding="utf-8")
 
 def get_list_of_words(vocabulary):
     return list(vocabulary.keys())
 
-def show_vocabulary_list(vocabulary):
+def show_vocabulary(vocabulary):
     return '\n'.join(list(vocabulary.keys()))
 
 def remove_word_from_vocabulary():

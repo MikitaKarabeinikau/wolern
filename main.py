@@ -18,7 +18,8 @@ def main():
         print("2. Scan a text file for unknown words")
         print("3. Show vocabulary list")
         print("4. Take a quiz")
-        print("5. Exit")
+        print("5. Review new words")
+        print("6. Exit")
 
         choice = input("Choose an option: ")
 
@@ -43,6 +44,9 @@ def main():
             # call quiz module
             pass
         elif choice == "5":
+            while True:
+                pass
+        elif choice == "6":
             print("Goodbye!")
             break
         else:
