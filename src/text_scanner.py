@@ -2,6 +2,7 @@ import json
 import re
 from pathlib import Path
 
+from wolern.src.fetchers import get_frequency
 from wolern.src.utils import STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH
 from wolern.src.vocabulary import get_vocabulary, add_word_to_vocabulary
 
@@ -27,7 +28,7 @@ def load_txt_file(file_path,load_limit=0):
     if len(unknown_words) > load_limit != 0:
         to_vocabulary,rest = unknown_words[:load_limit],unknown_words[load_limit:]
         for word in to_vocabulary:
-            add_word_to_vocabulary(word)
+            add_word_to_vocabulary(word,get_vocabulary(STANDART_VOCABULARY_PATH))
         save_unknown_unchecked_words(rest)
     else:
         for word in unknown_words:
@@ -56,9 +57,13 @@ def find_unknown_words(words_in_text, known_words):
     return words_in_text-known_words
 
 def save_unknown_unchecked_words(words):
+    words_with_frequency = []
+    for word in words:
+        words_with_frequency.append({"word":word,"frequency":get_frequency(word)})
+
     STANDART_UNCHECKED_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     with STANDART_UNCHECKED_PATH.open("w", encoding="utf-8") as f:
-        json.dump(list(words), f, ensure_ascii=False, indent=2)
+        json.dump(words_with_frequency, f, ensure_ascii=False, indent=2)
 
     print(f"Saved {len(words)} words into {STANDART_VOCABULARY_PATH}")

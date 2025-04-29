@@ -15,7 +15,7 @@ from wolern.src.utils import current_datetime, parse_time_to_str, STANDART_VOCAB
 from wolern.src.fetchers import *
 
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"
-
+_cache_unchecked_words = json.loads(STANDART_UNCHECKED_PATH.read_text(encoding='utf-8'))
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
 
 def show_all_vocabularies():
@@ -39,7 +39,8 @@ def pop_word_from_vocabulary(word, vocabulary_name):
         print(f'Word : {word} was deleted. {vocabulary_name} is rewrote.')
         return word
 
-
+def get_unchecked_words_list():
+    return list(_cache_unchecked_words)
 
 
 def get_vocabulary(path):
@@ -49,6 +50,7 @@ def get_vocabulary(path):
         return {}
 
 def get_list_of_new_words(vocabulary):
+
     words = [word for word in vocabulary.keys() if vocabulary[word]['learning_stage'] == 0]
     return list(words)
 
@@ -74,6 +76,7 @@ def add_word_to_vocabulary(word,vocabulary):
     translation = get_translation(word)
     examples = get_examples_from_wordnet(word)
     level = get_cefr_level(word)
+    frequency = get_frequency(word)
 
     review_count = 0
     last_reviewed = parse_time_to_str(current_datetime())
@@ -102,7 +105,7 @@ def add_word_to_vocabulary(word,vocabulary):
         "audio_url": str(get_audio_path(word))
     }
     vocabulary[word["word"]] = word
-    vocabulary.write_text(json.dumps(vocabulary,ensure_ascii=False,indent=2),encoding="utf-8")
+    json.dumps(vocabulary,ensure_ascii=False,indent=2)
 
 def get_list_of_words(vocabulary):
     return list(vocabulary.keys())

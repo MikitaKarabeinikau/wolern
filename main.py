@@ -5,7 +5,7 @@ from pathlib import Path
 from wolern.src.fetchers import cefr_from_csv_to_json
 from wolern.src.text_scanner import load_text
 from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary, show_vocabulary_list, get_vocabulary, \
-    show_all_vocabularies
+    show_all_vocabularies, get_list_of_new_words, get_unchecked_words_list
 
 
 def main():
@@ -45,6 +45,14 @@ def main():
             # call quiz module
             pass
         elif choice == "5":
+            print(f'1. Review vocabulary words\n2. Review newly scanned (unchecked) words')
+            decision = input("Choose an option:")
+            if decision == "1":
+                vocabulary_name = input(f'Print name of the vocabulary')
+                vocabulary_path = Path(__file__).resolve().parent / "data" / "vocabularies" / vocabulary_name+'.json'
+                words = get_list_of_new_words(vocabulary_path)
+            elif decision == "2":
+                words = get_unchecked_words_list()
             while True:
                 pass
         elif choice == "6":

@@ -32,7 +32,7 @@ else:
 
 def build_frequency_dict():
     subtlex = pd.read_excel(PATH_TO_SUBTLEXus)
-    frequency_dict = dict(zip(subtlex['Word'], subtlex['SUBTLCD']))
+    frequency_dict = dict(zip(subtlex['Word'].str.lower(), subtlex['SUBTLCD']))
     with open(FREQUENCIES_CACHE_PATH,'w',encoding="utf-8") as f:
         json.dump(frequency_dict,f, ensure_ascii=False, indent=2)
     print(f'{FREQUENCIES_CACHE_PATH} file was created.')
@@ -44,15 +44,13 @@ _frequency_cache = json.loads(FREQUENCIES_CACHE_PATH.read_text(encoding="utf-8")
 
 
 
-def get_frequencies(word):
-   return _frequency_cache[word]
-
-def set_frequency(vocabulary,word):
-    pass
-
-
-
-
+def get_frequency(word):
+    try:
+        frequency = _frequency_cache[word]
+        return frequency
+    except Exception as e:
+        print(f'Couldnt find frequency for word {word}')
+        return None
 
 def _save_translation_cache():
     TRANSLATION_CACHE_PATH.write_text(
