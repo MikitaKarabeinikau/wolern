@@ -64,7 +64,8 @@ def get_word_input():
     word = input("Enter the English word").strip().lower()
     return word
 
-def add_word_to_vocabulary(word,vocabulary):
+def add_word_to_vocabulary(word,vocabulary_path):
+    vocabulary = get_vocabulary(vocabulary_path)
     if word in vocabulary.keys():
         print(f'Word : {word} already in vocabulary')
         return
@@ -104,8 +105,13 @@ def add_word_to_vocabulary(word,vocabulary):
         "tags": tags if tags else [],
         "audio_url": str(get_audio_path(word))
     }
+
+
     vocabulary[word["word"]] = word
-    json.dumps(vocabulary,ensure_ascii=False,indent=2)
+    with vocabulary_path.open("w", encoding="utf-8") as f:
+        json.dump(vocabulary, f, ensure_ascii=False, indent=2)
+
+    print(f"✅ Word '{word}' added to vocabulary.")
 
 def get_list_of_words(vocabulary):
     return list(vocabulary.keys())

@@ -28,7 +28,7 @@ def load_txt_file(file_path,load_limit=0):
     if len(unknown_words) > load_limit != 0:
         to_vocabulary,rest = unknown_words[:load_limit],unknown_words[load_limit:]
         for word in to_vocabulary:
-            add_word_to_vocabulary(word,get_vocabulary(STANDART_VOCABULARY_PATH))
+            add_word_to_vocabulary(word,STANDART_VOCABULARY_PATH)
         save_unknown_unchecked_words(rest)
     else:
         for word in unknown_words:

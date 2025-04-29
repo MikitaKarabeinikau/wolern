@@ -857,5 +857,233 @@
     ],
     "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\cushions_gt.mp3",
     "known": false
+  },
+  "influence": {
+    "word": "influence",
+    "translation": {
+      "russian": [
+        "влияние",
+        "воздействие"
+      ]
+    },
+    "synonyms": [
+      "tempt",
+      "work",
+      "act upon",
+      "charm",
+      "mold",
+      "shape",
+      "determine",
+      "regulate"
+    ],
+    "definition": {
+      "noun": [
+        "a power to affect persons or events especially power based on prestige etc",
+        "causing something without any direct or apparent effort",
+        "a cognitive factor that tends to have an effect on what you do",
+        "the effect of one thing (or person) on another",
+        "one having power to influence another"
+      ],
+      "verb": [
+        "have and exert influence or effect",
+        "shape or influence; give direction to",
+        "induce into action by using one's charm"
+      ]
+    },
+    "examples": [
+      [
+        "She charmed him into giving her all his money",
+        "he was a bad influence on the children",
+        "The artist's work influenced the young painter",
+        "mold public opinion",
+        "she was the most important influence in my life",
+        "the influence of mechanical action",
+        "her wishes had a great influence on his thinking",
+        "experience often determines ability",
+        "She worked on her friends to support the political candidate",
+        "used her parents' influence to get the job"
+      ]
+    ],
+    "part_of_speech": [
+      "noun",
+      "verb"
+    ],
+    "date_added": "29-04-2025 00:42:27",
+    "last_reviewed": "29-04-2025 00:42:30",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "29-04-2025 00:47:30",
+    "notes": "",
+    "level": "B2",
+    "tags": [
+      "phenomenon",
+      "attribute",
+      "communication",
+      "person",
+      "cognition",
+      "social",
+      "act"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\influence_gt.mp3"
+  },
+  "threw": {
+    "word": "threw",
+    "translation": {
+      "russian": [
+        "выбрасывать",
+        "устраивать",
+        "кидать",
+        "швыряться",
+        "швырять",
+        "бросок"
+      ]
+    },
+    "synonyms": [
+      "give",
+      "bedevil",
+      "shed",
+      "discombobulate",
+      "cast off",
+      "switch",
+      "have",
+      "bewilder",
+      "confound",
+      "bemuse",
+      "drop",
+      "project",
+      "cast",
+      "hold",
+      "fuddle",
+      "throw away",
+      "fox",
+      "confuse",
+      "thrust",
+      "throw",
+      "throw off",
+      "flip",
+      "contrive",
+      "befuddle",
+      "shake off",
+      "make",
+      "hurl"
+    ],
+    "definition": {
+      "verb": [
+        "propel through the air",
+        "move violently, energetically, or carelessly",
+        "get rid of",
+        "place or put with great energy",
+        "convey or communicate; of a smile, a look, a physical gesture",
+        "cause to go on or to be engaged or set in operation",
+        "put or send forth",
+        "to put into a state or activity hastily, suddenly, or carelessly",
+        "cause to be confused emotionally",
+        "utter with force; utter vehemently",
+        "organize or be responsible for",
+        "make on a potter's wheel",
+        "cause to fall off",
+        "throw (a die) out onto a flat surface",
+        "be confusing or perplexing to; cause to be unable to think clearly"
+      ]
+    },
+    "examples": [
+      [
+        "cast a warm light",
+        "hold a reception",
+        "This question befuddled even the teacher",
+        "throw the lever",
+        "cast a spell",
+        "hurl insults",
+        "Throw a six",
+        "throw a frisbee",
+        "Throw a glance",
+        "This question completely threw me",
+        "give a course",
+        "switch on the light",
+        "Jane threw dinner together",
+        "throw accusations at someone",
+        "she threw a beautiful teapot",
+        "The horse threw its inexperienced rider",
+        "She threw herself forwards",
+        "She threw the flashlight beam into the corner",
+        "She threw the blanket around the child",
+        "shed your clothes",
+        "throw the car into reverse",
+        "These questions confuse even the experts",
+        "She gave me a dirty look",
+        "The setting sun threw long shadows",
+        "have, throw, or make a party",
+        "he shed his image as a pushy boss",
+        "thrust the money in the hands of the beggar"
+      ]
+    ],
+    "part_of_speech": [
+      "verb"
+    ],
+    "date_added": "29-04-2025 00:42:31",
+    "last_reviewed": "29-04-2025 00:42:32",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "29-04-2025 00:47:32",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "creation",
+      "communication",
+      "contact",
+      "cognition",
+      "motion",
+      "emotion"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\threw_gt.mp3"
+  },
+  "awe": {
+    "word": "awe",
+    "translation": {
+      "russian": [
+        "трепет",
+        "благоговение"
+      ]
+    },
+    "synonyms": [
+      "reverence",
+      "veneration",
+      "fear"
+    ],
+    "definition": {
+      "noun": [
+        "an overwhelming feeling of wonder or admiration",
+        "a feeling of profound respect for someone or something"
+      ],
+      "verb": [
+        "inspire awe in"
+      ]
+    },
+    "examples": [
+      [
+        "The famous professor awed the undergraduates",
+        "he stared over the edge with a feeling of awe",
+        "his respect for the law bordered on veneration",
+        "the fear of God",
+        "the French treat food with gentle reverence",
+        "the Chinese reverence for the dead"
+      ]
+    ],
+    "part_of_speech": [
+      "noun",
+      "verb"
+    ],
+    "date_added": "29-04-2025 00:42:33",
+    "last_reviewed": "29-04-2025 00:42:34",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "29-04-2025 00:47:34",
+    "notes": "",
+    "level": "C1",
+    "tags": [
+      "feeling",
+      "emotion"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\awe_gt.mp3"
   }
 }
