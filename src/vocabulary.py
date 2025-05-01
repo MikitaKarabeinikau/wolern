@@ -11,6 +11,7 @@ import nltk
 from pathlib import Path
 import json
 from wolern.src.sound_manager import generate_audio, get_audio_path
+from wolern.src.unchecked import update_weirds_word
 from wolern.src.utils import current_datetime, parse_time_to_str, STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH
 from wolern.src.fetchers import *
 
@@ -20,9 +21,9 @@ _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
 
 def show_all_vocabularies():
     """List all vocabulary files."""
-    vocabulary = os.listdir(Path(__file__).resolve().parent.parent / "data" /"vocabularies")
-    print('\n'.join(list(vocabulary)))
-    return vocabulary
+    vocabularys = os.listdir(Path(__file__).resolve().parent.parent / "data" /"vocabularies")
+    print('\n'.join(list(vocabularys)))
+    return vocabularys
 
 def pop_word_from_vocabulary(word, vocabulary_name):
     vocabulary = get_vocabulary(vocabulary_name)  # 1. Load vocab from file
@@ -39,9 +40,15 @@ def pop_word_from_vocabulary(word, vocabulary_name):
         print(f'Word : {word} was deleted. {vocabulary_name} is rewrote.')
         return word
 
-def get_unchecked_words_list():
-    return list(_cache_unchecked_words)
-
+def get_dict_of_new_words_with_frequency(vocabulary):
+    dct = {}
+    for word,info in vocabulary.items():
+        if info.get('learning_stage',0) == 0:
+            if info['frequency'] is not None:
+                dct[word] = info.get("frequency",0.0)
+            else:
+                pass
+    return dct
 
 def get_vocabulary(path):
     if path.exists():
@@ -49,10 +56,7 @@ def get_vocabulary(path):
     else:
         return {}
 
-def get_list_of_new_words(vocabulary):
 
-    words = [word for word in vocabulary.keys() if vocabulary[word]['learning_stage'] == 0]
-    return list(words)
 
 def get_cefr_level(word):
     return _cefr_cache.get(word.lower(),"UNKNOWN")
@@ -103,16 +107,44 @@ def add_word_to_vocabulary(word,vocabulary_path,learning_stage=0):
         "notes": "",
         "level": level,
         "tags": tags if tags else [],
-        "audio_url": str(get_audio_path(word))
+        "audio_url": str(get_audio_path(word)),
+        'frequency':frequency
+
     }
+    warnings = find_warnings(word)
 
+    if len(warnings) != 0:
+        update_weirds_word(word['word'],warnings)
+    else:
+        vocabulary[word["word"]] = word
+        with vocabulary_path.open("w", encoding="utf-8") as f:
+            json.dump(vocabulary, f, ensure_ascii=False, indent=2)
+        print(f"✅ Word '{word}' added to vocabulary.")
 
-    vocabulary[word["word"]] = word
-    with vocabulary_path.open("w", encoding="utf-8") as f:
-        json.dump(vocabulary, f, ensure_ascii=False, indent=2)
+def find_warnings(word_data):
+    """
+    Inspect word data for missing or suspicious fields.
+    Returns a list of warning messages.
+    """
 
-    print(f"✅ Word '{word}' added to vocabulary.")
+    warnings = []
 
+    if not word_data.get("translation"):
+        warnings.append("Missing translation")
+    if not word_data.get("synonyms"):
+        warnings.append("No synonyms found")
+    if not word_data.get("definition"):
+        warnings.append("No definitions available")
+    if not word_data.get("examples"):
+        warnings.append("No example sentences")
+    if not word_data.get("part_of_speech"):
+        warnings.append("Missing part of speech")
+    if not word_data.get("frequency"):
+        warnings.append("Missing frequency")
+    if not word_data.get("level"):
+        warnings.append("No CEFR level found")
+
+    return warnings
 def get_list_of_words(vocabulary):
     return list(vocabulary.keys())
 

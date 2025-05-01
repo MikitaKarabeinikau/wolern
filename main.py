@@ -4,8 +4,9 @@ from pathlib import Path
 
 from wolern.src.fetchers import cefr_from_csv_to_json
 from wolern.src.text_scanner import load_text
-from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary, show_vocabulary_list, get_vocabulary, \
-    show_all_vocabularies, get_list_of_new_words, get_unchecked_words_list
+from wolern.src.utils import STANDART_VOCABULARY_PATH
+from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary, get_vocabulary, \
+    show_all_vocabularies, get_list_of_new_words, show_vocabulary
 
 
 def main():
@@ -18,14 +19,14 @@ def main():
         print("2. Scan a text file for unknown words")
         print("3. Show vocabulary list")
         print("4. Take a quiz")
-        print("5. Review new words")
+        print("5. Review   words")
         print("6. Exit")
 
         choice = input("Choose an option: ")
 
         if choice == "1":
             # call add_word_to_vocabulary()
-            add_word_to_vocabulary(get_word_input())
+            add_word_to_vocabulary(get_word_input(),get_vocabulary(STANDART_VOCABULARY_PATH),1)
         elif choice == "2":
             # call text scanning logic
             limit = int(input("How many new words you want to add\nPrint zero to no limit\Write a number : "))
@@ -38,9 +39,9 @@ def main():
             # display saved words
             vocabulary = input(f'write a name of vocabulary to show there contant :{show_all_vocabularies()}\nPress Enter to show defualt vocabulary')
             if len(vocabulary) == 0:
-                show_vocabulary_list(get_vocabulary())
+                show_vocabulary(get_vocabulary())
             else:
-                show_vocabulary_list(get_vocabulary(vocabulary))
+                show_vocabulary(get_vocabulary(vocabulary))
         elif choice == "4":
             # call quiz module
             pass

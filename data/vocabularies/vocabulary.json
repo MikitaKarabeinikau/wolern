@@ -1,1089 +1,578 @@
 {
-  "contribute": {
-    "word": "contribute",
+  "resettling": {
+    "word": "resettling",
     "translation": {
-      "russian": [
-        "содействовать"
-      ]
+      "russian": null
     },
     "synonyms": [
-      "impart",
-      "bestow",
-      "give",
-      "lead",
-      "conduce",
-      "put up",
-      "chip in",
-      "bring",
-      "lend",
-      "add",
-      "kick in"
+      "resettle"
     ],
     "definition": {
       "verb": [
-        "bestow a quality on",
-        "contribute to some cause",
-        "be conducive to",
-        "provide"
+        "settle in a new place"
       ]
     },
     "examples": [
       [
-        "She brings a special atmosphere to our meetings",
-        "Her presence lends a certain cachet to the company",
-        "The use of computers in the classroom lead to better writing",
-        "The city has to put up half the required amount",
-        "I gave at the office",
-        "The music added a lot to the play",
-        "This adds a light note to the program"
+        "The immigrants had to resettle"
       ]
     ],
     "part_of_speech": [
       "verb"
     ],
-    "date_added": "26-04-2025 16:27:50",
-    "last_reviewed": "26-04-2025 16:27:52",
+    "date_added": "01-05-2025 22:58:23",
+    "last_reviewed": "01-05-2025 22:58:25",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 16:32:52",
-    "notes": "",
-    "level": "B1",
-    "tags": [
-      "social",
-      "possession"
-    ],
-    "audio_url": "..\\data\\audio\\contribute_gt.mp3",
-    "known": false
-  },
-  "class": {
-    "word": "class",
-    "translation": {
-      "russian": [
-        "класс",
-        "урок",
-        "занятие"
-      ]
-    },
-    "synonyms": [
-      "division",
-      "course",
-      "course of study",
-      "course of instruction",
-      "stratum",
-      "sort",
-      "family",
-      "assort",
-      "socio-economic class",
-      "classify",
-      "category",
-      "separate",
-      "form",
-      "sort out",
-      "grade",
-      "year",
-      "social class"
-    ],
-    "definition": {
-      "noun": [
-        "a collection of things sharing a common attribute",
-        "a body of students who are taught together",
-        "people having the same social, economic, or educational status",
-        "education imparted in a series of lessons or meetings",
-        "a league ranked by quality",
-        "a body of students who graduate together",
-        "(biology) a taxonomic group containing one or more orders",
-        "elegance in dress or behavior"
-      ],
-      "verb": [
-        "arrange or order by classes or categories"
-      ]
-    },
-    "examples": [
-      [
-        "she has a lot of class",
-        "he took a course in basket weaving",
-        "Princeton is in the NCAA Division 1-AA",
-        "there are two classes of detergents",
-        "the class of '97",
-        "early morning classes are always sleepy",
-        "she was in my year at Hoehandle High",
-        "flirting is not unknown in college classes",
-        "the working class",
-        "How would you classify these pottery shards--are they prehistoric?",
-        "an emerging professional class",
-        "he played baseball in class D for two years"
-      ]
-    ],
-    "part_of_speech": [
-      "noun",
-      "verb"
-    ],
-    "date_added": "26-04-2025 18:59:13",
-    "last_reviewed": "26-04-2025 18:59:16",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 19:04:16",
-    "notes": "",
-    "level": "C1",
-    "tags": [
-      "cognition",
-      "act",
-      "group",
-      "attribute"
-    ],
-    "audio_url": "..\\data\\audio\\class_gt.mp3",
-    "known": false
-  },
-  "possibility": {
-    "word": "possibility",
-    "translation": {
-      "russian": [
-        "возможность"
-      ]
-    },
-    "synonyms": [
-      "possible action",
-      "opening",
-      "possibleness",
-      "theory",
-      "hypothesis"
-    ],
-    "definition": {
-      "noun": [
-        "a future prospect or potential",
-        "capability of existing or happening or being true",
-        "a tentative insight into the natural world; a concept that is not yet verified but that if true would explain certain facts or phenomena",
-        "a possible alternative"
-      ]
-    },
-    "examples": [
-      [
-        "bankruptcy is always a possibility",
-        "he proposed a fresh theory of alkalis that later was accepted in chemical practices",
-        "this room has great possibilities",
-        "a scientific hypothesis that survives experimental testing becomes a scientific theory",
-        "there is a possibility that his sense of smell has been impaired"
-      ]
-    ],
-    "part_of_speech": [
-      "noun"
-    ],
-    "date_added": "26-04-2025 19:03:36",
-    "last_reviewed": "26-04-2025 19:03:38",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 19:08:38",
-    "notes": "",
-    "level": "B1",
-    "tags": [
-      "cognition",
-      "state"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\possibility_gt.mp3",
-    "known": false
-  },
-  "uselessness": {
-    "word": "uselessness",
-    "translation": {
-      "russian": [
-        "бесполезность",
-        "бесполезный",
-        "непригодный"
-      ]
-    },
-    "synonyms": [
-      "unusefulness",
-      "inutility"
-    ],
-    "definition": {
-      "noun": [
-        "the quality of having no practical use"
-      ]
-    },
-    "examples": [],
-    "part_of_speech": [
-      "noun"
-    ],
-    "date_added": "26-04-2025 23:49:13",
-    "last_reviewed": "26-04-2025 23:49:16",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:16",
+    "time_to_repeat": "01-05-2025 23:03:25",
     "notes": "",
     "level": "UNKNOWN",
     "tags": [
-      "attribute"
+      "change"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\uselessness_gt.mp3",
-    "known": false
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\resettling_gt.mp3",
+    "frequency": null
   },
-  "sleeve": {
-    "word": "sleeve",
+  "days": {
+    "word": "days",
     "translation": {
       "russian": [
-        "рукав",
-        "втулка"
+        "дни",
+        "день",
+        "сутки"
       ]
     },
     "synonyms": [
-      "arm"
+      "twenty-four hour period",
+      "sidereal day",
+      "years",
+      "solar day",
+      "mean solar day",
+      "24-hour interval",
+      "twenty-four hours",
+      "day",
+      "Day",
+      "Clarence Day",
+      "Clarence Shepard Day Jr.",
+      "daylight",
+      "daytime"
     ],
     "definition": {
       "noun": [
-        "the part of a garment that is attached at the armhole and that provides a cloth covering for the arm",
-        "small case into which an object fits"
+        "the time during which someone's life continues",
+        "time for Earth to make a complete rotation on its axis",
+        "some point or period in time",
+        "a day assigned to a particular purpose or observance",
+        "the time after sunrise and before sunset while it is light outside",
+        "the recurring hours when you are not sleeping (especially those when you are working)",
+        "an era of existence or influence",
+        "the period of time taken by a particular planet (e.g. Mars) to make a complete rotation on its axis",
+        "the time for one complete rotation of the earth relative to a particular star, about 4 minutes shorter than a mean solar day",
+        "a period of opportunity",
+        "United States writer best known for his autobiographical works (1874-1935)"
       ]
     },
-    "examples": [],
+    "examples": [
+      [
+        "every dog has his day",
+        "he was a successful pianist in his day",
+        "in the days of the Roman Empire",
+        "it was a busy day on the stock exchange",
+        "Mother's Day",
+        "my day began early this morning",
+        "it should arrive any day now",
+        "she called it a day and went to bed",
+        "these days it is not unusual",
+        "in his final years",
+        "those were the days",
+        "the monarch's last days",
+        "it is easier to make the repairs in the daytime",
+        "the dawn turned night into day",
+        "after that day she never trusted him again",
+        "they put on two performances every day",
+        "he deserves his day in court",
+        "how long is a day on Jupiter?",
+        "in the day of the dinosaurs",
+        "there are 30,000 passengers per day",
+        "two days later they left",
+        "in the days of sailing ships"
+      ]
+    ],
     "part_of_speech": [
       "noun"
     ],
-    "date_added": "26-04-2025 23:49:17",
-    "last_reviewed": "26-04-2025 23:49:18",
+    "date_added": "01-05-2025 22:58:27",
+    "last_reviewed": "01-05-2025 22:58:28",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:18",
+    "time_to_repeat": "01-05-2025 23:03:28",
     "notes": "",
-    "level": "B1",
+    "level": "UNKNOWN",
     "tags": [
+      "state",
+      "time",
+      "person"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\days_gt.mp3",
+    "frequency": 69.1583214115403
+  },
+  "hall": {
+    "word": "hall",
+    "translation": {
+      "russian": [
+        "зал",
+        "холл"
+      ]
+    },
+    "synonyms": [
+      "manor hall",
+      "vestibule",
+      "Marguerite Radclyffe Hall",
+      "student residence",
+      "residence hall",
+      "entrance hall",
+      "Hall",
+      "antechamber",
+      "lobby",
+      "G. Stanley Hall",
+      "foyer",
+      "dorm",
+      "mansion house",
+      "hallway",
+      "residence",
+      "mansion",
+      "dormitory",
+      "manse",
+      "anteroom",
+      "Charles Francis Hall",
+      "Asaph Hall",
+      "Granville Stanley Hall",
+      "Radclyffe Hall",
+      "Charles Martin Hall"
+    ],
+    "definition": {
+      "noun": [
+        "an interior passage or corridor onto which rooms open",
+        "a large entrance or reception room or area",
+        "a large room for gatherings or entertainment",
+        "a college or university building containing living quarters for students",
+        "the large room of a manor or castle",
+        "English writer whose novel about a lesbian relationship was banned in Britain for many years (1883-1943)",
+        "United States child psychologist whose theories of child psychology strongly influenced educational psychology (1844-1924)",
+        "United States chemist who developed an economical method of producing aluminum from bauxite (1863-1914)",
+        "United States explorer who led three expeditions to the Arctic (1821-1871)",
+        "United States astronomer who discovered Phobos and Deimos (the two satellites of Mars) (1829-1907)",
+        "a large and imposing house",
+        "a large building used by a college or university for teaching or research",
+        "a large building for meetings or entertainment"
+      ]
+    },
+    "examples": [
+      [
+        "halls of learning",
+        "pool hall",
+        "lecture hall",
+        "the elevators were at the end of the hall"
+      ]
+    ],
+    "part_of_speech": [
+      "noun"
+    ],
+    "date_added": "01-05-2025 22:58:29",
+    "last_reviewed": "01-05-2025 22:58:30",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:03:30",
+    "notes": "",
+    "level": "A1",
+    "tags": [
+      "person",
       "artifact"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\sleeve_gt.mp3",
-    "known": false
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\hall_gt.mp3",
+    "frequency": 18.752980448259418
   },
-  "groans": {
-    "word": "groans",
+  "indians": {
+    "word": "indians",
     "translation": {
       "russian": [
-        "стоны",
-        "стон",
-        "скрип"
+        "индейцы",
+        "индийцы",
+        "индийский"
       ]
     },
     "synonyms": [
-      "groan",
-      "moan"
+      "Red Indian",
+      "Amerind",
+      "American Indian",
+      "American-Indian language",
+      "Indian",
+      "Amerindian language"
     ],
     "definition": {
       "noun": [
-        "an utterance expressing pain or disapproval"
-      ],
-      "verb": [
-        "indicate pain, discomfort, or displeasure"
+        "a member of the race of people living in America when Europeans arrived",
+        "a native or inhabitant of India",
+        "any of the languages spoken by Amerindians"
       ]
     },
-    "examples": [
-      [
-        "The students groaned when the professor got out the exam booklets",
-        "The ancient door soughed when opened"
-      ]
-    ],
+    "examples": [],
     "part_of_speech": [
-      "verb",
       "noun"
     ],
-    "date_added": "26-04-2025 23:49:19",
-    "last_reviewed": "26-04-2025 23:49:20",
+    "date_added": "01-05-2025 22:58:31",
+    "last_reviewed": "01-05-2025 22:58:31",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:20",
+    "time_to_repeat": "01-05-2025 23:03:31",
     "notes": "",
     "level": "UNKNOWN",
     "tags": [
-      "communication"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\groans_gt.mp3",
-    "known": false
-  },
-  "slander": {
-    "word": "slander",
-    "translation": {
-      "russian": [
-        "клевета",
-        "злословие",
-        "оклеветать",
-        "оболгать"
-      ]
-    },
-    "synonyms": [
-      "calumniate",
-      "denigration",
-      "aspersion",
-      "sully",
-      "besmirch",
-      "smirch",
-      "asperse",
-      "defamation",
-      "defame",
-      "denigrate",
-      "calumny",
-      "smear"
-    ],
-    "definition": {
-      "noun": [
-        "words falsely spoken that damage the reputation of another",
-        "an abusive attack on a person's character or good name"
-      ],
-      "verb": [
-        "charge falsely or with malicious intent; attack the good name and reputation of someone"
-      ]
-    },
-    "examples": [
-      [
-        "The journalists have defamed me!",
-        "The article in the paper sullied my reputation"
-      ]
-    ],
-    "part_of_speech": [
-      "verb",
-      "noun"
-    ],
-    "date_added": "26-04-2025 23:49:21",
-    "last_reviewed": "26-04-2025 23:49:22",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:22",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "communication",
-      "act"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\slander_gt.mp3",
-    "known": false
-  },
-  "remark": {
-    "word": "remark",
-    "translation": {
-      "russian": [
-        "замечание",
-        "примечание",
-        "комментарий"
-      ]
-    },
-    "synonyms": [
-      "observation",
-      "mention",
-      "point out",
-      "note",
-      "comment",
-      "input",
-      "notice",
-      "observe"
-    ],
-    "definition": {
-      "noun": [
-        "a statement that expresses a personal opinion or belief or adds information",
-        "explicit notice"
-      ],
-      "verb": [
-        "make mention of",
-        "make or write a comment on"
-      ]
-    },
-    "examples": [
-      [
-        "They noted that it was a fine day to go sailing",
-        "She observed that his presentation took up too much time",
-        "he commented the paper of his colleague",
-        "it passed without remark",
-        "from time to time she contributed a personal comment on his account"
-      ]
-    ],
-    "part_of_speech": [
-      "verb",
-      "noun"
-    ],
-    "date_added": "26-04-2025 23:49:23",
-    "last_reviewed": "26-04-2025 23:49:24",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:24",
-    "notes": "",
-    "level": "B2",
-    "tags": [
-      "communication",
-      "cognition"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\remark_gt.mp3",
-    "known": false
-  },
-  "chirruping": {
-    "word": "chirruping",
-    "translation": {
-      "russian": null
-    },
-    "synonyms": [
-      "chirrup",
-      "cheep",
-      "peep",
-      "chirp"
-    ],
-    "definition": {
-      "verb": [
-        "make high-pitched sounds"
-      ]
-    },
-    "examples": [
-      [
-        "the birds were chirping in the bushes"
-      ]
-    ],
-    "part_of_speech": [
-      "verb"
-    ],
-    "date_added": "26-04-2025 23:49:25",
-    "last_reviewed": "26-04-2025 23:49:26",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:26",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "communication"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\chirruping_gt.mp3",
-    "known": false
-  },
-  "loves": {
-    "word": "loves",
-    "translation": {
-      "russian": [
-        "любовь",
-        "любить"
-      ]
-    },
-    "synonyms": [
-      "make out",
-      "roll in the hay",
-      "fuck",
-      "screw",
-      "have intercourse",
-      "sleep with",
-      "bonk",
-      "have sex",
-      "eff",
-      "sleep together",
-      "have it away",
-      "dearest",
-      "love life",
-      "jazz",
-      "be intimate",
-      "do it",
-      "have a go at it",
-      "passion",
-      "lovemaking",
-      "enjoy",
-      "honey",
-      "have it off",
-      "dear",
-      "making love",
-      "get laid",
-      "love",
-      "lie with",
-      "sexual love",
-      "bed",
-      "know",
-      "bang",
-      "hump",
-      "get it on",
-      "erotic love",
-      "make love",
-      "beloved"
-    ],
-    "definition": {
-      "noun": [
-        "a strong positive emotion of regard and affection",
-        "any object of warm affection or devotion",
-        "a beloved person; used as terms of endearment",
-        "a deep feeling of sexual desire and attraction",
-        "a score of zero in tennis or squash",
-        "sexual activities (often including sexual intercourse) between two people"
-      ],
-      "verb": [
-        "have a great affection or liking for",
-        "get pleasure from",
-        "be enamored or in love with",
-        "have sexual intercourse with"
-      ]
-    },
-    "examples": [
-      [
-        "it was 40 love",
-        "she was his first love",
-        "the theater was her first love",
-        "children need a lot of love",
-        "She loves her husband deeply",
-        "I love cooking",
-        "This student sleeps with everyone in her dorm",
-        "he has a passion for cock fighting",
-        "his lovemaking disgusted her",
-        "Adam knew Eve",
-        "he hadn't had any love in months",
-        "their love left them indifferent to their surroundings",
-        "Were you ever intimate with this man?",
-        "his love for his work",
-        "I love French food",
-        "She loves her boss and works hard for him",
-        "he has a very complicated love life"
-      ]
-    ],
-    "part_of_speech": [
-      "verb",
-      "noun"
-    ],
-    "date_added": "26-04-2025 23:49:27",
-    "last_reviewed": "26-04-2025 23:49:28",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:28",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "quantity",
       "person",
-      "feeling",
-      "act",
-      "emotion",
-      "cognition",
-      "contact"
+      "communication"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\loves_gt.mp3",
-    "known": false
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\indians_gt.mp3",
+    "frequency": 0.9418216499761565
   },
-  "bought": {
-    "word": "bought",
+  "rested": {
+    "word": "rested",
     "translation": {
       "russian": [
-        "купленный",
-        "приобретённый",
-        "покупать"
+        "отдохнувший",
+        "отдыхать",
+        "лежать",
+        "успокоиться",
+        "отдых",
+        "покой"
       ]
     },
     "synonyms": [
-      "grease one's palms",
-      "bribe",
-      "purchase",
-      "buy",
-      "corrupt"
+      "unweary",
+      "refreshed",
+      "fresh",
+      "roost",
+      "catch one's breath",
+      "reside",
+      "rest",
+      "stay",
+      "repose",
+      "untired",
+      "lie",
+      "invigorated",
+      "pillow",
+      "breathe",
+      "remain",
+      "perch",
+      "reinvigorated",
+      "unwearied",
+      "take a breather"
     ],
     "definition": {
       "verb": [
-        "obtain by purchase; acquire by means of a financial transaction",
-        "make illegal payments to in exchange for favors or influence",
-        "be worth or be capable of buying",
-        "acquire by trade or sacrifice or exchange",
-        "accept as true"
-      ]
-    },
-    "examples": [
-      [
-        "The conglomerate acquired a new company",
-        "This judge can be bought",
-        "I can't buy this story",
-        "This sum will buy you a ride on the train",
-        "She buys for the big department store",
-        "She wanted to buy his love with her dedication to him and his work",
-        "The family purchased a new car"
-      ]
-    ],
-    "part_of_speech": [
-      "verb"
-    ],
-    "date_added": "26-04-2025 23:49:31",
-    "last_reviewed": "26-04-2025 23:49:32",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:32",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "stative",
-      "cognition",
-      "possession"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\bought_gt.mp3",
-    "known": false
-  },
-  "moorish": {
-    "word": "moorish",
-    "translation": {
-      "russian": [
-        "мавританский"
-      ]
-    },
-    "synonyms": [
-      "moorish architecture",
-      "Moresque",
-      "Moorish architecture",
-      "Moorish",
-      "moresque"
-    ],
-    "definition": {
-      "noun": [
-        "a style of architecture common in Spain from the 13th to 16th centuries; characterized by horseshoe-shaped arches"
+        "not move; be in a resting position",
+        "take a short break from one's activities in order to relax",
+        "give a rest to",
+        "have a place in relation to something else",
+        "be at rest",
+        "stay the same; remain in a certain state",
+        "be inherent or innate in",
+        "put something in a resting position, as for support or steadying",
+        "sit, as on a branch",
+        "rest on or as if on a pillow",
+        "be inactive, refrain from acting"
       ],
       "adjective": [
-        "relating to or characteristic of the Moors"
+        "not tired; refreshed as by sleeping or relaxing"
       ]
     },
     "examples": [
       [
-        "Moorish courtyard"
+        "He remained unmoved by her tears",
+        "The birds perched high in the tree",
+        "The bad weather continued for another week",
+        "pillow your head",
+        "The responsibility rests with the Allies",
+        "He rested his bad leg",
+        "The committee is resting over the summer",
+        "The dress remained wet after repeated attempts to dry it",
+        "Rest your head on my shoulder",
+        "The fate of Bosnia lies in the hands of the West",
+        "came back rested from her vacation",
+        "rest assured",
+        "Rest the dogs for a moment",
+        "stay alone"
       ]
     ],
     "part_of_speech": [
-      "noun",
-      "adjective"
+      "adjective",
+      "verb"
     ],
-    "date_added": "26-04-2025 23:49:33",
-    "last_reviewed": "26-04-2025 23:49:34",
-    "review_count": 0,
-    "learning_stage": 1,
-    "time_to_repeat": "26-04-2025 23:54:34",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "cognition",
-      "pert"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\moorish_gt.mp3",
-    "known": false
-  },
-  "frostlike": {
-    "word": "frostlike",
-    "translation": {
-      "russian": null
-    },
-    "synonyms": [],
-    "definition": [],
-    "examples": [],
-    "part_of_speech": [],
-    "date_added": "26-04-2025 23:49:35",
-    "last_reviewed": "26-04-2025 23:49:36",
-    "review_count": 0,
-    "learning_stage": 5,
-    "time_to_repeat": "26-04-2025 23:54:36",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\frostlike_gt.mp3",
-    "known": false
-  },
-  "grasshopper": {
-    "word": "grasshopper",
-    "translation": {
-      "russian": [
-        "кузнечик"
-      ]
-    },
-    "synonyms": [
-      "hopper"
-    ],
-    "definition": {
-      "noun": [
-        "terrestrial plant-eating insect with hind legs adapted for leaping",
-        "a cocktail made of creme de menthe and cream (sometimes with creme de cacao)"
-      ]
-    },
-    "examples": [],
-    "part_of_speech": [
-      "noun"
-    ],
-    "date_added": "26-04-2025 23:49:37",
-    "last_reviewed": "26-04-2025 23:49:38",
+    "date_added": "01-05-2025 22:58:33",
+    "last_reviewed": "01-05-2025 22:58:33",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:38",
+    "time_to_repeat": "01-05-2025 23:03:33",
     "notes": "",
     "level": "UNKNOWN",
     "tags": [
-      "food",
-      "animal"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\grasshopper_gt.mp3",
-    "known": false
-  },
-  "maria": {
-    "word": "maria",
-    "translation": {
-      "russian": [
-        "Мария"
-      ]
-    },
-    "synonyms": [
-      "Calophyllum longifolium",
-      "Maria",
-      "calophyllum longifolium",
-      "mare"
-    ],
-    "definition": {
-      "noun": [
-        "a dark region of considerable extent on the surface of the moon",
-        "valuable timber tree of Panama"
-      ]
-    },
-    "examples": [],
-    "part_of_speech": [
-      "noun"
-    ],
-    "date_added": "26-04-2025 23:49:39",
-    "last_reviewed": "26-04-2025 23:49:40",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:40",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "object",
-      "plant"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\maria_gt.mp3",
-    "known": false
-  },
-  "foil": {
-    "word": "foil",
-    "translation": {
-      "russian": [
-        "фольга",
-        "рапира"
-      ]
-    },
-    "synonyms": [
-      "spoil",
-      "transparency",
-      "baffle",
-      "cross",
-      "hydrofoil",
-      "enhancer",
-      "bilk",
-      "frustrate",
-      "thwart",
-      "queer",
-      "scotch"
-    ],
-    "definition": {
-      "noun": [
-        "a piece of thin and flexible sheet metal",
-        "anything that serves by contrast to call attention to another thing's good qualities",
-        "a device consisting of a flat or curved piece (as a metal plate) so that its surface reacts to the water it is passing through",
-        "picture consisting of a positive photograph or drawing on a transparent base; viewed with a projector",
-        "a light slender flexible sword tipped by a button"
-      ],
-      "verb": [
-        "enhance by contrast",
-        "hinder or prevent (the efforts, plans, or desires) of",
-        "cover or back with foil"
-      ]
-    },
-    "examples": [
-      [
-        "foil your opponent",
-        "In this picture, the figures are foiled against the background",
-        "foil mirrors",
-        "What ultimately frustrated every challenger was Ruth's amazing September surge",
-        "the photographic film was wrapped in foil",
-        "pretty girls like plain friends as foils",
-        "the fins of a fish act as hydrofoils"
-      ]
-    ],
-    "part_of_speech": [
-      "verb",
-      "noun"
-    ],
-    "date_added": "26-04-2025 23:49:41",
-    "last_reviewed": "26-04-2025 23:49:41",
-    "review_count": 0,
-    "learning_stage": 3,
-    "time_to_repeat": "26-04-2025 23:54:41",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
+      "change",
+      "social",
+      "all",
       "stative",
-      "cognition",
-      "social",
-      "artifact",
-      "contact"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\foil_gt.mp3",
-    "known": false
-  },
-  "cushions": {
-    "word": "cushions",
-    "translation": {
-      "russian": [
-        "подушки",
-        "подушечки",
-        "подушка"
-      ]
-    },
-    "synonyms": [
-      "cushion",
-      "shock",
-      "soften",
-      "shock absorber",
-      "buffer"
-    ],
-    "definition": {
-      "noun": [
-        "a mechanical damper; absorbs energy of sudden impulses",
-        "the layer of air that supports a hovercraft or similar vehicle",
-        "a soft bag filled with air or a mass of padding such as feathers or foam rubber etc."
-      ],
-      "verb": [
-        "protect from impact"
-      ]
-    },
-    "examples": [
-      [
-        "cushion the blow",
-        "the old car needed a new set of shocks"
-      ]
-    ],
-    "part_of_speech": [
-      "verb",
-      "noun"
-    ],
-    "date_added": "26-04-2025 23:49:43",
-    "last_reviewed": "26-04-2025 23:49:44",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "26-04-2025 23:54:44",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "artifact",
-      "contact"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\cushions_gt.mp3",
-    "known": false
-  },
-  "influence": {
-    "word": "influence",
-    "translation": {
-      "russian": [
-        "влияние",
-        "воздействие"
-      ]
-    },
-    "synonyms": [
-      "tempt",
-      "work",
-      "act upon",
-      "charm",
-      "mold",
-      "shape",
-      "determine",
-      "regulate"
-    ],
-    "definition": {
-      "noun": [
-        "a power to affect persons or events especially power based on prestige etc",
-        "causing something without any direct or apparent effort",
-        "a cognitive factor that tends to have an effect on what you do",
-        "the effect of one thing (or person) on another",
-        "one having power to influence another"
-      ],
-      "verb": [
-        "have and exert influence or effect",
-        "shape or influence; give direction to",
-        "induce into action by using one's charm"
-      ]
-    },
-    "examples": [
-      [
-        "She charmed him into giving her all his money",
-        "he was a bad influence on the children",
-        "The artist's work influenced the young painter",
-        "mold public opinion",
-        "she was the most important influence in my life",
-        "the influence of mechanical action",
-        "her wishes had a great influence on his thinking",
-        "experience often determines ability",
-        "She worked on her friends to support the political candidate",
-        "used her parents' influence to get the job"
-      ]
-    ],
-    "part_of_speech": [
-      "noun",
-      "verb"
-    ],
-    "date_added": "29-04-2025 00:42:27",
-    "last_reviewed": "29-04-2025 00:42:30",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "29-04-2025 00:47:30",
-    "notes": "",
-    "level": "B2",
-    "tags": [
-      "phenomenon",
-      "attribute",
-      "communication",
-      "person",
-      "cognition",
-      "social",
-      "act"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\influence_gt.mp3"
-  },
-  "threw": {
-    "word": "threw",
-    "translation": {
-      "russian": [
-        "выбрасывать",
-        "устраивать",
-        "кидать",
-        "швыряться",
-        "швырять",
-        "бросок"
-      ]
-    },
-    "synonyms": [
-      "give",
-      "bedevil",
-      "shed",
-      "discombobulate",
-      "cast off",
-      "switch",
-      "have",
-      "bewilder",
-      "confound",
-      "bemuse",
-      "drop",
-      "project",
-      "cast",
-      "hold",
-      "fuddle",
-      "throw away",
-      "fox",
-      "confuse",
-      "thrust",
-      "throw",
-      "throw off",
-      "flip",
-      "contrive",
-      "befuddle",
-      "shake off",
-      "make",
-      "hurl"
-    ],
-    "definition": {
-      "verb": [
-        "propel through the air",
-        "move violently, energetically, or carelessly",
-        "get rid of",
-        "place or put with great energy",
-        "convey or communicate; of a smile, a look, a physical gesture",
-        "cause to go on or to be engaged or set in operation",
-        "put or send forth",
-        "to put into a state or activity hastily, suddenly, or carelessly",
-        "cause to be confused emotionally",
-        "utter with force; utter vehemently",
-        "organize or be responsible for",
-        "make on a potter's wheel",
-        "cause to fall off",
-        "throw (a die) out onto a flat surface",
-        "be confusing or perplexing to; cause to be unable to think clearly"
-      ]
-    },
-    "examples": [
-      [
-        "cast a warm light",
-        "hold a reception",
-        "This question befuddled even the teacher",
-        "throw the lever",
-        "cast a spell",
-        "hurl insults",
-        "Throw a six",
-        "throw a frisbee",
-        "Throw a glance",
-        "This question completely threw me",
-        "give a course",
-        "switch on the light",
-        "Jane threw dinner together",
-        "throw accusations at someone",
-        "she threw a beautiful teapot",
-        "The horse threw its inexperienced rider",
-        "She threw herself forwards",
-        "She threw the flashlight beam into the corner",
-        "She threw the blanket around the child",
-        "shed your clothes",
-        "throw the car into reverse",
-        "These questions confuse even the experts",
-        "She gave me a dirty look",
-        "The setting sun threw long shadows",
-        "have, throw, or make a party",
-        "he shed his image as a pushy boss",
-        "thrust the money in the hands of the beggar"
-      ]
-    ],
-    "part_of_speech": [
-      "verb"
-    ],
-    "date_added": "29-04-2025 00:42:31",
-    "last_reviewed": "29-04-2025 00:42:32",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "29-04-2025 00:47:32",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "creation",
       "communication",
       "contact",
-      "cognition",
-      "motion",
-      "emotion"
+      "body"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\threw_gt.mp3"
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\rested_gt.mp3",
+    "frequency": 1.347162613257034
   },
-  "awe": {
-    "word": "awe",
+  "hamilton": {
+    "word": "hamilton",
     "translation": {
       "russian": [
-        "трепет",
-        "благоговение"
+        "Гамильтон"
       ]
     },
     "synonyms": [
-      "reverence",
-      "veneration",
-      "fear"
+      "Hamilton",
+      "William Rowan Hamilton",
+      "Amy Lyon",
+      "Alice Hamilton",
+      "Alexander Hamilton",
+      "Sir William Rowan Hamilton",
+      "Lady Emma Hamilton"
     ],
     "definition": {
       "noun": [
-        "an overwhelming feeling of wonder or admiration",
-        "a feeling of profound respect for someone or something"
-      ],
-      "verb": [
-        "inspire awe in"
+        "Irish mathematician (1806-1865)",
+        "English beauty who was the mistress of Admiral Nelson (1765-1815)",
+        "United States toxicologist known for her work on industrial poisons (1869-1970)",
+        "United States statesman and leader of the Federalists; as the first Secretary of the Treasury he establish a federal bank; was mortally wounded in a duel with Aaron Burr (1755-1804)",
+        "a port city in southeastern Ontario at the western end of Lake Ontario",
+        "the capital of Bermuda"
+      ]
+    },
+    "examples": [],
+    "part_of_speech": [
+      "noun"
+    ],
+    "date_added": "01-05-2025 22:58:35",
+    "last_reviewed": "01-05-2025 22:58:35",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:03:35",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "person",
+      "location"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\hamilton_gt.mp3",
+    "frequency": 1.2875536480686696
+  },
+  "fever": {
+    "word": "fever",
+    "translation": {
+      "russian": [
+        "лихорадка",
+        "высокая температура"
+      ]
+    },
+    "synonyms": [
+      "febricity",
+      "pyrexia",
+      "febrility",
+      "feverishness"
+    ],
+    "definition": {
+      "noun": [
+        "a rise in the temperature of the body; frequently a symptom of infection",
+        "intense nervous anticipation"
       ]
     },
     "examples": [
       [
-        "The famous professor awed the undergraduates",
-        "he stared over the edge with a feeling of awe",
-        "his respect for the law bordered on veneration",
-        "the fear of God",
-        "the French treat food with gentle reverence",
-        "the Chinese reverence for the dead"
+        "in a fever of resentment"
+      ]
+    ],
+    "part_of_speech": [
+      "noun"
+    ],
+    "date_added": "01-05-2025 22:58:37",
+    "last_reviewed": "01-05-2025 22:58:37",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:03:37",
+    "notes": "",
+    "level": "A1",
+    "tags": [
+      "state",
+      "feeling"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\fever_gt.mp3",
+    "frequency": 6.795422031473534
+  },
+  "lover": {
+    "word": "lover",
+    "translation": {
+      "russian": [
+        "любитель",
+        "любовник"
+      ]
+    },
+    "synonyms": [
+      "buff",
+      "fan",
+      "afficionado",
+      "devotee"
+    ],
+    "definition": {
+      "noun": [
+        "a person who loves someone or is loved by someone",
+        "an ardent follower and admirer",
+        "a significant other to whom you are not related by marriage"
+      ]
+    },
+    "examples": [],
+    "part_of_speech": [
+      "noun"
+    ],
+    "date_added": "01-05-2025 22:58:39",
+    "last_reviewed": "01-05-2025 22:58:39",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:03:39",
+    "notes": "",
+    "level": "A2",
+    "tags": [
+      "person"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\lover_gt.mp3",
+    "frequency": 10.56270863137816
+  },
+  "glimpse": {
+    "word": "glimpse",
+    "translation": {
+      "russian": [
+        "быстрый взгляд"
+      ]
+    },
+    "synonyms": [
+      "glance",
+      "coup d'oeil"
+    ],
+    "definition": {
+      "noun": [
+        "a quick look",
+        "a brief or incomplete view",
+        "a vague indication"
+      ],
+      "verb": [
+        "catch a glimpse of or see briefly"
+      ]
+    },
+    "examples": [
+      [
+        "from the window he could catch a glimpse of the lake",
+        "We glimpsed the Queen as she got into her limousine",
+        "he caught only a glimpse of the professor's meaning"
       ]
     ],
     "part_of_speech": [
       "noun",
       "verb"
     ],
-    "date_added": "29-04-2025 00:42:33",
-    "last_reviewed": "29-04-2025 00:42:34",
+    "date_added": "01-05-2025 22:58:41",
+    "last_reviewed": "01-05-2025 22:58:41",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "29-04-2025 00:47:34",
+    "time_to_repeat": "01-05-2025 23:03:41",
     "notes": "",
-    "level": "C1",
+    "level": "B1",
     "tags": [
-      "feeling",
-      "emotion"
+      "act",
+      "communication",
+      "cognition",
+      "perception"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\awe_gt.mp3"
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\glimpse_gt.mp3",
+    "frequency": 1.9313304721030045
+  },
+  "flew": {
+    "word": "flew",
+    "translation": {
+      "russian": [
+        "летать",
+        "муха",
+        "ширинка"
+      ]
+    },
+    "synonyms": [
+      "flee",
+      "vaporize",
+      "fell",
+      "aviate",
+      "pilot",
+      "wing",
+      "vanish",
+      "take flight",
+      "fly"
+    ],
+    "definition": {
+      "verb": [
+        "travel through the air; be airborne",
+        "move quickly or suddenly",
+        "operate an airplane",
+        "transport by aeroplane",
+        "cause to fly or float",
+        "be dispersed or disseminated",
+        "change quickly from one emotional state to another",
+        "pass away rapidly",
+        "travel in an airplane",
+        "display in the air or cause to float",
+        "run away quickly",
+        "travel over (an area of land or sea) in an aircraft",
+        "hit a fly",
+        "decrease rapidly and disappear"
+      ]
+    },
+    "examples": [
+      [
+        "Time flies like an arrow",
+        "Lindbergh was the first to fly the Atlantic",
+        "fly into a rage",
+        "All nations fly their flags in front of the U.N.",
+        "The pilot flew to Cuba",
+        "He flew about the place",
+        "We fly flowers from the Caribbean to North America",
+        "Rumors and accusations are flying",
+        "Time fleeing beneath him",
+        "the money vanished in las Vegas",
+        "all my stock assets have vaporized",
+        "Are we driving or flying?",
+        "fly a kite",
+        "she is flying to Cincinnati tonight",
+        "He threw down his gun and fled",
+        "Man cannot fly"
+      ]
+    ],
+    "part_of_speech": [
+      "verb"
+    ],
+    "date_added": "01-05-2025 22:58:43",
+    "last_reviewed": "01-05-2025 22:58:43",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:03:43",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "motion",
+      "contact",
+      "change",
+      "perception"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\flew_gt.mp3",
+    "frequency": 7.15307582260372
   }
 }

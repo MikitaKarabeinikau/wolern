@@ -16,6 +16,8 @@ from pathlib import Path
 
 STANDART_VOCABULARY_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'vocabulary.json'
 STANDART_UNCHECKED_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'unchecked.json'
+PATH_TO_WEIRD_WORDS_VOCABULARY = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies'/'weird_words.json'
+
 from time import gmtime,strftime
 from datetime import datetime,timedelta
 

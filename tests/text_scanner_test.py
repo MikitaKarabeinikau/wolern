@@ -8,4 +8,4 @@ PATH_TO_TEST_UNCHECKED = Path(__file__).resolve().parent / "data" / 'unchecked.j
 
 if __name__ == "__main__":
     # print(len(load_text_file(PATH_TO_TEST_TEXT)))
-    load_text(PATH_TO_TEST_TEXT,3)
+    load_text(PATH_TO_TEST_TEXT,10)

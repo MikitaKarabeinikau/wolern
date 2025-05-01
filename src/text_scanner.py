@@ -32,7 +32,7 @@ def load_txt_file(file_path,load_limit=0):
         save_unknown_unchecked_words(rest)
     else:
         for word in unknown_words:
-            add_word_to_vocabulary(word)
+            add_word_to_vocabulary(word,vocabulary)
 
 def load_docx(file_path):
     pass
