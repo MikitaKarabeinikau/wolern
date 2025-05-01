@@ -64,7 +64,7 @@ def get_word_input():
     word = input("Enter the English word").strip().lower()
     return word
 
-def add_word_to_vocabulary(word,vocabulary_path):
+def add_word_to_vocabulary(word,vocabulary_path,learning_stage=0):
     vocabulary = get_vocabulary(vocabulary_path)
     if word in vocabulary.keys():
         print(f'Word : {word} already in vocabulary')
@@ -81,7 +81,7 @@ def add_word_to_vocabulary(word,vocabulary_path):
 
     review_count = 0
     last_reviewed = parse_time_to_str(current_datetime())
-    learning_stage = 0
+    learning_stage = learning_stage
     time_to_repeat = parse_time_to_str(initial_repeat_time())
 
     audio_url = generate_audio(word)
