@@ -7,7 +7,7 @@ text_for_scanner_test
 *.pyo
 *.wav
 *.mp3
-
+*.json
 
 #dirs
 venv
