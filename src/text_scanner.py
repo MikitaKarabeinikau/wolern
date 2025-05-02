@@ -1,11 +1,17 @@
 import json
+import os.path
 import re
 from pathlib import Path
 
-from wolern.src.fetchers import get_frequency
+from wolern.src.fetchers import get_frequency, frequency_exist
+from wolern.src.unchecked import update_weirds_word
 from wolern.src.utils import STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH
 from wolern.src.vocabulary import get_vocabulary, add_word_to_vocabulary
 
+if not os.path.exists(str(STANDART_UNCHECKED_PATH)):
+    with open(STANDART_UNCHECKED_PATH, 'w', encoding="utf-8") as f:
+        json.dump({}, f, ensure_ascii=False, indent=2)
+    print(f'{STANDART_UNCHECKED_PATH} file was created.')
 
 # Logic for reading and analyzing text files
 
@@ -50,6 +56,8 @@ def load_text_from_file(file_path):
     """Load and clean text from a .txt file."""
     text = file_path.read_text(encoding="utf-8").lower()
     words = re.findall(r'\b[a-z]+\b', text)
+    words = [w for w in words if len(w) >= 2]  # filter out 1–2 letter words
+
     return set(words)
 
 def find_unknown_words(words_in_text, known_words):
@@ -59,11 +67,15 @@ def find_unknown_words(words_in_text, known_words):
 def save_unknown_unchecked_words(words):
     words_with_frequency = []
     for word in words:
-        words_with_frequency.append({"word":word,"frequency":get_frequency(word)})
+        if frequency_exist(word):
+            words_with_frequency.append({"word":word,"frequency":get_frequency(word)})
+            STANDART_UNCHECKED_PATH.parent.mkdir(parents=True, exist_ok=True)
+            with STANDART_UNCHECKED_PATH.open("w", encoding="utf-8") as f:
+                json.dump(words_with_frequency, f, ensure_ascii=False, indent=2)
 
-    STANDART_UNCHECKED_PATH.parent.mkdir(parents=True, exist_ok=True)
+            print(f"Saved {len(words)} words into {STANDART_VOCABULARY_PATH}")
 
-    with STANDART_UNCHECKED_PATH.open("w", encoding="utf-8") as f:
-        json.dump(words_with_frequency, f, ensure_ascii=False, indent=2)
+        else:
+            update_weirds_word(word,["Missing frequency"])
 
-    print(f"Saved {len(words)} words into {STANDART_VOCABULARY_PATH}")
+

@@ -29,6 +29,8 @@ if TRANSLATION_CACHE_PATH.exists():
 else:
     _translation_cache = {}
 
+def frequency_exist(word):
+    return True if word in _frequency_cache.keys() else False
 
 def build_frequency_dict():
     subtlex = pd.read_excel(PATH_TO_SUBTLEXus)
@@ -121,7 +123,7 @@ def get_synonyms(word):
     filtered_synonyms = synonyms_filter(synonyms_from_nltk,synonyms_from_datamuse,word)
     return filtered_synonyms
 
-#todo
+
 def synonyms_filter(synonyms_arr1,synonyms_arr2,original_word):
     result = set(synonyms_arr1).union(set(synonyms_arr2))
     return list(result)

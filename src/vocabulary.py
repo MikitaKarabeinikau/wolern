@@ -40,23 +40,13 @@ def pop_word_from_vocabulary(word, vocabulary_name):
         print(f'Word : {word} was deleted. {vocabulary_name} is rewrote.')
         return word
 
-def get_dict_of_new_words_with_frequency(vocabulary):
-    dct = {}
-    for word,info in vocabulary.items():
-        if info.get('learning_stage',0) == 0:
-            if info['frequency'] is not None:
-                dct[word] = info.get("frequency",0.0)
-            else:
-                pass
-    return dct
+
 
 def get_vocabulary(path):
     if path.exists():
         return json.loads(path.read_text(encoding="utf-8"))
     else:
         return {}
-
-
 
 def get_cefr_level(word):
     return _cefr_cache.get(word.lower(),"UNKNOWN")

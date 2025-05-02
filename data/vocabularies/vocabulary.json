@@ -1,578 +1,1087 @@
 {
-  "resettling": {
-    "word": "resettling",
+  "sloping": {
+    "word": "sloping",
     "translation": {
-      "russian": null
+      "russian": [
+        "наклонный",
+        "покатый",
+        "жижа"
+      ]
     },
     "synonyms": [
-      "resettle"
+      "splatter",
+      "slope",
+      "pitch",
+      "spill",
+      "slosh",
+      "slanting",
+      "squish",
+      "diagonal",
+      "gradual",
+      "incline",
+      "sloped",
+      "swill",
+      "splash",
+      "splosh",
+      "aslope",
+      "slop",
+      "aslant",
+      "inclined",
+      "squelch",
+      "slanted"
     ],
     "definition": {
       "verb": [
-        "settle in a new place"
+        "be at an angle",
+        "cause or allow (a liquid substance) to run or flow from a container",
+        "walk through mud or mire",
+        "ladle clumsily",
+        "feed pigs"
+      ],
+      "adjective satellite": [
+        "having an oblique or slanted direction",
+        "having a slanting form or direction"
       ]
     },
     "examples": [
       [
-        "The immigrants had to resettle"
+        "slop the food onto the plate",
+        "an area of gently sloping hills",
+        "The terrain sloped down",
+        "We had to splosh across the wet meadow",
+        "spill the milk",
+        "a room with a sloping ceiling",
+        "splatter water"
+      ]
+    ],
+    "part_of_speech": [
+      "verb",
+      "adjective satellite"
+    ],
+    "date_added": "01-05-2025 23:37:13",
+    "last_reviewed": "01-05-2025 23:37:16",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:42:16",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "all",
+      "motion",
+      "contact",
+      "consumption"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\sloping_gt.mp3",
+    "frequency": 0.1430615164520744
+  },
+  "duties": {
+    "word": "duties",
+    "translation": {
+      "russian": [
+        "обязанности",
+        "пошлины",
+        "сборы",
+        "обязанность",
+        "долг",
+        "дежурство",
+        "пошлина"
+      ]
+    },
+    "synonyms": [
+      "tariff",
+      "responsibility",
+      "obligation",
+      "duty"
+    ],
+    "definition": {
+      "noun": [
+        "the social force that binds you to the courses of action demanded by that force; ; - John D.Rockefeller Jr",
+        "work that you are obliged to perform for moral or legal reasons",
+        "a government tax on imports or exports"
+      ]
+    },
+    "examples": [
+      [
+        "they signed a treaty to lower duties on trade between their countries",
+        "every right implies a responsibility; every opportunity, an obligation; every possession, a duty",
+        "we must instill a sense of duty in our children",
+        "the duties of the job"
+      ]
+    ],
+    "part_of_speech": [
+      "noun"
+    ],
+    "date_added": "01-05-2025 23:37:17",
+    "last_reviewed": "01-05-2025 23:37:18",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:42:18",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "act",
+      "possession"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\duties_gt.mp3",
+    "frequency": 3.958035288507392
+  },
+  "acknowledge": {
+    "word": "acknowledge",
+    "translation": {
+      "russian": [
+        "подтверждать"
+      ]
+    },
+    "synonyms": [
+      "receipt",
+      "recognise",
+      "recognize",
+      "cite",
+      "notice",
+      "know",
+      "mention",
+      "admit"
+    ],
+    "definition": {
+      "verb": [
+        "declare to be true or admit the existence or reality or truth of",
+        "report the receipt of",
+        "express recognition of the presence or existence of, or acquaintance with",
+        "express obligation, thanks, or gratitude for",
+        "accept as legally binding and valid",
+        "accept (someone) to be what is claimed or accept his power and authority"
+      ]
+    },
+    "examples": [
+      [
+        "We do not recognize your gods",
+        "She acknowledged that she might have forgotten",
+        "He never acknowledges his colleagues when they run into him in the hallway",
+        "She acknowledged his complement with a smile",
+        "it is important to acknowledge the work of others in one's own writing",
+        "The program committee acknowledged the submission of the authors of the paper",
+        "We must acknowledge the kindness she showed towards us",
+        "acknowledge the deed",
+        "The Crown Prince was acknowledged as the true heir to the throne",
+        "He admitted his errors"
       ]
     ],
     "part_of_speech": [
       "verb"
     ],
-    "date_added": "01-05-2025 22:58:23",
-    "last_reviewed": "01-05-2025 22:58:25",
+    "date_added": "01-05-2025 23:37:21",
+    "last_reviewed": "01-05-2025 23:37:22",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:25",
+    "time_to_repeat": "01-05-2025 23:42:22",
     "notes": "",
-    "level": "UNKNOWN",
+    "level": "B1",
     "tags": [
-      "change"
+      "communication",
+      "cognition"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\resettling_gt.mp3",
-    "frequency": null
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\acknowledge_gt.mp3",
+    "frequency": 2.9804482594182167
   },
-  "days": {
-    "word": "days",
+  "effective": {
+    "word": "effective",
     "translation": {
       "russian": [
-        "дни",
-        "день",
-        "сутки"
+        "эффективный",
+        "действенный",
+        "действующий"
       ]
     },
     "synonyms": [
-      "twenty-four hour period",
-      "sidereal day",
-      "years",
-      "solar day",
-      "mean solar day",
-      "24-hour interval",
-      "twenty-four hours",
-      "day",
-      "Day",
-      "Clarence Day",
-      "Clarence Shepard Day Jr.",
-      "daylight",
-      "daytime"
+      "operative",
+      "in force",
+      "efficient",
+      "telling",
+      "existent",
+      "impressive",
+      "actual",
+      "operational",
+      "good",
+      "in effect",
+      "effectual",
+      "efficacious",
+      "trenchant",
+      "hard-hitting",
+      "impelling",
+      "competent"
     ],
     "definition": {
-      "noun": [
-        "the time during which someone's life continues",
-        "time for Earth to make a complete rotation on its axis",
-        "some point or period in time",
-        "a day assigned to a particular purpose or observance",
-        "the time after sunrise and before sunset while it is light outside",
-        "the recurring hours when you are not sleeping (especially those when you are working)",
-        "an era of existence or influence",
-        "the period of time taken by a particular planet (e.g. Mars) to make a complete rotation on its axis",
-        "the time for one complete rotation of the earth relative to a particular star, about 4 minutes shorter than a mean solar day",
-        "a period of opportunity",
-        "United States writer best known for his autobiographical works (1874-1935)"
+      "adjective": [
+        "producing or capable of producing an intended result or having a striking effect; -LewisMumford"
+      ],
+      "adjective satellite": [
+        "able to accomplish a purpose; functioning effectively; -G.B.Shaw",
+        "works well as a means or remedy",
+        "exerting force or influence",
+        "existing in fact; not theoretical; real",
+        "ready for service"
       ]
     },
     "examples": [
       [
-        "every dog has his day",
-        "he was a successful pianist in his day",
-        "in the days of the Roman Empire",
-        "it was a busy day on the stock exchange",
-        "Mother's Day",
-        "my day began early this morning",
-        "it should arrive any day now",
-        "she called it a day and went to bed",
-        "these days it is not unusual",
-        "in his final years",
-        "those were the days",
-        "the monarch's last days",
-        "it is easier to make the repairs in the daytime",
-        "the dawn turned night into day",
-        "after that day she never trusted him again",
-        "they put on two performances every day",
-        "he deserves his day in court",
-        "how long is a day on Jupiter?",
-        "in the day of the dinosaurs",
-        "there are 30,000 passengers per day",
-        "two days later they left",
-        "in the days of sailing ships"
+        "effective steps toward peace",
+        "an efficient secretary",
+        "an efficacious law",
+        "people who will do nothing unless they get something out of it for themselves are often highly effective persons...",
+        "a lotion that is effective in cases of prickly heat",
+        "a warranty good for two years",
+        "the law is already in effect (or in force)",
+        "effective teaching methods",
+        "a decline in the effective demand",
+        "an effective reprimand",
+        "the law is effective immediately",
+        "the fort was held by about 100 effective soldiers",
+        "made an effective entrance",
+        "an air-cooled motor was more effective than a witch's broomstick for rapid long-distance transportation",
+        "confused increased equipment and expenditure with the quantity of effective work done",
+        "effective personnel",
+        "the efficient cause of the revolution",
+        "his complaint proved to be effectual in bringing action"
       ]
     ],
     "part_of_speech": [
-      "noun"
+      "adjective satellite",
+      "adjective"
     ],
-    "date_added": "01-05-2025 22:58:27",
-    "last_reviewed": "01-05-2025 22:58:28",
+    "date_added": "01-05-2025 23:37:23",
+    "last_reviewed": "01-05-2025 23:37:24",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:28",
+    "time_to_repeat": "01-05-2025 23:42:24",
     "notes": "",
-    "level": "UNKNOWN",
+    "level": "B1",
     "tags": [
-      "state",
-      "time",
-      "person"
+      "all"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\days_gt.mp3",
-    "frequency": 69.1583214115403
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\effective_gt.mp3",
+    "frequency": 5.662851692894612
   },
-  "hall": {
-    "word": "hall",
+  "dreaded": {
+    "word": "dreaded",
     "translation": {
       "russian": [
-        "зал",
-        "холл"
+        "страшный",
+        "бояться",
+        "ужас"
       ]
     },
     "synonyms": [
-      "manor hall",
-      "vestibule",
-      "Marguerite Radclyffe Hall",
-      "student residence",
-      "residence hall",
-      "entrance hall",
-      "Hall",
-      "antechamber",
-      "lobby",
-      "G. Stanley Hall",
-      "foyer",
-      "dorm",
-      "mansion house",
-      "hallway",
-      "residence",
-      "mansion",
-      "dormitory",
-      "manse",
-      "anteroom",
-      "Charles Francis Hall",
-      "Asaph Hall",
-      "Granville Stanley Hall",
-      "Radclyffe Hall",
-      "Charles Martin Hall"
+      "fearsome",
+      "horrendous",
+      "alarming",
+      "dire",
+      "fearful",
+      "terrible",
+      "horrific",
+      "frightening",
+      "dreadful",
+      "awful",
+      "fear",
+      "dread",
+      "direful"
     ],
     "definition": {
-      "noun": [
-        "an interior passage or corridor onto which rooms open",
-        "a large entrance or reception room or area",
-        "a large room for gatherings or entertainment",
-        "a college or university building containing living quarters for students",
-        "the large room of a manor or castle",
-        "English writer whose novel about a lesbian relationship was banned in Britain for many years (1883-1943)",
-        "United States child psychologist whose theories of child psychology strongly influenced educational psychology (1844-1924)",
-        "United States chemist who developed an economical method of producing aluminum from bauxite (1863-1914)",
-        "United States explorer who led three expeditions to the Arctic (1821-1871)",
-        "United States astronomer who discovered Phobos and Deimos (the two satellites of Mars) (1829-1907)",
-        "a large and imposing house",
-        "a large building used by a college or university for teaching or research",
-        "a large building for meetings or entertainment"
+      "verb": [
+        "be afraid or scared of; be frightened of"
+      ],
+      "adjective satellite": [
+        "causing fear or dread or terror"
       ]
     },
     "examples": [
       [
-        "halls of learning",
-        "pool hall",
-        "lecture hall",
-        "the elevators were at the end of the hall"
+        "dire news",
+        "horrendous explosions shook the city",
+        "a terrible curse",
+        "polio is no longer the dreaded disease it once was",
+        "I fear the winters in Moscow",
+        "We should not fear the Communists!",
+        "the awful war",
+        "a career or vengeance so direful that London was shocked",
+        "a fearful howling",
+        "a dreadful storm",
+        "an awful risk",
+        "the dread presence of the headmaster"
       ]
     ],
     "part_of_speech": [
-      "noun"
+      "verb",
+      "adjective satellite"
     ],
-    "date_added": "01-05-2025 22:58:29",
-    "last_reviewed": "01-05-2025 22:58:30",
+    "date_added": "01-05-2025 23:37:25",
+    "last_reviewed": "01-05-2025 23:37:26",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:30",
-    "notes": "",
-    "level": "A1",
-    "tags": [
-      "person",
-      "artifact"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\hall_gt.mp3",
-    "frequency": 18.752980448259418
-  },
-  "indians": {
-    "word": "indians",
-    "translation": {
-      "russian": [
-        "индейцы",
-        "индийцы",
-        "индийский"
-      ]
-    },
-    "synonyms": [
-      "Red Indian",
-      "Amerind",
-      "American Indian",
-      "American-Indian language",
-      "Indian",
-      "Amerindian language"
-    ],
-    "definition": {
-      "noun": [
-        "a member of the race of people living in America when Europeans arrived",
-        "a native or inhabitant of India",
-        "any of the languages spoken by Amerindians"
-      ]
-    },
-    "examples": [],
-    "part_of_speech": [
-      "noun"
-    ],
-    "date_added": "01-05-2025 22:58:31",
-    "last_reviewed": "01-05-2025 22:58:31",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:31",
+    "time_to_repeat": "01-05-2025 23:42:26",
     "notes": "",
     "level": "UNKNOWN",
     "tags": [
-      "person",
+      "all",
+      "emotion"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\dreaded_gt.mp3",
+    "frequency": 0.7391511683357177
+  },
+  "supports": {
+    "word": "supports",
+    "translation": {
+      "russian": [
+        "поддержка",
+        "содействие",
+        "помощь"
+      ]
+    },
+    "synonyms": [
+      "supporting",
+      "substantiate",
+      "reinforcement",
+      "confirm",
+      "funding",
+      "backing",
+      "patronage",
+      "abide",
+      "accompaniment",
+      "back up",
+      "fend for",
+      "endure",
+      "bear out",
+      "sustenance",
+      "corroborate",
+      "suffer",
+      "plump for",
+      "musical accompaniment",
+      "stand",
+      "affirm",
+      "reenforcement",
+      "support",
+      "hold up",
+      "livelihood",
+      "keep",
+      "financial backing",
+      "plunk for",
+      "back",
+      "brook",
+      "underpin",
+      "bread and butter",
+      "patronise",
+      "stick out",
+      "put up",
+      "keep going",
+      "stomach",
+      "patronize",
+      "digest",
+      "sustain",
+      "indorse",
+      "tolerate",
+      "subscribe",
+      "financial support",
+      "defend",
+      "living",
+      "backup",
+      "bear",
+      "endorse",
+      "hold",
+      "documentation"
+    ],
+    "definition": {
+      "noun": [
+        "the activity of providing for or maintaining by supplying with money or necessities",
+        "aiding the cause or policy or interests of",
+        "something providing immaterial assistance to a person or cause or interest",
+        "a military operation (often involving new supplies of men and materiel) to strengthen a military force or aid in the performance of its mission",
+        "documentary validation",
+        "the financial means whereby one lives",
+        "supporting structure that holds up or provides a foundation",
+        "the act of bearing the weight of or strengthening",
+        "a musical part (vocal or instrumental) that supports or provides background for other musical parts",
+        "any device that bears the weight of another thing",
+        "financial resources provided to make some project possible"
+      ],
+      "verb": [
+        "give moral or psychological support, aid, or courage to",
+        "support materially or financially",
+        "be behind; approve of",
+        "be the physical support of; carry the weight of",
+        "establish or strengthen as with new evidence or facts",
+        "adopt as a belief",
+        "support with evidence or authority or make more certain or confirm",
+        "argue or speak in defense of",
+        "play a subordinate role to (another performer)",
+        "be a regular customer or client of",
+        "put up with something or somebody unpleasant"
+      ]
+    },
+    "examples": [
+      [
+        "I subscribe to your view on abortion",
+        "Her children always backed her up",
+        "She supported the motion to strike",
+        "the statue stood on a marble support",
+        "The evidence supports the defendant",
+        "the president no longer has the support of his own party",
+        "he could no longer earn his own livelihood",
+        "each child was expected to pay for their keep",
+        "The stories and claims were born out by the evidence",
+        "the foundation provided support for the experiment",
+        "The beam holds up the roof",
+        "The scholarship supported me when I was in college",
+        "He plumped for the Labor Party",
+        "they developed a scheme of mutual support",
+        "his support kept the family together",
+        "the team enjoyed the support of their fans",
+        "the strongest support for this view is the work of Jones",
+        "the policy found little public support",
+        "We patronize this store",
+        "The new secretary had to endure a lot of unprofessional remarks",
+        "his documentation of the results was excellent",
+        "he applied to the state for support",
+        "he learned to tolerate the heat",
+        "they gave him emotional support during difficult times",
+        "Olivier supported Gielgud beautifully in the second act",
+        "He supported me with one hand while I balanced on the beam",
+        "his faith was all the support he needed",
+        "Our sponsor kept our art studio going for as long as he could",
+        "I cannot bear his constant criticism",
+        "She stuck out two years in a miserable marriage",
+        "they called for artillery support",
+        "he does not support his natural children",
+        "there was no place to attach supports for a shelf",
+        "I backed Kennedy in 1960",
+        "She supported him during the illness",
+        "he leaned against the wall for support",
+        "What's holding that mirror?",
+        "his story confirmed my doubts"
+      ]
+    ],
+    "part_of_speech": [
+      "verb",
+      "noun"
+    ],
+    "date_added": "01-05-2025 23:37:27",
+    "last_reviewed": "01-05-2025 23:37:28",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:42:28",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "creation",
+      "act",
+      "stative",
+      "possession",
+      "cognition",
+      "artifact",
+      "social",
+      "contact",
       "communication"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\indians_gt.mp3",
-    "frequency": 0.9418216499761565
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\supports_gt.mp3",
+    "frequency": 1.1921793037672868
   },
-  "rested": {
-    "word": "rested",
+  "yelled": {
+    "word": "yelled",
     "translation": {
       "russian": [
-        "отдохнувший",
-        "отдыхать",
-        "лежать",
-        "успокоиться",
-        "отдых",
-        "покой"
+        "кричать",
+        "прокричать",
+        "крик",
+        "вопль"
       ]
     },
     "synonyms": [
-      "unweary",
-      "refreshed",
-      "fresh",
-      "roost",
-      "catch one's breath",
-      "reside",
-      "rest",
-      "stay",
-      "repose",
-      "untired",
-      "lie",
-      "invigorated",
-      "pillow",
-      "breathe",
-      "remain",
-      "perch",
-      "reinvigorated",
-      "unwearied",
-      "take a breather"
+      "loud",
+      "holler",
+      "shout",
+      "cry",
+      "yell",
+      "scream",
+      "shout out",
+      "shouted",
+      "squall",
+      "hollo",
+      "call"
     ],
     "definition": {
       "verb": [
-        "not move; be in a resting position",
-        "take a short break from one's activities in order to relax",
-        "give a rest to",
-        "have a place in relation to something else",
-        "be at rest",
-        "stay the same; remain in a certain state",
-        "be inherent or innate in",
-        "put something in a resting position, as for support or steadying",
-        "sit, as on a branch",
-        "rest on or as if on a pillow",
-        "be inactive, refrain from acting"
+        "utter a sudden loud cry",
+        "utter or declare in a very loud voice"
+      ],
+      "adjective satellite": [
+        "in a vehement outcry"
+      ]
+    },
+    "examples": [
+      [
+        "You don't have to yell--I can hear you just fine",
+        "she cried with pain when the doctor inserted the needle",
+        "I yelled to her from the window but she couldn't hear me",
+        "his shouted words of encouragement could be heard over the crowd noises"
+      ]
+    ],
+    "part_of_speech": [
+      "verb",
+      "adjective satellite"
+    ],
+    "date_added": "01-05-2025 23:37:31",
+    "last_reviewed": "01-05-2025 23:37:32",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "01-05-2025 23:42:32",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "communication",
+      "all"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\yelled_gt.mp3",
+    "frequency": 3.314258464473057
+  },
+  "right": {
+    "word": "right",
+    "translation": {
+      "russian": [
+        "право",
+        "подходящий",
+        "правильный",
+        "правый"
+      ]
+    },
+    "synonyms": [
+      "far",
+      "moral",
+      "right wing",
+      "properly",
+      "rightish",
+      "decent",
+      "conservative",
+      "flop",
+      "powerful",
+      "aright",
+      "honourable",
+      "accurate",
+      "rectify",
+      "exact",
+      "reactionary",
+      "decently",
+      "right field",
+      "rightfulness",
+      "proper",
+      "correct",
+      "mightily",
+      "perpendicular",
+      "word-perfect",
+      "right hand",
+      "correctly",
+      "letter-perfect",
+      "rightfield",
+      "far-right",
+      "redress",
+      "starboard",
+      "ethical",
+      "justly",
+      "opportune",
+      "satisfactory",
+      "mighty",
+      "the right way",
+      "right on",
+      "suitable",
+      "veracious",
+      "appropriate",
+      "precise",
+      "good",
+      "right-hand",
+      "compensate",
+      "honorable",
+      "right-minded",
+      "right-wing",
+      "rightist",
+      "straight",
+      "reactionist",
+      "ripe",
+      "in good order"
+    ],
+    "definition": {
+      "noun": [
+        "an abstract idea of that which is due to a person or governmental body by law or tradition or nature; ; - Eleanor Roosevelt",
+        "location near or direction toward the right side; i.e. the side to the south when a person or object faces east",
+        "the piece of ground in the outfield on the catcher's right",
+        "those who support political or social or economic conservatism; those who believe that things are better left unchanged",
+        "the hand that is on the right side of the body",
+        "a turn toward the side of the body that is on the south when the person is facing east",
+        "anything in accord with principles of justice",
+        "(frequently plural) the interest possessed by law or custom in some intangible thing"
+      ],
+      "verb": [
+        "make reparations or amends for",
+        "put in or restore to an upright position",
+        "regain an upright or proper position",
+        "make right or correct"
       ],
       "adjective": [
-        "not tired; refreshed as by sleeping or relaxing"
-      ]
-    },
-    "examples": [
-      [
-        "He remained unmoved by her tears",
-        "The birds perched high in the tree",
-        "The bad weather continued for another week",
-        "pillow your head",
-        "The responsibility rests with the Allies",
-        "He rested his bad leg",
-        "The committee is resting over the summer",
-        "The dress remained wet after repeated attempts to dry it",
-        "Rest your head on my shoulder",
-        "The fate of Bosnia lies in the hands of the West",
-        "came back rested from her vacation",
-        "rest assured",
-        "Rest the dogs for a moment",
-        "stay alone"
-      ]
-    ],
-    "part_of_speech": [
-      "adjective",
-      "verb"
-    ],
-    "date_added": "01-05-2025 22:58:33",
-    "last_reviewed": "01-05-2025 22:58:33",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:33",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "change",
-      "social",
-      "all",
-      "stative",
-      "communication",
-      "contact",
-      "body"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\rested_gt.mp3",
-    "frequency": 1.347162613257034
-  },
-  "hamilton": {
-    "word": "hamilton",
-    "translation": {
-      "russian": [
-        "Гамильтон"
-      ]
-    },
-    "synonyms": [
-      "Hamilton",
-      "William Rowan Hamilton",
-      "Amy Lyon",
-      "Alice Hamilton",
-      "Alexander Hamilton",
-      "Sir William Rowan Hamilton",
-      "Lady Emma Hamilton"
-    ],
-    "definition": {
-      "noun": [
-        "Irish mathematician (1806-1865)",
-        "English beauty who was the mistress of Admiral Nelson (1765-1815)",
-        "United States toxicologist known for her work on industrial poisons (1869-1970)",
-        "United States statesman and leader of the Federalists; as the first Secretary of the Treasury he establish a federal bank; was mortally wounded in a duel with Aaron Burr (1755-1804)",
-        "a port city in southeastern Ontario at the western end of Lake Ontario",
-        "the capital of Bermuda"
-      ]
-    },
-    "examples": [],
-    "part_of_speech": [
-      "noun"
-    ],
-    "date_added": "01-05-2025 22:58:35",
-    "last_reviewed": "01-05-2025 22:58:35",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:35",
-    "notes": "",
-    "level": "UNKNOWN",
-    "tags": [
-      "person",
-      "location"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\hamilton_gt.mp3",
-    "frequency": 1.2875536480686696
-  },
-  "fever": {
-    "word": "fever",
-    "translation": {
-      "russian": [
-        "лихорадка",
-        "высокая температура"
-      ]
-    },
-    "synonyms": [
-      "febricity",
-      "pyrexia",
-      "febrility",
-      "feverishness"
-    ],
-    "definition": {
-      "noun": [
-        "a rise in the temperature of the body; frequently a symptom of infection",
-        "intense nervous anticipation"
-      ]
-    },
-    "examples": [
-      [
-        "in a fever of resentment"
-      ]
-    ],
-    "part_of_speech": [
-      "noun"
-    ],
-    "date_added": "01-05-2025 22:58:37",
-    "last_reviewed": "01-05-2025 22:58:37",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:37",
-    "notes": "",
-    "level": "A1",
-    "tags": [
-      "state",
-      "feeling"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\fever_gt.mp3",
-    "frequency": 6.795422031473534
-  },
-  "lover": {
-    "word": "lover",
-    "translation": {
-      "russian": [
-        "любитель",
-        "любовник"
-      ]
-    },
-    "synonyms": [
-      "buff",
-      "fan",
-      "afficionado",
-      "devotee"
-    ],
-    "definition": {
-      "noun": [
-        "a person who loves someone or is loved by someone",
-        "an ardent follower and admirer",
-        "a significant other to whom you are not related by marriage"
-      ]
-    },
-    "examples": [],
-    "part_of_speech": [
-      "noun"
-    ],
-    "date_added": "01-05-2025 22:58:39",
-    "last_reviewed": "01-05-2025 22:58:39",
-    "review_count": 0,
-    "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:39",
-    "notes": "",
-    "level": "A2",
-    "tags": [
-      "person"
-    ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\lover_gt.mp3",
-    "frequency": 10.56270863137816
-  },
-  "glimpse": {
-    "word": "glimpse",
-    "translation": {
-      "russian": [
-        "быстрый взгляд"
-      ]
-    },
-    "synonyms": [
-      "glance",
-      "coup d'oeil"
-    ],
-    "definition": {
-      "noun": [
-        "a quick look",
-        "a brief or incomplete view",
-        "a vague indication"
+        "being or located on or directed toward the side of the body to the east when facing north",
+        "free from error; especially conforming to fact or truth",
+        "in conformance with justice or law or morality",
+        "correct in opinion or judgment",
+        "of or belonging to the political or intellectual right"
       ],
-      "verb": [
-        "catch a glimpse of or see briefly"
+      "adjective satellite": [
+        "socially right or correct",
+        "appropriate for a condition or purpose or occasion or a person's character, needs",
+        "in or into a satisfactory condition",
+        "intended for the right hand",
+        "in accord with accepted standards of usage or procedure",
+        "having the axis perpendicular to the base",
+        "(of the side of cloth or clothing) facing or intended to face outward",
+        "most suitable or right for a particular purpose",
+        "precisely accurate"
+      ],
+      "adverb": [
+        "precisely, exactly",
+        "immediately",
+        "exactly",
+        "toward or on the right; also used figuratively",
+        "in the right manner",
+        "an interjection expressing agreement",
+        "completely",
+        "(Southern regional intensive) very; to a great degree",
+        "in accordance with moral or social standards",
+        "in an accurate manner"
       ]
     },
     "examples": [
       [
-        "from the window he could catch a glimpse of the lake",
-        "We glimpsed the Queen as she got into her limousine",
-        "he caught only a glimpse of the professor's meaning"
+        "she is not suitable for the position",
+        "they rejoiced mightily",
+        "correct behavior",
+        "The capsized boat righted again",
+        "they are endowed by their Creator with certain unalienable Rights",
+        "she called right after dinner",
+        "do right by him",
+        "he stood on the right",
+        "rectify the calculation",
+        "he fell right into the trap",
+        "it isn't right to leave the party without saying goodbye",
+        "Certain rights can never be granted to the government but must be kept in the hands of the people",
+        "a veracious account",
+        "he looked right and left",
+        "be sure your shirt is right side out",
+        "what's the right word for this?",
+        "mineral rights",
+        "can't you carry me decent?",
+        "They righted the sailboat that had capsized",
+        "a right angle",
+        "stand right here!",
+        "he guessed right",
+        "the correct answer",
+        "it is powerful humid",
+        "that boy is powerful big now",
+        "a right is not something that somebody gives you; it is something that nobody can take away",
+        "took the right road",
+        "a right-hand turn",
+        "the right man for the job",
+        "film rights",
+        "he writes with his right hand but pitches with his left",
+        "the right time to act",
+        "the baby is mighty cute",
+        "a right-hand glove",
+        "the time is ripe for great sociological changes",
+        "hit him with quick rights to the body",
+        "things are right again now",
+        "the party has moved right",
+        "that serves him right",
+        "she felt right at home",
+        "everything in its proper place",
+        "he's mighty tired",
+        "put things right",
+        "the correct version",
+        "my right hand",
+        "time proved him right",
+        "right center field",
+        "the rightfulness of his claim",
+        "a good time to plant tomatoes",
+        "Correct the mistakes",
+        "please do your job properly!",
+        "they have a right nice place",
+        "the right answer",
+        "the right way to open oysters",
+        "he fell flop on his face",
+        "the right side of the cloth showed the pattern",
+        "the right bank of a river is the bank on your right side when you are facing downstream",
+        "right a wrongs done to the victims of the Holocaust",
+        "the flower had been correctly depicted by his son",
+        "he feels he is in the right",
+        "do the right thing and confess",
+        "take a right at the corner",
+        "the right decision"
       ]
     ],
     "part_of_speech": [
       "noun",
+      "adjective satellite",
+      "adjective",
+      "adverb",
       "verb"
     ],
-    "date_added": "01-05-2025 22:58:41",
-    "last_reviewed": "01-05-2025 22:58:41",
+    "date_added": "02-05-2025 00:10:20",
+    "last_reviewed": "02-05-2025 00:10:21",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:41",
+    "time_to_repeat": "02-05-2025 00:15:21",
     "notes": "",
-    "level": "B1",
+    "level": "A2",
     "tags": [
+      "location",
+      "possession",
+      "artifact",
+      "motion",
+      "group",
       "act",
-      "communication",
-      "cognition",
-      "perception"
+      "all",
+      "attribute",
+      "body",
+      "social",
+      "change"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\glimpse_gt.mp3",
-    "frequency": 1.9313304721030045
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\right_gt.mp3",
+    "frequency": 99.18931807343824
   },
-  "flew": {
-    "word": "flew",
+  "incarnation": {
+    "word": "incarnation",
     "translation": {
       "russian": [
-        "летать",
-        "муха",
-        "ширинка"
+        "воплощение"
       ]
     },
     "synonyms": [
-      "flee",
-      "vaporize",
-      "fell",
-      "aviate",
-      "pilot",
-      "wing",
-      "vanish",
-      "take flight",
-      "fly"
+      "embodiment",
+      "avatar",
+      "personification",
+      "Incarnation"
     ],
     "definition": {
-      "verb": [
-        "travel through the air; be airborne",
-        "move quickly or suddenly",
-        "operate an airplane",
-        "transport by aeroplane",
-        "cause to fly or float",
-        "be dispersed or disseminated",
-        "change quickly from one emotional state to another",
-        "pass away rapidly",
-        "travel in an airplane",
-        "display in the air or cause to float",
-        "run away quickly",
-        "travel over (an area of land or sea) in an aircraft",
-        "hit a fly",
-        "decrease rapidly and disappear"
+      "noun": [
+        "a new personification of a familiar idea",
+        "(Christianity) the Christian doctrine of the union of God and man in the person of Jesus Christ",
+        "time passed in a particular bodily form",
+        "the act of attributing human characteristics to abstract ideas etc."
       ]
     },
     "examples": [
       [
-        "Time flies like an arrow",
-        "Lindbergh was the first to fly the Atlantic",
-        "fly into a rage",
-        "All nations fly their flags in front of the U.N.",
-        "The pilot flew to Cuba",
-        "He flew about the place",
-        "We fly flowers from the Caribbean to North America",
-        "Rumors and accusations are flying",
-        "Time fleeing beneath him",
-        "the money vanished in las Vegas",
-        "all my stock assets have vaporized",
-        "Are we driving or flying?",
-        "fly a kite",
-        "she is flying to Cincinnati tonight",
-        "He threw down his gun and fled",
-        "Man cannot fly"
+        "the very avatar of cunning",
+        "the incarnation of evil",
+        "he believes that his life will be better in his next incarnation",
+        "the embodiment of hope"
       ]
     ],
     "part_of_speech": [
-      "verb"
+      "noun"
     ],
-    "date_added": "01-05-2025 22:58:43",
-    "last_reviewed": "01-05-2025 22:58:43",
+    "date_added": "02-05-2025 00:10:22",
+    "last_reviewed": "02-05-2025 00:10:22",
     "review_count": 0,
     "learning_stage": 0,
-    "time_to_repeat": "01-05-2025 23:03:43",
+    "time_to_repeat": "02-05-2025 00:15:22",
     "notes": "",
     "level": "UNKNOWN",
     "tags": [
-      "motion",
-      "contact",
-      "change",
-      "perception"
+      "act",
+      "person",
+      "communication",
+      "time"
     ],
-    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\flew_gt.mp3",
-    "frequency": 7.15307582260372
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\incarnation_gt.mp3",
+    "frequency": 0.20267048164043874
+  },
+  "sonorous": {
+    "word": "sonorous",
+    "translation": {
+      "russian": null
+    },
+    "synonyms": [
+      "full",
+      "heavy"
+    ],
+    "definition": {
+      "adjective satellite": [
+        "full and loud and deep"
+      ]
+    },
+    "examples": [
+      [
+        "heavy sounds",
+        "a herald chosen for his sonorous voice"
+      ]
+    ],
+    "part_of_speech": [
+      "adjective satellite"
+    ],
+    "date_added": "02-05-2025 00:10:24",
+    "last_reviewed": "02-05-2025 00:10:24",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "02-05-2025 00:15:24",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "all"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\sonorous_gt.mp3",
+    "frequency": 0.011921793037672867
+  },
+  "ambassador": {
+    "word": "ambassador",
+    "translation": {
+      "russian": [
+        "посол"
+      ]
+    },
+    "synonyms": [
+      "embassador"
+    ],
+    "definition": {
+      "noun": [
+        "a diplomat of the highest rank; accredited as representative from one country to another",
+        "an informal representative"
+      ]
+    },
+    "examples": [
+      [
+        "an ambassador of good will"
+      ]
+    ],
+    "part_of_speech": [
+      "noun"
+    ],
+    "date_added": "02-05-2025 00:10:26",
+    "last_reviewed": "02-05-2025 00:10:26",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "02-05-2025 00:15:26",
+    "notes": "",
+    "level": "B2",
+    "tags": [
+      "person"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\ambassador_gt.mp3",
+    "frequency": 2.694325226514068
+  },
+  "former": {
+    "word": "former",
+    "translation": {
+      "russian": [
+        "бывший",
+        "предыдущий",
+        "создатель"
+      ]
+    },
+    "synonyms": [
+      "erstwhile",
+      "old",
+      "other",
+      "onetime",
+      "early",
+      "sometime",
+      "once",
+      "one-time",
+      "quondam",
+      "previous",
+      "late"
+    ],
+    "definition": {
+      "noun": [
+        "the first of two or the first mentioned of two"
+      ],
+      "adjective": [
+        "referring to the first of two things or persons mentioned (or the earlier one or ones of several)"
+      ],
+      "adjective satellite": [
+        "belonging to some prior time",
+        "(used especially of persons) of the immediate past",
+        "belonging to the distant past"
+      ]
+    },
+    "examples": [
+      [
+        "in other times",
+        "the once capital of the state",
+        "the former president",
+        "our former glory",
+        "our late President is still very active",
+        "erstwhile friend",
+        "the previous occupant of the White House",
+        "her quondam lover",
+        "the early inhabitants of Europe",
+        "the novel was made into a film in 1943 and again in 1967; I prefer the former version to the latter one",
+        "former generations",
+        "Tom and Dick were both heroes but only the former is remembered today"
+      ]
+    ],
+    "part_of_speech": [
+      "adjective",
+      "noun",
+      "adjective satellite"
+    ],
+    "date_added": "02-05-2025 00:10:28",
+    "last_reviewed": "02-05-2025 00:10:28",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "02-05-2025 00:15:28",
+    "notes": "",
+    "level": "B1",
+    "tags": [
+      "all",
+      "relation"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\former_gt.mp3",
+    "frequency": 8.57176919408679
+  },
+  "deeply": {
+    "word": "deeply",
+    "translation": {
+      "russian": [
+        "глубоко",
+        "глубокий",
+        "насыщенный",
+        "глубоко",
+        "глубина"
+      ]
+    },
+    "synonyms": [
+      "profoundly",
+      "deep"
+    ],
+    "definition": {
+      "adverb": [
+        "to a great depth psychologically",
+        "to a great depth;far down"
+      ]
+    },
+    "examples": [
+      [
+        "dug deep",
+        "dived deeply",
+        "They felt the loss deeply"
+      ]
+    ],
+    "part_of_speech": [
+      "adverb"
+    ],
+    "date_added": "02-05-2025 00:10:35",
+    "last_reviewed": "02-05-2025 00:10:36",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "02-05-2025 00:15:36",
+    "notes": "",
+    "level": "A2",
+    "tags": [
+      "all"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\deeply_gt.mp3",
+    "frequency": 7.105388650453029
+  },
+  "gray": {
+    "word": "gray",
+    "translation": {
+      "russian": [
+        "серый"
+      ]
+    },
+    "synonyms": [
+      "achromatic",
+      "old",
+      "gray-headed",
+      "grey",
+      "grayness",
+      "Asa Gray",
+      "Thomas Gray",
+      "greyness",
+      "hoary",
+      "Gray",
+      "grey-headed",
+      "cloudy",
+      "white-haired",
+      "southern",
+      "hoar",
+      "intermediate",
+      "grey-haired",
+      "dull",
+      "Gy",
+      "Louis Harold Gray",
+      "leaden",
+      "greyish",
+      "colorless",
+      "grayish",
+      "Robert Gray",
+      "gray-haired",
+      "grizzly"
+    ],
+    "definition": {
+      "noun": [
+        "a neutral achromatic color midway between white and black",
+        "clothing that is a grey color",
+        "any organization or party whose uniforms or badges are grey",
+        "horse of a light gray or whitish color",
+        "the SI unit of energy absorbed from ionizing radiation; equal to the absorption of one joule of radiation energy by one kilogram of matter; one gray equals 100 rad",
+        "English radiobiologist in whose honor the gray (the SI unit of energy for the absorbed dose of radiation) was named (1905-1965)",
+        "English poet best known for his elegy written in a country churchyard (1716-1771)",
+        "American navigator who twice circumnavigated the globe and who discovered the Columbia River (1755-1806)",
+        "United States botanist who specialized in North American flora and who was an early supporter of Darwin's theories of evolution (1810-1888)"
+      ],
+      "verb": [
+        "make grey",
+        "turn grey"
+      ],
+      "adjective satellite": [
+        "of an achromatic color of any lightness intermediate between the extremes of white and black",
+        "showing characteristics of age, especially having grey or white hair; -Coleridge",
+        "used to signify the Confederate forces in the American Civil War (who wore grey uniforms)",
+        "intermediate in character or position"
+      ]
+    },
+    "examples": [
+      [
+        "whose beard with age is hoar",
+        "Her hair began to grey",
+        "a grey area between clearly legal and strictly illegal",
+        "The painter decided to grey the sky",
+        "a man with greyish hair",
+        "he was dressed in grey",
+        "gray flannel suit",
+        "the Confederate army was a vast grey",
+        "a stalwart grey figure",
+        "the little grey cells",
+        "nodded his hoary head"
+      ]
+    ],
+    "part_of_speech": [
+      "noun",
+      "verb",
+      "adjective satellite"
+    ],
+    "date_added": "02-05-2025 00:10:37",
+    "last_reviewed": "02-05-2025 00:10:38",
+    "review_count": 0,
+    "learning_stage": 0,
+    "time_to_repeat": "02-05-2025 00:15:38",
+    "notes": "",
+    "level": "UNKNOWN",
+    "tags": [
+      "quantity",
+      "artifact",
+      "person",
+      "group",
+      "all",
+      "attribute",
+      "animal",
+      "change"
+    ],
+    "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\gray_gt.mp3",
+    "frequency": 6.425846447305675
   }
 }
