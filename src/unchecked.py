@@ -58,6 +58,7 @@ def sort_unchecked_by_frequency(vocabulary):
     for word in unsorted_list:
         index = binary_search_insert_index(word,sorted_list,0,len(sorted_list))
         sorted_list.insert(index,word)
+        delete_from_unchecked(word[0])
     return sorted_list
 
 def delete_from_unchecked(word):

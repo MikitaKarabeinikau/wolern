@@ -144,13 +144,17 @@ def show_vocabulary(vocabulary):
     elif isinstance(vocabulary,list):
         return '\n'.join(list(vocabulary))
 
-def remove_word_from_vocabulary():
+def remove_word_from_vocabulary(word,vocabulary):
     pass
 
-def update_word():
+def update_word(word,vocabulary):
 
     pass
 
+def update_learning_stage(word,stage,vocabulary,path_to):
+    with path_to.open("w", encoding="utf-8") as f:
+        vocabulary[word]['learning_stage'] = stage
+        json.dump(vocabulary,f, ensure_ascii=False, indent=2)
 
 def reset_vocabulary_file():
     pass

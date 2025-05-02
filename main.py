@@ -1,13 +1,26 @@
 # Main entry point for the program
+import json
 import os.path
 from pathlib import Path
 
 from wolern.src.fetchers import cefr_from_csv_to_json
 from wolern.src.text_scanner import load_text
-from wolern.src.utils import STANDART_VOCABULARY_PATH
+from wolern.src.unchecked import get_sorted_unchecked, sort_unchecked_by_frequency, delete_from_unchecked
+from wolern.src.utils import STANDART_VOCABULARY_PATH, STANDART_SORTED_UNCHECKED_PATH
 from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary, get_vocabulary, \
-    show_all_vocabularies, get_list_of_new_words, show_vocabulary
+    show_all_vocabularies, get_list_of_new_words, show_vocabulary, update_learning_stage
 
+input_message = (
+    "\nSelect learning stage:\n"
+    "  0: New word – not yet reviewed\n"
+    "  1: Recognized – seen once or twice\n"
+    "  2: Familiar – answered correctly once\n"
+    "  3: Learned – answered correctly multiple times\n"
+    "  4: Mastered – reviewed over time, rarely forgotten\n"
+    "  5: Archived – fully known, rarely shown unless reset\n"
+    "  q: To Exit.\n"
+    "Enter your choice (0–5): "
+)
 
 def main():
     if os.path.exists('data/cache/cefr_cache.json'):
@@ -46,16 +59,34 @@ def main():
             # call quiz module
             pass
         elif choice == "5":
-            print(f'1. Review vocabulary words\n2. Review newly scanned (unchecked) words')
-            decision = input("Choose an option:")
-            if decision == "1":
-                vocabulary_name = input(f'Print name of the vocabulary')
-                vocabulary_path = Path(__file__).resolve().parent / "data" / "vocabularies" / vocabulary_name+'.json'
-                words = get_list_of_new_words(vocabulary_path)
-            elif decision == "2":
-                words = get_unchecked_words_list()
-            while True:
-                pass
+            vocabulary = get_vocabulary(STANDART_VOCABULARY_PATH)
+            sort_unchecked_by_frequency(vocabulary)
+            words = get_sorted_unchecked()
+
+            while words:
+                try:
+                    word, freq = words.pop()  # use pop(0) to preserve sorting (FIFO)
+
+                    print(f"\nReview word: {word} (frequency: {freq})")
+                    stage = input(input_message)
+
+                    if stage == 'q':
+                        # Save progress back to sorted file
+                        with open(STANDART_SORTED_UNCHECKED_PATH, "w", encoding="utf-8") as f:
+                            json.dump(words, f, ensure_ascii=False, indent=2)
+                        print("✅ Progress saved. Exiting review.")
+                        break
+
+                    if stage.isdigit() and 0 <= int(stage) <= 5:
+                        if word in vocabulary:
+                            update_learning_stage(word, int(stage), vocabulary, STANDART_VOCABULARY_PATH)
+                        else:
+                            add_word_to_vocabulary(word, STANDART_VOCABULARY_PATH, int(stage))
+                    else:
+                        print("⚠️ Invalid input. Enter a number from 0–5 or 'q' to quit.")
+                except Exception as e:
+                    print(f"❌ Error during review: {e}")
+                    break
         elif choice == "6":
             print("Goodbye!")
             break
