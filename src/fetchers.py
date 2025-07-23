@@ -375,16 +375,7 @@ def build_cefr_dict(files: Iterable[Path]) -> dict[str, str]:
 
 
 def get_translation_from_cache(word: str) -> dict[str, list[str]] | None:
-    """
-    Retrieve the cached translation for a given word, if available.
 
-    Parameters:
-        word (str): The word to look up.
-
-    Returns:
-        dict[str, list[str]] | None: A dictionary of translations by language,
-        or None if the word is not in the cache.
-    """
     return _translation_cache.get(word)
 
 
