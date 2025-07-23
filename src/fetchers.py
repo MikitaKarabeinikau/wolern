@@ -12,6 +12,7 @@ import requests
 from requests import RequestException
 import pandas as pd
 from bs4 import BeautifulSoup
+import nltk
 from nltk.corpus import wordnet
 from deep_translator import LingueeTranslator
 
@@ -22,6 +23,7 @@ if TRANSLATION_CACHE_PATH.exists():
     _translation_cache = json.loads(TRANSLATION_CACHE_PATH.read_text(encoding="utf-8"))
 else:
     _translation_cache = {}
+
 
 
 def frequency_exist(word: str) -> bool:

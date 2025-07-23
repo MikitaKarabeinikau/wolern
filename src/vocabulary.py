@@ -12,13 +12,13 @@ from pathlib import Path
 import json
 from src.sound_manager import generate_audio, get_audio_path
 from src.unchecked import update_weirds_word
-from src.utils import current_datetime, parse_time_to_str, STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH
+from src.utils import current_datetime, parse_time_to_str,initial_repeat_time, STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH
 from src.fetchers import *
 
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"
 _cache_unchecked_words = json.loads(STANDART_UNCHECKED_PATH.read_text(encoding='utf-8'))
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
-
+nltk.download('wordnet')
 
 def show_all_vocabularies():
     vocabularys = os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies")
@@ -88,7 +88,7 @@ def add_word_to_vocabulary(word, vocabulary_path, learning_stage=0):
 
     word = {
         "word": word.lower(),
-        "translation": get_transtaltion_from_cache(word),
+        "translation": get_translation_from_cache(word),
         "synonyms": synonyms,
         "definition": definitions if definitions else [],
         "examples": [examples] if examples else [],
