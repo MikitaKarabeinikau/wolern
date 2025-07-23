@@ -1,12 +1,9 @@
-import pytest
+from pathlib import Path
 
-from wolern.src.utils import UNCHECKED_PATH, VOCABULARY_PATH
-from wolern.src.vocabulary import delete_word_from_vocabulary
+import pytest
+from src.vocabulary import add_word_to_vocabulary
 
 
 if __name__ == '__main__':
-    print(delete_word_from_vocabulary("browning",UNCHECKED_PATH))
-    print(delete_word_from_vocabulary("duties",VOCABULARY_PATH))
+    add_word_to_vocabulary("dog", Path(__file__).resolve().parent.parent/'tests'/'data'/'test_vocabulary.json')
 
-@pytest.fixture
-def 

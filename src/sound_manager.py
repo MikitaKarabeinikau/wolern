@@ -28,38 +28,16 @@ import pyttsx3
 
 from requests import RequestException
 
-from wolern.src.utils import AUDIO_DIR
+from src.utils import STANDART_AUDIO_FILES_DIR
 
 
 def _filename(word: str, suffix: str) -> Path:
-    """
-    Construct an .mp3 file path by combining the provided word and suffix.
-
-    Parameters:
-        word (str): The base word to include in the filename (will be stripped and lowercased).
-        suffix (str): The suffix to append to the filename (e.g., 'gt' for gTTS output or 'pytt' for pyttsx3 fallback).
-
-    Returns:
-        Path: A Path object pointing to the generated .mp3 file within AUDIO_DIR.
-    """
     normalized_word = word.strip().lower()
     filename = f"{normalized_word}_{suffix}.mp3"
-    return AUDIO_DIR / filename
+    return STANDART_AUDIO_FILES_DIR / filename
 
 
 def generate_audio(word: str) -> Path:
-    """
-    Generate an audio file for the given word using Google Text-to-Speech (gTTS),
-    falling back to pyttsx3 if gTTS fails.
-
-    Parameters:
-        word (str): The text to synthesize into speech.
-
-    Returns:
-        Path: The Path to the synthesized .mp3 audio file. The file suffix will be 'gt'
-            if generated via gTTS, or 'pytt' if falling back to pyttsx3.
-    """
-    # Attempt synthesis with gTTS
     gt_file = _filename(word, "gt")
     try:
         gTTS(text=word, lang="en").save(gt_file.as_posix())

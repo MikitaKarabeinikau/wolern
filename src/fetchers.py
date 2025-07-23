@@ -15,8 +15,8 @@ from bs4 import BeautifulSoup
 from nltk.corpus import wordnet
 from deep_translator import LingueeTranslator
 
-from wolern.src.utils import convert_pos, POS_TAG_MAP, CEFR_ORDER, TRANSLATION_CACHE_PATH, \
-    PATH_TO_SUBTLEXus, FREQUENCIES_CACHE_PATH, CSV_PATH_1, CSV_PATH_2, CACHE_PATH
+from src.utils import convert_pos, POS_TAG_MAP, CEFR_ORDER, TRANSLATION_CACHE_PATH, \
+    PATH_TO_SUBTLEXus, FREQUENCIES_CACHE_PATH, CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH, CEFR_CACHE_PATH
 _translation_cache: dict[str, dict]
 if TRANSLATION_CACHE_PATH.exists():
     _translation_cache = json.loads(TRANSLATION_CACHE_PATH.read_text(encoding="utf-8"))
@@ -25,33 +25,10 @@ else:
 
 
 def frequency_exist(word: str) -> bool:
-    """
-    Check if the given word exists in the frequency cache.
-
-    Parameters:
-        word (str): The word to check.
-
-    Returns:
-        bool: True if the word exists in the frequency cache, False otherwise.
-    """
     return word in _frequency_cache
 
 
 def build_frequency_dict() -> None:
-    """
-    Build a frequency dictionary from the SUBTLEX-US dataset and save it as a JSON file.
-
-    Reads the Excel file specified by PATH_TO_SUBTLEXus, extracts word-frequency pairs,
-    converts all words to lowercase, and writes the resulting dictionary to the path
-    defined by FREQUENCIES_CACHE_PATH.
-
-    Returns:
-        None
-
-    Side effects:
-        - Creates or overwrites a JSON file containing frequency data.
-        - Prints a confirmation message to the console.
-    """
     subtlex = pd.read_excel(PATH_TO_SUBTLEXus)
     frequency_dict = dict(zip(subtlex["Word"].str.lower(), subtlex["SUBTLCD"]))
     with open(FREQUENCIES_CACHE_PATH, "w", encoding="utf-8") as f:
@@ -125,6 +102,8 @@ def get_synonyms_from_nltk(word: str) -> List[str]:
 
 
 def get_synonyms_datamuse(word: str) -> List[str]:
+    if word == "":
+        raise ValueError("[ERROR] Word could not be empty")
     """
     Fetch synonyms for a given word using the Datamuse API.
 
@@ -151,22 +130,10 @@ def get_synonyms_datamuse(word: str) -> List[str]:
     return []
 
 
-def replace_part(word: str, f_index: int | None, s_index: int | None) -> str:
-    """
-    Replace a part of the word between two indices with an ellipsis ("...").
-
-    Parameters:
-        word (str): The original word.
-        f_index (int | None): The starting index of the part to replace.
-        s_index (int | None): The ending index of the part to replace.
-
-    Returns:
-        str: The modified word with the specified substring replaced by '...'.
-             If either index is None, the original word is returned unchanged.
-    """
-    if f_index is None or s_index is None:
+def replace_part(word: str, left_index: int | None, right_index: int | None) -> str:
+    if left_index is None or right_index is None:
         return word
-    return word[:f_index] + "..." + word[s_index:]
+    return word[:left_index] + "..." + word[right_index:]
 
 
 def get_index_of_similar_part(
@@ -471,23 +438,8 @@ def cefr_from_csv_to_json():
     Side effects:
         - Overwrites the file at CACHE_PATH with the new CEFR data.
     """
-    data = build_cefr_dict([CSV_PATH_1, CSV_PATH_2])
-    CACHE_PATH.write_text(
+    data = build_cefr_dict([CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH])
+    CEFR_CACHE_PATH.write_text(
         json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
     )
 
-
-__all__ = [
-    "get_frequency",
-    "check_translation_in_cache",
-    "get_synonyms",
-    "get_translation",
-    "get_parts_of_speech",
-    "get_definitions_by_pos",
-    "get_examples_from_wordnet",
-    "get_tags_from_wordnet",
-    "fetch_cefr_from_evp",
-    "build_frequency_dict",
-    "build_cefr_dict",
-    "cefr_from_csv_to_json",
-]
