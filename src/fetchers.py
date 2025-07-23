@@ -291,16 +291,7 @@ def get_examples_from_wordnet(word: str) -> List[str]:
 
 
 def get_tags_from_wordnet(word: str) -> List[str]:
-    """
-    Extract unique lexical category tags for a word using WordNet.
 
-    Parameters:
-        word (str): The word to analyze.
-
-    Returns:
-        List[str]: A list of unique lexical tags (e.g., 'food', 'animal'),
-                   derived from WordNet's lexnames.
-    """
     tags = set()
     for syn in wordnet.synsets(word):
         lexname = syn.lexname()  # e.g., 'noun.food', 'noun.animal'
