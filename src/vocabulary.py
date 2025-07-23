@@ -6,7 +6,6 @@ Host all functions that:
 
 """
 import os
-
 import nltk
 from pathlib import Path
 import json
@@ -18,12 +17,12 @@ from src.fetchers import *
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"
 _cache_unchecked_words = json.loads(STANDART_UNCHECKED_PATH.read_text(encoding='utf-8'))
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
-nltk.download('wordnet')
+
 
 def show_all_vocabularies():
-    vocabularys = os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies")
-    print('\n'.join(list(vocabularys)))
-    return vocabularys
+    vocabularies = os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies")
+    print('\n'.join(list(vocabularies)))
+    return vocabularies
 
 
 def pop_word_from_vocabulary(word, vocabulary_name):
@@ -46,6 +45,8 @@ def get_vocabulary(path):
     if path.exists():
         return json.loads(path.read_text(encoding="utf-8"))
     else:
+        print(f'[INFO] File {path} does not exist!\n'
+              f'Opened empty vocabulary.')
         return {}
 
 
@@ -61,8 +62,17 @@ def get_word_input():
     word = input("Enter the English word").strip().lower()
     return word
 
+def is_word_in_vocabulary(word,vocabulary_file_path = Path(__file__).resolve().parent.parent/'data'/'vocabularies'/'vocabulary.json'):
+    #What if file_path will be uncorrect? Should I raise Error or new dict is enough?
+    #Could new dict make bugs in future ?
+    vocabulary = get_vocabulary(vocabulary_file_path)
+    return True if word in vocabulary.keys() else False
 
 def add_word_to_vocabulary(word, vocabulary_path, learning_stage=0):
+    if word == None:
+        raise ValueError(f'Word could not be a None')
+    elif len(word) <= 1:
+        raise ValueError(f'LENGTH OF WORD COULD NOT BE LESS OR EQUALE 1 ')
     vocabulary = get_vocabulary(vocabulary_path)
     if word in vocabulary.keys():
         print(f'Word : {word} already in vocabulary')

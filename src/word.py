@@ -1,9 +1,12 @@
 import json
+from pathlib import Path
 
 from src.sound_manager import get_audio_path
-from src.vocabulary import word_in_vocabulary
-
-
+from src.vocabulary import word_in_vocabulary,get_vocabulary
+def word_from_vocabulary(word,vocabulary):
+        vocabulary = get_vocabulary(Path(__file__).resolve().parent / 'data' / 'vocabularies' / vocabulary +".json")
+        word_data = None
+        return Word(word_data)
 class Word:
     def __init__(self, word_data):
         self.word = word_data["word"]

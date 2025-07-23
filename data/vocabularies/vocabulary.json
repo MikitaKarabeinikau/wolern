@@ -1083,5 +1083,104 @@
     ],
     "audio_url": "C:\\Users\\scoob\\PythonProject\\wolern\\data\\audio\\gray_gt.mp3",
     "frequency": 6.425846447305675
+  },
+  "cat": {
+    "word": "cat",
+    "translation": {
+      "russian": [
+        "кошка",
+        "кот"
+      ]
+    },
+    "synonyms": [
+      "be sick",
+      "hombre",
+      "barf",
+      "throw up",
+      "cat-o'-nine-tails",
+      "purge",
+      "puke",
+      "computerized tomography",
+      "CT",
+      "true cat",
+      "bozo",
+      "caterpillar",
+      "computerized axial tomography",
+      "kat",
+      "Arabian tea",
+      "chuck",
+      "spue",
+      "vomit",
+      "retch",
+      "African tea",
+      "quat",
+      "computed tomography",
+      "disgorge",
+      "khat",
+      "honk",
+      "upchuck",
+      "vomit up",
+      "spew",
+      "ct",
+      "Caterpillar",
+      "sick",
+      "big cat",
+      "guy",
+      "regorge",
+      "computed axial tomography",
+      "cast",
+      "regurgitate",
+      "CAT",
+      "qat"
+    ],
+    "definition": {
+      "noun": [
+        "feline mammal usually having thick soft fur and no ability to roar: domestic cats; wildcats",
+        "an informal term for a youth or man",
+        "a spiteful woman gossip",
+        "the leaves of the shrub Catha edulis which are chewed like tobacco or used to make tea; has the effect of a euphoric stimulant",
+        "a whip with nine knotted cords",
+        "a large tracked vehicle that is propelled by two endless metal belts; frequently used for moving earth in construction and farm work",
+        "any of several large cats typically able to roar and living in the wild",
+        "a method of examining body organs by scanning them with X rays and using a computer to construct a series of cross-sectional scans along a single axis"
+      ],
+      "verb": [
+        "beat with a cat-o'-nine-tails",
+        "eject the contents of the stomach through the mouth"
+      ]
+    },
+    "examples": [
+      [
+        "The patient regurgitated the food we gave him last night",
+        "what a cat she is!",
+        "the guy's only doing it for some doll",
+        "After drinking too much, the students vomited",
+        "in Yemen kat is used daily by 85% of adults",
+        "He purged continuously",
+        "a nice guy",
+        "British sailors feared the cat"
+      ]
+    ],
+    "part_of_speech": [
+      "noun",
+      "verb"
+    ],
+    "date_added": "23-07-2025 13:00:15",
+    "last_reviewed": "23-07-2025 13:00:17",
+    "review_count": 0,
+    "learning_stage": 1,
+    "time_to_repeat": "23-07-2025 13:05:17",
+    "notes": "",
+    "level": "A1",
+    "tags": [
+      "contact",
+      "artifact",
+      "animal",
+      "act",
+      "person",
+      "body"
+    ],
+    "audio_url": "/home/scb/wolern/data/cache/audio/cat_gt.mp3",
+    "frequency": 16.523605150214593
   }
 }

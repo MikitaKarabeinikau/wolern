@@ -3,12 +3,12 @@ import json
 import os.path
 from pathlib import Path
 
-from wolern.src.fetchers import cefr_from_csv_to_json
-from wolern.src.text_scanner import load_text
-from wolern.src.unchecked import get_sorted_unchecked, sort_unchecked_by_frequency, delete_from_unchecked
-from wolern.src.utils import STANDART_VOCABULARY_PATH, STANDART_SORTED_UNCHECKED_PATH
-from wolern.src.vocabulary import get_word_input, add_word_to_vocabulary, get_vocabulary, \
-    show_all_vocabularies, get_list_of_new_words, show_vocabulary, update_learning_stage
+from src.fetchers import cefr_from_csv_to_json
+from src.text_scanner import load_text
+from src.unchecked import get_sorted_unchecked, sort_unchecked_by_frequency, delete_from_unchecked
+from src.utils import STANDART_VOCABULARY_PATH, STANDART_SORTED_UNCHECKED_PATH
+from src.vocabulary import get_word_input, add_word_to_vocabulary, get_vocabulary, \
+    show_all_vocabularies, get_list_of_words, show_vocabulary, update_learning_stage
 
 input_message = (
     "\nSelect learning stage:\n"
@@ -21,6 +21,7 @@ input_message = (
     "  q: To Exit.\n"
     "Enter your choice (0–5): "
 )
+
 
 def main():
     if os.path.exists('data/cache/cefr_cache.json'):
@@ -39,7 +40,7 @@ def main():
 
         if choice == "1":
             # call add_word_to_vocabulary()
-            add_word_to_vocabulary(get_word_input(),get_vocabulary(STANDART_VOCABULARY_PATH),1)
+            add_word_to_vocabulary(get_word_input(), Path(__file__).resolve().parent / 'data' / 'vocabularies' / 'vocabulary.json', 1)
         elif choice == "2":
             # call text scanning logic
             limit = int(input("How many new words you want to add\nPrint zero to no limit\Write a number : "))
@@ -47,14 +48,15 @@ def main():
             if limit == 0:
                 load_text(path_to)
             else:
-                load_text(path_to,limit)
+                load_text(path_to, limit)
         elif choice == "3":
             # display saved words
-            vocabulary = input(f'write a name of vocabulary to show there contant :{show_all_vocabularies()}\nPress Enter to show defualt vocabulary')
+            vocabulary = input(
+                f'write a name of vocabulary to show there contant :{show_all_vocabularies()}\nPress Enter to show defualt vocabulary')
             if len(vocabulary) == 0:
                 show_vocabulary(get_vocabulary())
             else:
-                show_vocabulary(get_vocabulary(vocabulary))
+                show_vocabulary(get_vocabulary(Path(__file__).resolve().parent / 'data' / 'vocabularies'/ vocabulary))
         elif choice == "4":
             # call quiz module
             pass
@@ -92,6 +94,7 @@ def main():
             break
         else:
             print("Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     main()
