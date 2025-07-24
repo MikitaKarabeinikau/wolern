@@ -35,4 +35,7 @@ def test_delete_vocabulary(vocabulary):
     assert vocabulary.is_vocabulary_exit('test_vocabulary') == False
 
 if __name__ == "__main__":
-    pass
+    vocabulary = Vocabulary()
+    vocabulary.add_word_to_vocabulary('home','known')
+    vocabulary.add_word_to_vocabulary('frog','known')
+    vocabulary.delete_word_from_vocabulary('home','known')

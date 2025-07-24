@@ -28,6 +28,7 @@ class Vocabulary():
         self.owner = owner
         self.dir = self.set_vocabulary_dir()
         self.collection = self.load_all_vocabularies()
+        self.write_standart_vocabularies()
 
     def set_vocabulary_dir(self):
         if os.path.isdir(VOCABULARY_DIR_PATH/self.owner):
@@ -62,8 +63,8 @@ class Vocabulary():
 
     def create_empty_json_file(self,vocabulary_name):
         with open(self.dir / (vocabulary_name+'.json'), 'w', encoding='utf-8') as vocabulary:
-                        json.dump({},vocabulary,ensure_ascii=False,indent=2)
-                        print(f'[INFO] {datetime.datetime.now()} Vocabulary {vocabulary_name} was created! {vocabulary}')
+            json.dump({},vocabulary,ensure_ascii=False,indent=2)
+            print(f'[INFO] {datetime.datetime.now()} Vocabulary {vocabulary_name} was created! {vocabulary}')
     def add_new_vocabulary(self,vocabulary_name):
         if self.is_vocabulary_exit(vocabulary_name):
             raise ValueError(f"[ERROR] Vocabulary {vocabulary_name.upper()} is already exist.")
@@ -85,29 +86,119 @@ class Vocabulary():
             print(f'[INFO] Vocabulary {vocabulary_name} does not exist in dir : {self.dir}')
             return False
 
-def pop_word_from_vocabulary(word, vocabulary_name):
-    vocabulary = get_vocabulary(vocabulary_name)
-    if vocabulary_name != STANDART_UNCHECKED_PATH:
+
+    def update_name_of_vocabulary(self,old_name,new_name):
+        old_name += '.json'
+        new_name = self.dir/ (old_name+'.json')
+        vocabulary = self.get_vocabulary(old_name)
+        json.dump(vocabulary,new_name,ensure_ascii=False,indent=2)
+
+    def get_vocabulary(self,vocabulary_name):
+        path = self.dir/(vocabulary_name+'.json')
+        if os.path.isfile(path):
+            return json.loads(path.read_text(encoding="utf-8"))
+        else:
+            print(f'[INFO] File {path} does not exist!\n'
+                  f'Opened empty vocabulary.')
+            return {}
+
+    def find_warnings(self,word_data):
+                warnings = []
+                if not word_data.get("translation"):
+                    warnings.append("Missing translation")
+                if not word_data.get("synonyms"):
+                    warnings.append("No synonyms found")
+                if not word_data.get("definition"):
+                    warnings.append("No definitions available")
+                if not word_data.get("examples"):
+                    warnings.append("No example sentences")
+                if not word_data.get("part_of_speech"):
+                    warnings.append("Missing part of speech")
+                if not word_data.get("frequency"):
+                    warnings.append("Missing frequency")
+                if not word_data.get("level"):
+                    warnings.append("No CEFR level found")
+                return warnings
+    def add_word_to_vocabulary(self,word, vocabulary_name, learning_stage=0):
+        if word == None:
+            raise ValueError(f'Word could not be a None')
+        elif len(word) <= 1:
+            raise ValueError(f'LENGTH OF WORD COULD NOT BE LESS OR EQUALE 1 ')
+        vocabulary = self.get_vocabulary(vocabulary_name)
+
+        if word in vocabulary.keys():
+            print(f'Word : {word} already in vocabulary')
+            return
+
+        added_date = parse_time_to_str(current_datetime())
+
+        part_of_speech = get_parts_of_speech(word)
+        definitions = get_definitions_by_pos(word)
+        synonyms = get_synonyms(word)
+        translation = get_translation(word)
+        examples = get_examples_from_wordnet(word)
+        level = get_cefr_level(word)
+        frequency = get_frequency(word)
+
+        review_count = 0
+        last_reviewed = parse_time_to_str(current_datetime())
+        learning_stage = learning_stage
+        time_to_repeat = parse_time_to_str(initial_repeat_time())
+        audio_url = generate_audio(word)
+        tags = get_tags_from_wordnet(word)
+        word = {
+            "word": word.lower(),
+            "translation": get_translation_from_cache(word),
+            "synonyms": synonyms,
+            "definition": definitions if definitions else [],
+            "examples": [examples] if examples else [],
+            "part_of_speech": part_of_speech,
+            "date_added": added_date,
+            "last_reviewed": last_reviewed,
+            "review_count": review_count,
+            "learning_stage": learning_stage,
+            "time_to_repeat": time_to_repeat,
+            "notes": "",
+            "level": level,
+            "tags": tags if tags else [],
+            "audio_url": str(get_audio_path(word)),
+            'frequency': frequency
+        }
+
+        warnings = self.find_warnings(word)
+
+        if len(warnings) >=2:
+            self.move_word_to_weird_vocabulary(word)
+        else:
+            vocabulary[word["word"]] = word
+            with (self.dir/(vocabulary_name +'.json')).open("w", encoding="utf-8") as f:
+                json.dump(vocabulary, f, ensure_ascii=False, indent=2)
+            print(f"✅ Word '{word}' added to vocabulary.")
+    def delete_word_from_vocabulary(self,word,vocabulary_name):
+        words = self.get_vocabulary(vocabulary_name)
+        if word in words.keys():
+            del words[word]
+            print(f'[INFO] Word: {word.upper()} was deleted from {vocabulary_name.upper()}')
+            with open(self.dir/(vocabulary_name+'.json'),'w', encoding='utf-8') as vocabulary:
+                json.dump(words,vocabulary,ensure_ascii=False,indent=2)
+        else:
+            print(f'Word {word} does not exist in {self.dir/(vocabulary_name+".json")}')
+
+
+    def move_word_to_weird_vocabulary(self,word):
+        word['warnings'] = warnings
+        with (self.dir/'weird.json').open("w",encoding='utf-8') as vocabulary:
+            json.dump(word,ensure_ascii=False,indent=2)
+
+    def pop_word_from_vocabulary(self,word, vocabulary_name):
+        vocabulary = self.get_vocabulary(vocabulary_name)
         deleted_word_data = vocabulary.pop(word, None)
         with open(vocabulary_name, 'w', encoding='utf-8') as fl:
             json.dump(vocabulary, fl, ensure_ascii=False, indent=2)
         print(f'Word : {word} was deleted. {vocabulary_name} is rewrote.')
         return deleted_word_data
-    else:
-        vocabulary.remove(word)
-        with open(vocabulary_name, 'w', encoding='utf-8') as fl:
-            json.dump(vocabulary, fl, ensure_ascii=False, indent=2)
-        print(f'Word : {word} was deleted. {vocabulary_name} is rewrote.')
-        return word
 
 
-def get_vocabulary(path):
-    if path.exists():
-        return json.loads(path.read_text(encoding="utf-8"))
-    else:
-        print(f'[INFO] File {path} does not exist!\n'
-              f'Opened empty vocabulary.')
-        return {}
 
 
 def get_cefr_level(word):
@@ -129,111 +220,21 @@ def is_word_in_vocabulary(word,vocabulary_file_path = Path(__file__).resolve().p
         raise ValueError('Word should not be None')
     if len(word) <=1:
         raise ValueError('Word should have more symbols then 1')
-    vocabulary = get_vocabulary(vocabulary_file_path)
+    vocabulary = Vocabulary(vocabulary_file_path).get_vocabulary()
     return True if word in vocabulary.keys() else False
 
-def add_word_to_vocabulary(word, vocabulary_path, learning_stage=0):
-    if word == None:
-        raise ValueError(f'Word could not be a None')
-    elif len(word) <= 1:
-        raise ValueError(f'LENGTH OF WORD COULD NOT BE LESS OR EQUALE 1 ')
-    vocabulary = get_vocabulary(vocabulary_path)
-    if word in vocabulary.keys():
-        print(f'Word : {word} already in vocabulary')
-        return
-    added_date = parse_time_to_str(current_datetime())
-
-    part_of_speech = get_parts_of_speech(word)
-    definitions = get_definitions_by_pos(word)
-    synonyms = get_synonyms(word)
-    translation = get_translation(word)
-    examples = get_examples_from_wordnet(word)
-    level = get_cefr_level(word)
-    frequency = get_frequency(word)
-
-    review_count = 0
-    last_reviewed = parse_time_to_str(current_datetime())
-    learning_stage = learning_stage
-    time_to_repeat = parse_time_to_str(initial_repeat_time())
-
-    audio_url = generate_audio(word)
-
-    tags = get_tags_from_wordnet(word)
-
-    word = {
-        "word": word.lower(),
-        "translation": get_translation_from_cache(word),
-        "synonyms": synonyms,
-        "definition": definitions if definitions else [],
-        "examples": [examples] if examples else [],
-        "part_of_speech": part_of_speech,
-        "date_added": added_date,
-        "last_reviewed": last_reviewed,
-        "review_count": review_count,
-        "learning_stage": learning_stage,
-        "time_to_repeat": time_to_repeat,
-        "notes": "",
-        "level": level,
-        "tags": tags if tags else [],
-        "audio_url": str(get_audio_path(word)),
-        'frequency': frequency
-
-    }
-    warnings = find_warnings(word)
-
-    if len(warnings) != 0:
-        update_weirds_word(word['word'], warnings)
-    else:
-        vocabulary[word["word"]] = word
-        with vocabulary_path.open("w", encoding="utf-8") as f:
-            json.dump(vocabulary, f, ensure_ascii=False, indent=2)
-        print(f"✅ Word '{word}' added to vocabulary.")
 
 
-def find_warnings(word_data):
-    """
-    Inspect word data for missing or suspicious fields.
-    Returns a list of warning messages.
-    """
-
-    warnings = []
-
-    if not word_data.get("translation"):
-        warnings.append("Missing translation")
-    if not word_data.get("synonyms"):
-        warnings.append("No synonyms found")
-    if not word_data.get("definition"):
-        warnings.append("No definitions available")
-    if not word_data.get("examples"):
-        warnings.append("No example sentences")
-    if not word_data.get("part_of_speech"):
-        warnings.append("Missing part of speech")
-    if not word_data.get("frequency"):
-        warnings.append("Missing frequency")
-    if not word_data.get("level"):
-        warnings.append("No CEFR level found")
-
-    return warnings
 
 
 def get_list_of_words(vocabulary):
     return list(vocabulary.keys())
 
-
-def show_vocabulary(vocabulary):
-    if isinstance(vocabulary, dict):
-        return '\n'.join(list(vocabulary.keys()))
-    elif isinstance(vocabulary, list):
-        return '\n'.join(list(vocabulary))
-
-
 def remove_word_from_vocabulary(word, vocabulary):
     pass
 
-
 def update_word(word, vocabulary):
     pass
-
 
 def update_learning_stage(word, stage, vocabulary, path_to):
     with path_to.open("w", encoding="utf-8") as f:

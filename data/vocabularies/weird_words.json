@@ -1215,5 +1215,8 @@
     "warnings": [
       "Missing frequency"
     ]
+  },
+  "dog": {
+    "warnings": []
   }
 }
