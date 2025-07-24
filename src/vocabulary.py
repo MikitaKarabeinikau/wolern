@@ -5,6 +5,7 @@ Host all functions that:
 • update stats (update_learning_stage, update_repeat_time).
 
 """
+import datetime
 import os
 import nltk
 from pathlib import Path
@@ -12,7 +13,7 @@ import json
 from src.sound_manager import generate_audio, get_audio_path
 from src.unchecked import update_weirds_word
 from src.utils import current_datetime, parse_time_to_str, initial_repeat_time, STANDART_VOCABULARY_PATH, \
-    STANDART_UNCHECKED_PATH, VOCABULARY_DIR_PATH
+    STANDART_UNCHECKED_PATH, VOCABULARY_DIR_PATH,STANDART_VOCABULARIES_SET
 from src.fetchers import *
 
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"
@@ -38,11 +39,51 @@ class Vocabulary():
     def load_all_vocabularies(self):
         pass
 
-    def show_all_vocabularies():
-        vocabularies = os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies")
-        print('\n'.join(list(vocabularies)))
-        return vocabularies
+    def write_standart_vocabularies(self):
+        for vocabulary_name in STANDART_VOCABULARIES_SET:
+            if os.path.isfile(self.dir/(vocabulary_name + '.json')) == False:
+                self.create_empty_json_file(vocabulary_name)
 
+    def get_list_of_all_vocabularies(self):
+        vocabularies = os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies"/self.owner)
+        if len(vocabularies) <= 1:
+            self.write_standart_vocabularies()
+            os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies"/self.owner)
+        else:
+            return vocabularies
+
+    def show_all_vocabularies(self):
+        if len(self.get_list_of_all_vocabularies()) <= 1:
+            self.write_standart_vocabularies()
+            return self.get_list_of_all_vocabularies()
+        else:
+            print(f'List of vocabularies:\n'+'\n'.join(self.get_list_of_all_vocabularies()))
+            return self.get_list_of_all_vocabularies()
+
+    def create_empty_json_file(self,vocabulary_name):
+        with open(self.dir / (vocabulary_name+'.json'), 'w', encoding='utf-8') as vocabulary:
+                        json.dump({},vocabulary,ensure_ascii=False,indent=2)
+                        print(f'[INFO] {datetime.datetime.now()} Vocabulary {vocabulary_name} was created! {vocabulary}')
+    def add_new_vocabulary(self,vocabulary_name):
+        if self.is_vocabulary_exit(vocabulary_name):
+            raise ValueError(f"[ERROR] Vocabulary {vocabulary_name.upper()} is already exist.")
+        else:
+            self.create_empty_json_file(vocabulary_name)
+
+    def delete_vocabulary(self,vocabulary_name):
+        if os.path.isfile(self.dir/(vocabulary_name+'.json')):
+            os.remove(self.dir/(vocabulary_name+'.json'))
+            print(f'[INFO] {datetime.datetime.now()} Vocabulary {self.dir/(vocabulary_name+".json")}')
+        else:
+            raise ValueError(f'Vocabulary {self.dir/(vocabulary_name+".json")} does not exist')
+
+    def is_vocabulary_exit(self,vocabulary_name):
+        if vocabulary_name+'.json' in (os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies"/self.owner)):
+            print(f'[INFO] Vocabulary {vocabulary_name} exist in dir : {self.dir}')
+            return True
+        else:
+            print(f'[INFO] Vocabulary {vocabulary_name} does not exist in dir : {self.dir}')
+            return False
 
 def pop_word_from_vocabulary(word, vocabulary_name):
     vocabulary = get_vocabulary(vocabulary_name)

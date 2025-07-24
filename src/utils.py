@@ -30,6 +30,8 @@ TEST_VOCABULARY = Path(__file__).resolve().parent.parent / 'tests' / 'data' / 't
 VOCABULARY_DIR_PATH = Path(__file__).resolve().parent.parent / 'data'/ 'vocabularies'
 from datetime import datetime, timedelta
 
+STANDART_VOCABULARIES_SET = ['known','unknown']
+
 # CEFR progression scale
 CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1", "C2"]
 

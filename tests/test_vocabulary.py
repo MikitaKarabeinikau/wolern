@@ -28,5 +28,11 @@ def vocabulary():
 def test_set_vocabulary_dir(vocabulary):
     assert vocabulary.set_vocabulary_dir() == VOCABULARY_DIR_PATH/vocabulary.owner
 
+def test_delete_vocabulary(vocabulary):
+    vocabulary.add_new_vocabulary('test_vocabulary')
+    assert vocabulary.is_vocabulary_exit('test_vocabulary') == True
+    vocabulary.delete_vocabulary('test_vocabulary')
+    assert vocabulary.is_vocabulary_exit('test_vocabulary') == False
 
-
+if __name__ == "__main__":
+    pass
