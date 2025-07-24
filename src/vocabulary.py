@@ -11,7 +11,8 @@ from pathlib import Path
 import json
 from src.sound_manager import generate_audio, get_audio_path
 from src.unchecked import update_weirds_word
-from src.utils import current_datetime, parse_time_to_str,initial_repeat_time, STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH
+from src.utils import current_datetime, parse_time_to_str, initial_repeat_time, STANDART_VOCABULARY_PATH, \
+    STANDART_UNCHECKED_PATH, VOCABULARY_DIR_PATH
 from src.fetchers import *
 
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"
@@ -19,10 +20,28 @@ _cache_unchecked_words = json.loads(STANDART_UNCHECKED_PATH.read_text(encoding='
 _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
 
 
-def show_all_vocabularies():
-    vocabularies = os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies")
-    print('\n'.join(list(vocabularies)))
-    return vocabularies
+
+
+class Vocabulary():
+    def __init__(self,owner='scoobykot'):
+        self.owner = owner
+        self.dir = self.set_vocabulary_dir()
+        self.collection = self.load_all_vocabularies()
+
+    def set_vocabulary_dir(self):
+        if os.path.isdir(VOCABULARY_DIR_PATH/self.owner):
+            return VOCABULARY_DIR_PATH/self.owner
+        else:
+            os.mkdir(VOCABULARY_DIR_PATH/self.owner)
+            print(f'[INFO] New dir {VOCABULARY_DIR_PATH/self.owner} was created!')
+            return VOCABULARY_DIR_PATH/self.owner
+    def load_all_vocabularies(self):
+        pass
+
+    def show_all_vocabularies():
+        vocabularies = os.listdir(Path(__file__).resolve().parent.parent / "data" / "vocabularies")
+        print('\n'.join(list(vocabularies)))
+        return vocabularies
 
 
 def pop_word_from_vocabulary(word, vocabulary_name):
@@ -65,6 +84,10 @@ def get_word_input():
 def is_word_in_vocabulary(word,vocabulary_file_path = Path(__file__).resolve().parent.parent/'data'/'vocabularies'/'vocabulary.json'):
     #What if file_path will be uncorrect? Should I raise Error or new dict is enough?
     #Could new dict make bugs in future ?
+    if word is None:
+        raise ValueError('Word should not be None')
+    if len(word) <=1:
+        raise ValueError('Word should have more symbols then 1')
     vocabulary = get_vocabulary(vocabulary_file_path)
     return True if word in vocabulary.keys() else False
 

@@ -2,11 +2,18 @@ import json
 from pathlib import Path
 
 from src.sound_manager import get_audio_path
-from src.vocabulary import word_in_vocabulary,get_vocabulary
-def word_from_vocabulary(word,vocabulary):
-        vocabulary = get_vocabulary(Path(__file__).resolve().parent / 'data' / 'vocabularies' / vocabulary +".json")
-        word_data = None
-        return Word(word_data)
+from src.vocabulary import word_in_vocabulary,get_vocabulary,is_word_in_vocabulary
+def get_word_from_vocabulary(word,vocabulary_file_path=Path(__file__).resolve().parent/ 'data' / 'vocablaries'/'vocabulary.json'):
+        vocabulary = get_vocabulary(vocabulary_file_path)
+        if is_word_in_vocabulary(word,vocabulary_file_path) == True:
+            print(f'Word {word.upper()} exist in {vocabulary_file_path}')
+            print(Word(vocabulary[word]))
+            return Word(vocabulary[word])
+        else:
+            print(f'Word {word.upper()} is not in vocabulary {vocabulary_file_path}')
+
+
+
 class Word:
     def __init__(self, word_data):
         self.word = word_data["word"]

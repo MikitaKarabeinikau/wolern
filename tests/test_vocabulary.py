@@ -12,10 +12,21 @@ def  test_add_word_to_vocabulary_short_word_error():
 
 def test_is_word_in_vocabulary_True():
     assert is_word_in_vocabulary('dog',Path(__file__).resolve().parent.parent/'tests'/'data'/'test_vocabulary.json') == True
+def test_is_word_in_vocabulary_False():
+    assert is_word_in_vocabulary('mod',Path(__file__).resolve().parent.parent/'tests'/'data'/'test_vocabulary.json') == False
 
-if __name__ == '__main__':
-    test_add_word_to_vocabulary_None_argument()
-    test_add_word_to_vocabulary_short_word_error()
-    test_is_word_in_vocabulary_True()
+def test_is_word_in_vocabulary_None():
+    with pytest.raises(ValueError,match="Word should not be None"):
+        assert is_word_in_vocabulary(None,Path(__file__).resolve().parent.parent/'tests'/'data'/'test_vocabulary.json') == False
+
+def test_is_word_in_vocabulary_TO_SHORT_WORD():
+    with pytest.raises(ValueError,match='Word should have more symbols then 1'):
+        assert is_word_in_vocabulary('b',Path(__file__).resolve().parent.parent/'tests'/'data'/'test_vocabulary.json') == False
+@pytest.fixture
+def vocabulary():
+    return Vocabulary()
+def test_set_vocabulary_dir(vocabulary):
+    assert vocabulary.set_vocabulary_dir() == VOCABULARY_DIR_PATH/vocabulary.owner
+
 
 

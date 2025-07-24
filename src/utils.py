@@ -26,7 +26,8 @@ PATH_TO_WEIRD_WORDS_VOCABULARY = Path(__file__).resolve().parent.parent / 'data'
 STANDART_SORTED_UNCHECKED_PATH = Path(
     __file__).resolve().parent.parent / "data" / "vocabularies" / "sorted_unchecked.json"
 STANDART_AUDIO_FILES_DIR = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'audio'
-
+TEST_VOCABULARY = Path(__file__).resolve().parent.parent / 'tests' / 'data' / 'test_vocabulary.json'
+VOCABULARY_DIR_PATH = Path(__file__).resolve().parent.parent / 'data'/ 'vocabularies'
 from datetime import datetime, timedelta
 
 # CEFR progression scale

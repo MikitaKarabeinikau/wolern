@@ -96,8 +96,8 @@ def sync_audio_files() -> None:
             None
     """
     # Collect sets of words with each suffix
-    gtts = {p.stem.rsplit("_", 1)[0] for p in AUDIO_DIR.glob("*_gt.mp3")}
-    pyttsx = {p.stem.rsplit("_", 1)[0] for p in AUDIO_DIR.glob("*_pytt.mp3")}
+    gtts = {p.stem.rsplit("_", 1)[0] for p in STANDART_AUDIO_FILES_DIR.glob("*_gt.mp3")}
+    pyttsx = {p.stem.rsplit("_", 1)[0] for p in STANDART_AUDIO_FILES_DIR.glob("*_pytt.mp3")}
 
     # Identify words missing gTTS audio
     missing_in_gtts = pyttsx - gtts
