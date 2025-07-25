@@ -5,7 +5,7 @@ from src.vocabulary import *
 
 @pytest.fixture
 def vocabulary():
-    return Vocabulary()
+    return Vocabulary('test')
 
 def test_add_word_to_vocabulary_None_argument(vocabulary):
     with pytest.raises(ValueError,match="Word could not be a None"):

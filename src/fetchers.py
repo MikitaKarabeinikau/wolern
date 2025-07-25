@@ -348,7 +348,7 @@ def highest_cefr(existing: str | None, new: str) -> str:
     return new if CEFR_ORDER.index(new) > CEFR_ORDER.index(existing) else existing
 
 
-def build_cefr_dict(files: Iterable[Path]) -> dict[str, str]:
+def build_cefr_dict(files):
     """
     Build a dictionary mapping words to their highest CEFR level from multiple CSV files.
 
