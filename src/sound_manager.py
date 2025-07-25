@@ -79,7 +79,7 @@ def get_list_of_audio_files(pattern: str = "*_gt.mp3") -> list[Path]:
     Returns:
         list[Path]: A sorted list of Path objects for files matching the pattern.
     """
-    return sorted(AUDIO_DIR.glob(pattern))
+    return sorted(STANDART_AUDIO_FILES_DIR.glob(pattern))
 
 
 def sync_audio_files() -> None:
