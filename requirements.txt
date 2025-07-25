@@ -26,5 +26,5 @@ tqdm==4.67.1
 typing_extensions==4.14.1
 tzdata==2025.2
 urllib3==2.5.0
--e git+ssh://git@github.com/MikitaKarabeinikau/wolern.git@36b50709613241aa0feb68a73d81b0fb913475c4#egg=wolern
+git+https://github.com/MikitaKarabeinikau/wolern.git@<commit>#egg=wolern
 xlrd==2.0.2
