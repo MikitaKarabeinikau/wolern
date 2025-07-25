@@ -11,7 +11,7 @@ joblib==1.5.1
 nltk==3.9.1
 numpy==2.3.1
 packaging==25.0
-pandas==2.6
+pandas==2.3.1
 pluggy==1.6.0
 Pygments==2.19.2
 pytest==8.4.1
@@ -20,12 +20,12 @@ pyttsx3==2.99
 pytz==2025.2
 regex==2024.11.6
 requests==2.32.4
+setuptools==80.9.0
 six==1.17.0
 soupsieve==2.7
 tqdm==4.67.1
 typing_extensions==4.14.1
 tzdata==2025.2
 urllib3==2.5.0
-setuptools==80.9.0
-wolern @ git+https://github.com/MikitaKarabeinikau/wolern.git@d4c3e21a553afefec2e6544cbeb92e1d7c5d033b#egg=wolern
+-e git+ssh://git@github.com/MikitaKarabeinikau/wolern.git@647e54a6f2d737b1b622114f73d8787420a5abc7#egg=wolern
 xlrd==2.0.2
