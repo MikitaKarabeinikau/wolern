@@ -5,6 +5,11 @@ setup(
     version='0.0.1', # Start with a version number
     packages=find_packages(),
     install_requires=[],
+    package_data={
+        'wolern':[
+            'data/sources/frequencies_source/*.xls',
+        ]
+    },
     author='Mikita Karabeinikau',
     description='Coming soon...',
     long_description=open('README.md').read(),
