@@ -17,7 +17,7 @@ from pathlib import Path
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'cefr_cache.json'
 CEFR_VOCABULARY_PROFILE_FILE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'source' / 'cefr_sources' / 'cefrj-vocabulary-profile-1.5.csv'
 CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'source' / 'cefr_sources' / 'octanove-vocabulary-profile-c1c2-1.0.csv'
-PATH_TO_SUBTLEXus = Path(__file__).resolve().parent.parent / 'data' / 'source' / 'frequencies_source' / 'SUBTLEXusfrequencyabove1.xls'
+PATH_TO_SUBTLEXus = Path(__file__).resolve().parent.parent / 'data' / 'source' / 'frequencies_source' / 'SUBTLEX.xls'
 FREQUENCIES_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'frequency_cache.json'
 TRANSLATION_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'translation_cache.json'
 STANDART_VOCABULARY_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'vocabulary.json'
