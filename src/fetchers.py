@@ -247,6 +247,9 @@ def get_parts_of_speech(word: str) -> List[str]:
         pos_tags.add(convert_pos(synset.pos()))
     return list(pos_tags)
 
+def get_cefr_level(word):
+    _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
+    return _cefr_cache.get(word.lower(), "UNKNOWN")
 
 def get_definitions_by_pos(word: str) -> dict[str, list[str]]:
     """

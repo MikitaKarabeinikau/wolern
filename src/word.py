@@ -2,15 +2,6 @@ import json
 from pathlib import Path
 
 from src.sound_manager import get_audio_path
-from src.vocabulary import word_in_vocabulary,get_vocabulary,is_word_in_vocabulary
-def get_word_from_vocabulary(word,vocabulary_file_path=Path(__file__).resolve().parent/ 'data' / 'vocablaries'/'vocabulary.json'):
-        vocabulary = get_vocabulary(vocabulary_file_path)
-        if is_word_in_vocabulary(word,vocabulary_file_path) == True:
-            print(f'Word {word.upper()} exist in {vocabulary_file_path}')
-            print(Word(vocabulary[word]))
-            return Word(vocabulary[word])
-        else:
-            print(f'Word {word.upper()} is not in vocabulary {vocabulary_file_path}')
 
 
 
@@ -51,8 +42,9 @@ class Word:
             "audio_url": self.audio_url,
         }
 
-    def save_word_in_vocabulary(self, vocabulary):
-        if not word_in_vocabulary(self.word, vocabulary):
-            vocabulary[self.word] = self.to_dict()
-            with open(vocabulary, "w", encoding="utf-8") as f:
-                json.dump(vocabulary, f, ensure_ascii=False, indent=2)
+    def update_learning_stage(word, stage, vocabulary, path_to):
+        with path_to.open("w", encoding="utf-8") as f:
+            vocabulary[word]['learning_stage'] = stage
+            json.dump(vocabulary, f, ensure_ascii=False, indent=2)
+
+

@@ -27,9 +27,6 @@ def test_frequency_exist_false(mock_frequency_cache):
     with patch("fetchers._frequency_cache", mock_frequency_cache):
         assert frequency_exist("dog") is False
 
-
-
-
 def test_frequency_exist_empty_string(mock_frequency_cache):
     with patch("fetchers._frequency_cache", mock_frequency_cache):
         assert frequency_exist("") is False

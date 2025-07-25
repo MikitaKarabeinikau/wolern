@@ -29,7 +29,7 @@ STANDART_AUDIO_FILES_DIR = Path(__file__).resolve().parent.parent / 'data' / 'ca
 TEST_VOCABULARY = Path(__file__).resolve().parent.parent / 'tests' / 'data' / 'test_vocabulary.json'
 VOCABULARY_DIR_PATH = Path(__file__).resolve().parent.parent / 'data'/ 'vocabularies'
 from datetime import datetime, timedelta
-
+DEFUALT_USER = 'scoobykot'
 STANDART_VOCABULARIES_SET = ['known','unknown','weird']
 
 # CEFR progression scale
