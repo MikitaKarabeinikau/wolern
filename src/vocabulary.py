@@ -10,7 +10,6 @@ from word import Word
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"
 _cache_unchecked_words = json.loads(STANDART_UNCHECKED_PATH.read_text(encoding='utf-8'))
 
-
 class Vocabulary_Manager():
     def __init__(self,owner=DEFUALT_USER):
         self.owner = owner
