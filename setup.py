@@ -8,6 +8,7 @@ setup(
     package_data={
         'wolern':[
             'data/sources/frequencies_source/*.xls',
+            'data/**/*',
         ]
     },
     author='Mikita Karabeinikau',
