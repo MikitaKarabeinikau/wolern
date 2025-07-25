@@ -1,17 +1,7 @@
-"""
-Host all functions that:
-• build the word dict (add_word_to_vocabulary, build_word_entry)
-• load/save JSON (load_vocabulary, save_vocabulary)
-• update stats (update_learning_stage, update_repeat_time).
-
-"""
 import datetime
 import os
-import nltk
-from pathlib import Path
-import json
 from src.sound_manager import generate_audio, get_audio_path
-from src.unchecked import update_weirds_word
+
 from src.utils import current_datetime, parse_time_to_str, initial_repeat_time, STANDART_VOCABULARY_PATH, \
     STANDART_UNCHECKED_PATH, VOCABULARY_DIR_PATH, STANDART_VOCABULARIES_SET, DEFUALT_USER
 from src.fetchers import *
