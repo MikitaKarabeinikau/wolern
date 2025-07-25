@@ -16,14 +16,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+      
     steps:
-      - name: Checkout main repository and private submodules
+    - name: Checkout main repository and private submodules
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.DEPLOYMENT_TOKEN }} 
           submodules: true
           fetch-depth: 0
-    steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
