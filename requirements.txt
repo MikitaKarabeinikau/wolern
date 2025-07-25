@@ -27,5 +27,4 @@ tqdm==4.67.1
 typing_extensions==4.14.1
 tzdata==2025.2
 urllib3==2.5.0
-wolern @ git+https://github.com/MikitaKarabeinikau/wolern.git@1590033f62427dd0c14c5a5c38f733cc55a8ee43#egg=wolern
 xlrd==2.0.2
