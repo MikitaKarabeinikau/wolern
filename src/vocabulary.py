@@ -18,7 +18,10 @@ class Vocabulary_Manager():
 
         self.write_standart_vocabularies()
     def load_all_vocabularies(self):
-         return [Vocabulary(vocabulary_name[:-5]).vocabulary for vocabulary_name in self.get_list_of_all_vocabularies()]
+        vocabularies = {}
+        for voc_name in self.get_list_of_all_vocabularies():
+            vocabularies[voc_name[:-5]] = Vocabulary(voc_name[:-5]).vocabulary
+        return vocabularies
     def delete_vocabulary(self,vocabulary_name):
         if os.path.isfile(self.dir/(vocabulary_name+'.json')):
             os.remove(self.dir/(vocabulary_name+'.json'))
@@ -63,6 +66,9 @@ class Vocabulary_Manager():
             raise ValueError(f"[ERROR] Vocabulary {vocabulary_name.upper()} is already exist.")
         else:
             self.create_empty_json_file(vocabulary_name)
+    def clean_vocabulary(self,vocabulary_name):
+        self.create_empty_json_file(vocabulary_name+'.json')
+
 
 class Vocabulary():
     def __init__(self,vocabulary_name,owner=DEFUALT_USER):
@@ -71,6 +77,10 @@ class Vocabulary():
         self.dir = self.set_vocabulary_dir()
         self.full_path = self.dir / (self.vocabulary_name+'.json')
         self.vocabulary = self.get_vocabulary()
+        self.size = self.get_size()
+
+    def get_size(self):
+        return len(self.vocabulary.keys())
 
     def set_vocabulary_dir(self):
         if os.path.isdir(VOCABULARY_DIR_PATH/self.owner):
@@ -86,6 +96,9 @@ class Vocabulary():
         new_name = self.dir/ (old_name+'.json')
         vocabulary = self.get_vocabulary(old_name)
         json.dump(vocabulary,new_name,ensure_ascii=False,indent=2)
+    def update_vocabulary(self):
+        with open(self.full_path,'w') as file:
+            json.dump(self.vocabulary,file,ensure_ascii=False,indent=2)
 
     def get_vocabulary(self):
         if os.path.isfile(self.full_path):

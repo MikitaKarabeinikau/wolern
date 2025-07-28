@@ -360,13 +360,15 @@ def build_cefr_dict(files):
         dict[str, str]: A dictionary where each word is mapped to its highest CEFR level.
     """
     cefr: dict[str, str] = {}
+    c = []
     for csv_path in files:
         with csv_path.open(encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 word = row["headword"].strip().lower()
                 level = row["CEFR"].strip().upper()
-                cefr[word] = highest_cefr(cefr.get(word), level)
+                if level not in c : c.append(level)
+                cefr[word] = c
     return cefr
 
 

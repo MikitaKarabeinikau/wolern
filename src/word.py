@@ -1,10 +1,6 @@
 import json
-from pathlib import Path
 
 from src.sound_manager import get_audio_path
-
-
-
 class Word:
     def __init__(self, word_data):
         self.word = word_data["word"]
@@ -41,6 +37,25 @@ class Word:
             "tags": self.tags,
             "audio_url": self.audio_url,
         }
+
+
+    def get_definition(self):
+        s = str()
+        for i in self.definition.keys():
+            s +=' '.join(self.definition[i])
+            s +='\n'
+        return s
+
+
+    def get_examples(self):
+        return self.examples
+    def add_to_examples(self,example):
+        self.examples.append()
+        return self.to_dict()
+
+    def add_notes(self,note):
+        self.notes.append(note)
+        print(f'In word: {self.word} was added a note!')
 
     def update_learning_stage(word, stage, vocabulary, path_to):
         with path_to.open("w", encoding="utf-8") as f:

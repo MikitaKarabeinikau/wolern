@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import pprint
 import pytest
 from src.vocabulary import *
 
@@ -26,4 +26,4 @@ def test_set_vocabulary_dir(vocabulary):
 if __name__ == "__main__":
     Vocabulary('known').add_word_to_vocabulary('house')
     manager = Vocabulary_Manager()
-    print(manager.collection)
+    pprint.pprint(manager.collection['known'])
