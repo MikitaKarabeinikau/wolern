@@ -1,3 +1,5 @@
+import rich
+from rich.progress import Progress, SpinnerColumn, TextColumn
 
 input_message = (
     "\nSelect learning stage:\n"
@@ -14,24 +16,60 @@ import fetchers
 from src.vocabulary import Vocabulary_Manager,Vocabulary
 import pprint
 
-def main():
-    command = input(f'Write a command:\nclean: if you want to clean vocabulary\nshow : show vocabulary\nadd : add word to vocabulary\nword: get word\n')
 
-    if command == 'clean':
-        vocabulary_name = input('What vocabulary\n')
-        manager = Vocabulary_Manager()
-        manager.clean_vocabulary(vocabulary_name)
-    elif command == 'show':
-        vocabulary = Vocabulary('known')
-        pprint.pprint(vocabulary.vocabulary)
-    elif command == 'add':
-        word = input('input word:\n')
-        Vocabulary('known').add_word_to_vocabulary(word)
-    elif command == 'word':
-        word = input('input word\n')
-        voc = Vocabulary('known')
-        if voc.is_word_in_vocabulary(word): pprint.pprint(voc.get_word_from_vocabulary(word).get_definition())
+def main():
+    while True:
+        command = input(f'Write a command:\nc'
+                        f'lean: if you want to clean vocabulary\n'
+                        f'show : show vocabulary\n'
+                        f'word: get word\n'
+                        f'size: print size of vocabulary\n'
+                        f'exit: to close the app\n')
+
+        if command == 'clean':
+            vocabulary_name = input('What vocabulary\n')
+            manager = Vocabulary_Manager()
+            manager.clean_vocabulary(vocabulary_name)
+        elif command == 'show':
+            vocabulary = Vocabulary('known')
+            pprint.pprint(vocabulary.vocabulary)
+        elif command == 'word':
+            while True:
+                word_command = input(f'\nWrite a command :\n'
+                                     f'words_in: show list of words'
+                                     f'definit: if you whant to get definition of the word\n'
+                                     f'add : add word to vocabulary\n'
+                                     f'delete: to delete word from vocabulary\n'
+                                     f'example: to show examples\n'
+                                     f'exit: to change to previously\n')
+                if word_command == 'definit':
+                    word = input('input word\n')
+                    voc = Vocabulary('known')
+                    if voc.is_word_in_vocabulary(word): print(voc.get_word_from_vocabulary(word).get_definition())
+                elif word_command == 'delete':
+                            word = input('input word:\n')
+                            if voc.is_word_in_vocabulary(word):Vocabulary('known').delete_word_from_vocabulary(word)
+                elif word_command == 'add':
+                    word = input('input word:\n')
+
+                    if not Vocabulary('known').is_word_in_vocabulary(word):Vocabulary('known').add_word_to_vocabulary(word)
+                elif word_command == 'example':
+                    word = input('input word\n')
+                    if Vocabulary('known').is_word_in_vocabulary(word):
+                        word = Vocabulary('known').get_word_from_vocabulary(word)
+                        word.show_examples()
+                elif word_command == 'words_in':
+                    voc = Vocabulary('known').get_list_of_words()
+                    print(voc)
+                elif word_command == 'exit':
+                    break
+        elif command == 'size':
+            pprint.pprint(Vocabulary('known').get_size())
+        elif command == 'exit':
+            pprint.pprint(f'See later!')
+            break
         
+
 
 
 # def main():

@@ -1,5 +1,6 @@
 import datetime
 import os
+
 from src.sound_manager import generate_audio, get_audio_path
 
 from src.utils import current_datetime, parse_time_to_str, initial_repeat_time, STANDART_VOCABULARY_PATH, \
@@ -95,7 +96,7 @@ class Vocabulary():
         self.vocabulary_name = new_name
         new_name = self.dir/ (old_name+'.json')
         vocabulary = self.get_vocabulary(old_name)
-        json.dump(vocabulary,new_name,ensure_ascii=False,indent=2)
+        self.save()
     def update_vocabulary(self):
         with open(self.full_path,'w') as file:
             json.dump(self.vocabulary,file,ensure_ascii=False,indent=2)
@@ -167,21 +168,20 @@ class Vocabulary():
             with (self.dir/(self.vocabulary_name +'.json')).open("w", encoding="utf-8") as f:
                 json.dump(self.vocabulary, f, ensure_ascii=False, indent=2)
             print(f"✅ Word '{word}' added to vocabulary.")
-    def delete_word_from_vocabulary(self,word,vocabulary_name):
+    def delete_word_from_vocabulary(self,word):
         #TODO:DELETE SOUND FILE !
-        words = self.get_vocabulary(vocabulary_name)
+        words = self.get_vocabulary()
         if word in words.keys():
             del words[word]
-            print(f'[INFO] Word: {word.upper()} was deleted from {vocabulary_name.upper()}')
-            with open(self.dir/(vocabulary_name+'.json'),'w', encoding='utf-8') as vocabulary:
-                json.dump(words,vocabulary,ensure_ascii=False,indent=2)
+            print(f'[INFO] Word: {word.upper()} was deleted from {self.vocabulary_name.upper()}')
+            self.save()
         else:
-            print(f'Word {word} does not exist in {self.dir/(vocabulary_name+".json")}')
+            print(f'Word {word.upper()} does not exist in {self.full_path}')
 
     def move_word_to_weird_vocabulary(self,word):
         word['warnings'] = warnings
         with (self.dir/'weird.json').open("w",encoding='utf-8') as vocabulary:
-            json.dump(word,ensure_ascii=False,indent=2)
+            json.dump(word,vocabulary,ensure_ascii=False,indent=2)
 
     def pop_word_from_vocabulary(self,word, vocabulary_name):
         vocabulary = self.get_vocabulary(vocabulary_name)
@@ -209,6 +209,15 @@ class Vocabulary():
             return Word(self.vocabulary[word])
         else:
             print(f'Word {word.upper()} is not in vocabulary {str(self.full_path).upper()}')
+
+    def save(self):
+        try:
+            data_to_save = self.vocabulary
+            with open(self.full_path,'w', encoding='utf-8') as f:
+                json.dump(data_to_save,f,indent=2,ensure_ascii=False)
+            print(f'File : {self.full_path} was saved!')
+        except IOError as e:
+            print(f'{e}')
 
 
 def get_word_input():

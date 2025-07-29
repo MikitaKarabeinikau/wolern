@@ -251,17 +251,8 @@ def get_cefr_level(word):
     _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
     return _cefr_cache.get(word.lower(), "UNKNOWN")
 
-def get_definitions_by_pos(word: str) -> dict[str, list[str]]:
-    """
-    Get definitions for a word grouped by part of speech using WordNet.
+def get_definitions_by_pos(word):
 
-    Parameters:
-        word (str): The word to define.
-
-    Returns:
-        dict[str, list[str]]: A dictionary where keys are part-of-speech labels
-        (e.g., 'noun', 'verb') and values are lists of unique definitions.
-    """
     definitions: dict[str, list[str]] = {}
 
     for synset in wordnet.synsets(word):
@@ -274,8 +265,12 @@ def get_definitions_by_pos(word: str) -> dict[str, list[str]]:
         definition = synset.definition()
         if definition not in definitions[readable_pos]:
             definitions[readable_pos].append(definition)
-
-    return definitions
+    format_definition = ''
+    for part in definitions.keys():
+        format_definition +=''.join(definitions[part])+' '
+        format_definition +='\n'
+    output_definitions = format_definition.split(';')
+    return output_definitions
 
 
 def get_examples_from_wordnet(word: str) -> List[str]:
@@ -401,9 +396,7 @@ def get_translation(
         return {target_lang: cached[target_lang]}
 
     try:
-        translated_words = LingueeTranslator(
-            source="english", target=target_lang
-        ).translate(word, return_all=True)
+        translated_words = LingueeTranslator(source="english", target=target_lang).translate(word, return_all=True)
         _translation_cache.setdefault(w, {})[target_lang] = translated_words
         _save_translation_cache()
         return {target_lang: translated_words}
