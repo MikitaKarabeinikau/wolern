@@ -1,7 +1,11 @@
 import json
-
+import logging
+from pathlib import Path
 import utils
 from src.sound_manager import get_audio_path
+
+logging.basicConfig(filename=(Path(__file__).resolve().parent.parent /'logs'/'app.log'),level=logging.INFO,format='%(asctime)s - %(levelname)s - %(message)s')
+
 class Word:
     def __init__(self, word_data):
         self.word = word_data["word"]
@@ -19,6 +23,10 @@ class Word:
         self.level = word_data.get("level", None)
         self.tags = word_data.get("tags", [])
         self.audio_url = word_data.get("audio_url", get_audio_path(self.word))
+        self.frequency = word_data.get("frequency",None)
+
+    def __str__(self):
+        return f'{self.word.upper()}\t\tLearning Stage: {self.learning_stage}\nTranslation:\n\t{self.get_translation("russian")}\nExamples: \n\t{self.get_examples()}TAGS:\n\t{self.tags}'
 
     def to_dict(self):
         return {
@@ -37,17 +45,22 @@ class Word:
             "level": self.level,
             "tags": self.tags,
             "audio_url": self.audio_url,
+            "frequency": self.frequency
         }
 
     def add_tags(self,tag):
-        if tag not in self.tags: self.tags.append(tag)
-    def show_tags(self):
-        return 'TAGS :' + '\n'.join(self.tags)
+        if tag not in self.tags:
+            self.tags.append(tag)
+            logging.info(f'TAG: {tag} was added in {self.word}')
+
+    def display_tags(self):
+        return f'TAGS of {self.word}:' + '\n\t'.join(self.tags)
 
 
     def delete_tag(self,tag):
-        if tag in self.tags: self.tags.remove(tag)
-
+        if tag in self.tags:
+            self.tags.remove(tag)
+            logging.info(f'TAG: {tag} was delete from word: {self.word}')
     def delete_level(self,level):
         if level in self.level: self.level.remove(level)
 

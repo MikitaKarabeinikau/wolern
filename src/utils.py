@@ -14,6 +14,7 @@ Date formatting is a general-purpose helper — you will probably want to reuse 
 """
 from pathlib import Path
 
+PATH_TO_LOG_FILE = Path(__file__).resolve().parent.parent /'logs'/'app.log'
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'cefr_cache.json'
 CEFR_VOCABULARY_PROFILE_FILE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'source' / 'cefr_sources' / 'cefrj-vocabulary-profile-1.5.csv'
 CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'source' / 'cefr_sources' / 'octanove-vocabulary-profile-c1c2-1.0.csv'

@@ -1,6 +1,10 @@
 import rich
 from rich.progress import Progress, SpinnerColumn, TextColumn
+import logging
 
+from utils import PATH_TO_LOG_FILE
+
+logging.basicConfig(filename=PATH_TO_LOG_FILE,level=logging.INFO)
 input_message = (
     "\nSelect learning stage:\n"
     "  0: New word – not yet reviewed\n"
@@ -18,6 +22,7 @@ import pprint
 
 
 def main():
+    manager = Vocabulary_Manager()
     while True:
         command = input(f'Write a command:\nc'
                         f'lean: if you want to clean vocabulary\n'
@@ -41,6 +46,7 @@ def main():
                                      f'add : add word to vocabulary\n'
                                      f'delete: to delete word from vocabulary\n'
                                      f'example: to show examples\n'
+                                     f'update: change word data'
                                      f'exit: to change to previously\n')
                 if word_command == 'definit':
                     word = input('input word\n')
@@ -63,6 +69,26 @@ def main():
                     print(voc)
                 elif word_command == 'exit':
                     break
+                elif word_command == 'update':
+                    word = input(f'print word that info you want to change:\n')
+                    if Vocabulary('known').is_word_in_vocabulary(word):
+                        inputed_word = Vocabulary('known').get_word_from_vocabulary(word)
+                        while True:
+                            parameter_to_update = input(f'Write a update parameter:\n'
+                                                f'tag : to add tag\n'
+                                                f'\n'
+                                                f'exit: to left\n')
+                            if parameter_to_update == 'tag':
+                                tag = input(f'What tag you whant to add\n')
+                                inputed_word.add_tags(tag)
+                                print(inputed_word)
+
+                                manager.update_all_vocabularies(inputed_word)
+                            elif parameter_to_update == 'exit':
+                                break
+                    else:
+                        print('Word does not exist in vocabulary\n')
+
         elif command == 'size':
             pprint.pprint(Vocabulary('known').get_size())
         elif command == 'exit':

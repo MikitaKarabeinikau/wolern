@@ -1,5 +1,7 @@
 import datetime
+import logging
 import os
+import pprint
 
 from src.sound_manager import generate_audio, get_audio_path
 
@@ -21,7 +23,7 @@ class Vocabulary_Manager():
     def load_all_vocabularies(self):
         vocabularies = {}
         for voc_name in self.get_list_of_all_vocabularies():
-            vocabularies[voc_name[:-5]] = Vocabulary(voc_name[:-5]).vocabulary
+            vocabularies[voc_name[:-5]] = Vocabulary(voc_name[:-5])
         return vocabularies
     def delete_vocabulary(self,vocabulary_name):
         if os.path.isfile(self.dir/(vocabulary_name+'.json')):
@@ -69,6 +71,23 @@ class Vocabulary_Manager():
             self.create_empty_json_file(vocabulary_name)
     def clean_vocabulary(self,vocabulary_name):
         self.create_empty_json_file(vocabulary_name+'.json')
+    def update_all_vocabularies(self,updated_word:Word):
+        if not isinstance(updated_word,Word):
+            raise ValueError("parameter is not a Word class!")
+        for vocabulary_name in self.collection.keys():
+
+            vocabulary = self.collection[vocabulary_name].get_vocabulary()
+            if updated_word.word in vocabulary.keys():
+                for parameter in vocabulary[updated_word.word].keys():
+                    pprint.pprint(vocabulary[updated_word.word][parameter])
+                    pprint.pprint(updated_word.to_dict()[parameter])
+                    vocabulary[updated_word.word][parameter] = updated_word.to_dict()[parameter]
+                    voc_to_save = Vocabulary(vocabulary_name)
+                    voc_to_save.vocabulary = vocabulary
+                    voc_to_save.save()
+
+            # logging.INFO(f'Word : {updated_word.word} was updated in vocabulary {vocabulary_name}')
+
 
 
 class Vocabulary():

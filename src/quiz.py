@@ -1,8 +1,4 @@
-# Handles the quiz/test functionality
-
-def generate_quiz():
+def learn_words():
     pass
 
-def add_result():
-    pass
 
