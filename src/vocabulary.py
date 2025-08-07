@@ -74,17 +74,10 @@ class Vocabulary_Manager():
     def update_all_vocabularies(self,updated_word:Word):
         if not isinstance(updated_word,Word):
             raise ValueError("parameter is not a Word class!")
-        for vocabulary_name in self.collection.keys():
-
-            vocabulary = self.collection[vocabulary_name].get_vocabulary()
-            if updated_word.word in vocabulary.keys():
-                for parameter in vocabulary[updated_word.word].keys():
-                    pprint.pprint(vocabulary[updated_word.word][parameter])
-                    pprint.pprint(updated_word.to_dict()[parameter])
-                    vocabulary[updated_word.word][parameter] = updated_word.to_dict()[parameter]
-                    voc_to_save = Vocabulary(vocabulary_name)
-                    voc_to_save.vocabulary = vocabulary
-                    voc_to_save.save()
+        for vocabulary_name,vocabulary in self.collection.items():
+            if vocabulary.is_word_in_vocabulary(updated_word.word):
+                vocabulary.vocabulary = updated_word.to_dict()
+                vocabulary.save()
 
             # logging.INFO(f'Word : {updated_word.word} was updated in vocabulary {vocabulary_name}')
 
