@@ -4,8 +4,7 @@ from pathlib import Path
 import utils
 from src.sound_manager import get_audio_path
 
-logging.basicConfig(filename=(Path(__file__).resolve().parent.parent / 'logs' / 'app.log'), level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename=(Path(__file__).resolve().parent.parent / 'logs' / 'app.log'), level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class Word:
@@ -95,6 +94,7 @@ class Word:
 
     def increase_review_count(self):
         if self._review_count <0:
+            logging.error(f'REVIEW COUNTER IS LOWER THAN 0')
             raise ValueError(f'Review counter could not be a lower then 0!')
             logging.error(f'Word {self.word} have less then 0 reviews')
         self._review_count += 1
@@ -112,38 +112,54 @@ class Word:
         print('\n'.join(self.definition))
 
     def pop_definiton(self):
-        if len(self.definition) > 0:
-            definition = self.definition[-1]
-            self.definition = self.definition[:-1]
-            print(f'Definiton: {definition} was deleted')
-            return definition
+        if len(self.definition) <=0:
+            logging.error('INDEX ERROR: NO ITEMS')
+            raise IndexError('No items in array. ')
+        definition = self.definition[-1]
+        self.definition = self.definition[:-1]
+        logging.info(f'Definiton: {definition} was deleted')
+        return definition
 
     def shift_definiton(self):
-        if len(self.definition) > 0:
-            definition = self.definition[0]
-            self.definition = self.definition[1:]
-            print(f'Definiton: {definition} was deleted')
-            return definition
+        if len(self.definition) <=0:
+            logging.error(f'NO DEFINITION for {self.word}')
+            raise IndexError('No items in array. ')
+        definition = self.definition[0]
+        self.definition = self.definition[1:]
+        logging.info(f'Definiton: {definition} was deleted')
+        return definition
 
     def set_time_to_repeat(self, minute):
+        last_time = self.time_to_repeat
         self.time_to_repeat = utils.change_repeat_time(minute)
-
-    def show_time_to_repeat(self):
+        logging.info(f'Time for repeate for word {self.word.upper()} was changed to {self.time_to_repeat} from {last_time}')
+    def display_time_to_repeat(self):
+        if self.time_to_repeat is None:
+            raise ValueError(f'Time to repeate for word {self.word.upper()} was not set')
         print(utils.parse_time_to_str(self.time_to_repeat))
 
     def get_time_to_repeat(self):
+        if self.time_to_repeat is None:
+            raise ValueError(f'Time to repeate for word {self.word.upper()} was not set')
         return self.time_to_repeat
 
     def get_date_added(self):
+        if self.date_added is None:
+            raise ValueError(f'Added Date of word {self.word.upper()} was not set')
         return self.date_added
 
-    def show_date_added(self):
+    def display_date_added(self):
+        if self.date_added is None:
+            raise ValueError(f'Added Date of word {self.word.upper()} was not set')
         print(utils.parse_time_to_str(self.date_added))
 
     def get_examples(self):
+        if len(self.examples) == 0:
+            logging.warning(f'Word ')
+            return []
         return self.examples
 
-    def show_examples(self):
+    def display_examples(self):
         print(self.examples)
 
     def add_to_examples(self, example):

@@ -1,18 +1,18 @@
 import json
 import os.path
 import re
-from pathlib import Path
+import logging
 
 from src.fetchers import get_frequency, frequency_exist
 from src.unchecked import update_weirds_word
-from src.utils import STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH
-from vocabulary import Vocabulary
+from src.utils import STANDART_VOCABULARY_PATH, STANDART_UNCHECKED_PATH, PATH_TO_LOG_FILE
 
 if not os.path.exists(str(STANDART_UNCHECKED_PATH)):
     with open(STANDART_UNCHECKED_PATH, 'w', encoding="utf-8") as f:
         json.dump({}, f, ensure_ascii=False, indent=2)
     print(f'{STANDART_UNCHECKED_PATH} file was created.')
 
+logging.basicConfig(filename=PATH_TO_LOG_FILE,format='%(name)s - %(levelname)s - %(message)s')
 
 # Logic for reading and analyzing text files
 
@@ -56,6 +56,17 @@ def load_pdf(file_path):
 #     """Load vocabulary from JSON file and return set of known words."""
 #     vocabulary = get_vocabulary(path)
 #     return set(vocabulary.keys())
+
+
+def get_examples_from_text(sentences,word:str,text_tag:str):
+    if not isinstance(word, str):
+        raise ValueError('Word should be string')
+    if not isinstance(text_tag,str):
+        raise ValueError('Text tag should be string')
+    examples = [sentence for sentence in sentences if word in sentence]
+    if len(examples) == 0:
+        logging.WARNING(f'Text {text_tag} exclude examples of {word.upper()}')
+    return examples
 
 
 def load_text_from_file(file_path):
