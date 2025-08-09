@@ -1,5 +1,7 @@
 import time
 import logging
+
+import quiz
 import utils
 from utils import PATH_TO_LOG_FILE
 
@@ -15,6 +17,7 @@ def main():
                         f'clean: if you want to clean vocabulary\n'
                         f'show : show vocabulary\n'
                         f'word: get word\n'
+                        f'quiz: to open quiz menu'
                         f'size: print size of vocabulary\n'
                         f'random: generate random 50 words\n'
                         f'test: generate test vocabulary\n'
@@ -35,12 +38,28 @@ def main():
                 print(f'Looking info for word {word.upper()}')
                 manager.collection['test'].add_word_to_vocabulary(word)
                 time.sleep(10)
-
+        elif command == 'quiz':
+            while True:
+                quiz_command = input(f'Write command to:\n'
+                                     f'time: to get time to repeat\n'
+                                     f'five_random: to test changing time\n'
+                                     f'\n'
+                                     f'back: to back in previous menu\n'
+                                     f'quit: to close app\n')
+                if quiz_command == 'time':
+                    quiz.get_learning_words_with_date_to_repeate()
+                elif quiz_command == 'five_random':
+                    quiz.change_five_random_data()
+                elif quiz_command == 'back':
+                    break
+                elif quiz_command == 'quit':
+                    exit()
         elif command == 'vocabulary':
             while True:
                 vocabulary_command = input(f'Write command to:\n'
                                            f'list: get list of dictionary\n'
-                                           f'open: to open vocabulary'
+                                        
+                                           f'open: to open vocabulary\n'
                                            f'back: to return in previous menu\n'
                                            f'quit: to close app\n')
                 if vocabulary_command == 'list':
