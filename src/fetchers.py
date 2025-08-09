@@ -7,14 +7,14 @@ import json
 import csv
 import warnings
 from typing import List, Iterable
-
+import deepl
 import requests
 from requests import RequestException
 import pandas as pd
 from bs4 import BeautifulSoup
 import nltk
 from nltk.corpus import wordnet
-from deep_translator import LingueeTranslator
+from deep_translator import LingueeTranslator,exceptions
 
 from src.utils import convert_pos, POS_TAG_MAP, CEFR_ORDER, TRANSLATION_CACHE_PATH, \
     PATH_TO_SUBTLEXus, FREQUENCIES_CACHE_PATH, CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH, CEFR_CACHE_PATH
@@ -375,20 +375,7 @@ def get_translation_from_cache(word: str) -> dict[str, list[str]] | None:
 def get_translation(
     word: str, target_lang: str = "russian"
 ) -> dict[str, list[str] | None]:
-    """
-    Retrieve a translation for a given word in the specified language.
 
-    Uses a cached result if available; otherwise, queries the LingueeTranslator API
-    and caches the result in `_translation_cache`.
-
-    Parameters:
-        word (str): The English word to translate.
-        target_lang (str): The target language for translation (default is 'russian').
-
-    Returns:
-        dict[str, list[str] | None]: A dictionary with the target language as the key
-        and the list of translated words (or None if translation fails) as the value.
-    """
     w = word.lower()
 
     cached = _translation_cache.get(w)
@@ -400,7 +387,7 @@ def get_translation(
         _translation_cache.setdefault(w, {})[target_lang] = translated_words
         _save_translation_cache()
         return {target_lang: translated_words}
-    except RequestException as e:  # Can't narrow to RequestException here due to external lib
+    except exceptions.ElementNotFoundInGetRequest as e:  # Can't narrow to RequestException here due to external lib
         warnings.warn(f"[translation] {word} → {target_lang} failed: {e}")
         _translation_cache.setdefault(w, {})[target_lang] = None
         _save_translation_cache()

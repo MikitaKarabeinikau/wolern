@@ -155,61 +155,98 @@ class Word:
 
     def get_examples(self):
         if len(self.examples) == 0:
-            logging.warning(f'Word ')
+            logging.warning(f'Word {self.word} exclude examples!')
             return []
         return self.examples
 
     def display_examples(self):
+        if len(self.examples) == 0:
+            logging.warning(f'Word {self.word} exclude examples!')
         print(self.examples)
 
     def add_to_examples(self, example):
+        if example in self.examples:
+            logging.warning(f'Word {self.word} already contain examples: {example}!')
+            raise ValueError(f'Word {self.word} already contain examples: {example}!')
         self.examples.append()
         return self.to_dict()
 
     def pop_example(self):
-        if len(self.examples) > 0:
-            example = self.examples[-1]
-            self.examples = self.examples[:-1]
-            return example
+        if len(self.examples) <= 0:
+            logging.error(f'You tried to pop example from empty array! Word: {self.word.upper()}')
+            raise IndexError(f'Examples of word {self.word.upper()} are empty!')
+        example = self.examples[-1]
+        self.examples = self.examples[:-1]
+        logging.info(f'From word {self.word.upper()} was pop example: {example}')
+        return example
 
     def shift_example(self):
-        if len(self.examples) > 0:
-            example = self.examples[0]
-            self.examples = self.examples[1:]
-            return example
+        if len(self.examples) <= 0:
+            logging.error(f'You tried to shift example from empty array! Word: {self.word.upper()}')
+            raise IndexError(f'Examples of word {self.word.upper()} are empty!')
+        example = self.examples[0]
+        self.examples = self.examples[1:]
+        logging.info(f'From word {self.word.upper()} was pop example: {example}')
+        return example
 
     def add_notes(self, note):
+        if note in self.notes:
+            logging.warning(f'You try to add duplicate of note')
+            raise ValueError(f'Note: {note}\t is already in notes')
         self.notes.append(note)
-        print(f'In word: {self.word} was added a note!')
+        logging.info(f'In word: {self.word} was added a note [{note}]!')
 
     def pop_note(self):
-        if len(self.notes) < 0:
-            note = self.notes[-1]
-            self.notes = self.notes[:-1]
-            print(f'Note: {note} was deleted!')
+        if len(self.notes) <= 0:
+            logging.error(f'You tried to pop note from empty array! Word: {self.word.upper()}')
+            raise IndexError(f'Notes of word {self.word.upper()} are empty!')
+        note = self.notes[-1]
+        self.notes = self.notes[:-1]
+        logging.info(f'From word {self.word.upper()} was pop example: {note}')
+        return note
 
     def shift_note(self):
-        if len(self.notes) < 0:
-            note = self.notes[0]
-            self.notes = self.notes[1:]
-            print(f'Note: {note} was deleted!')
+        if len(self.notes) <= 0:
+            logging.error(f'You tried to shift note from empty array! Word: {self.word.upper()}')
+            raise IndexError(f'Notes of word {self.word.upper()} are empty!')
+        note = self.notes[0]
+        self.notes = self.notes[1:]
+        logging.info(f'From word {self.word.upper()} was shift example: {note}')
+        return note
 
     def increase_learning_stage(self):
+        '''
+        TODO: I need to write Observer that was informed about changes in learning stage
+        :return: observer cahnge word vocabulary
+        '''
         if self.learning_stage < 5:
             self.learning_stage += 1
 
     def down_learning_stage(self):
-        if self.learning_stage > 0:
-            self.learning_stage -= 1
+        if self.learning_stage == 0:
+            raise IndexError('Learning stage could not be less than 0')
+        self.learning_stage -= 1
+        logging.info(f'Learning stage of word {self.word} was decrise by one. Now its: {self.learning_stage}')
 
-    def show_part_of_speach(self):
+    def display_part_of_speach(self):
+        if len(self.part_of_speech) == 0:
+            logging.info(f'Word: {self.word.upper()} does not contain part of speach')
+            raise ValueError(f'No part of speech for word {self.word}')
         print(''.join(self.part_of_speech) + ' ')
 
     def get_part_of_speach(self):
+        if len(self.part_of_speech) == 0:
+            logging.info(f'Word: {self.word.upper()} does not contain part of speach')
+            raise ValueError(f'No part of speech for word {self.word}')
         return self.part_of_speech
 
     def pop_part_of_speach(self):
-        pass
+       '''
+       TODO:
+            with part of speech should be removed exaamples related with that pos
+       :return:
+       '''
+       pass
 
     def shift_part_of_speach(self):
         pass
@@ -217,7 +254,7 @@ class Word:
     def add_part_of_speach(self):
         pass
 
-    def show_translation(self):
+    def display_translation(self):
         translation = ''
         for lang in self.translation.keys():
             translation += lang + '\n'
@@ -226,6 +263,11 @@ class Word:
 
         print(translation)
 
+    '''
+    TODO:
+        refactor this functions 
+        I dont like how they looks
+    '''
     def remove_translation(self, lang):
         self.translation[lang].remove(self.word)
 
