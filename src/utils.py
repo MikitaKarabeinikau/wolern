@@ -109,7 +109,6 @@ def parse_time_to_str(time):
 def initial_repeat_time():
     return datetime.utcnow() + timedelta(minutes=5)
 
-
 def change_repeat_time(minutes, time=None):
     if time is None:
         time = datetime.utcnow()

@@ -1,5 +1,7 @@
+import datetime
 import time
 import logging
+from random import randint
 
 import quiz
 import utils
@@ -13,23 +15,71 @@ import pprint
 def main():
     manager = Vocabulary_Manager()
     while True:
-        command = input(f'Write a command:\nc'
-                        f'clean: if you want to clean vocabulary\n'
-                        f'show : show vocabulary\n'
+        command = input(f'Write a command:\n'
                         f'word: get word\n'
-                        f'quiz: to open quiz menu'
-                        f'size: print size of vocabulary\n'
-                        f'random: generate random 50 words\n'
-                        f'test: generate test vocabulary\n'
-                        f'quit: to close the app\n'
-                        f'vocabulary: to open vocabulary menu')
+                        f'quiz: to open quiz menu\n'
+                        f'vocabulary: to open vocabulary menu\n'
+                        f'run: to check current function\n'
+                        f'test: to generate test set\n'
+                        f'quit: to close the app\n')
+        if command == 'run':
+            def count_data(arr):
+                counter = {}
+                for i in arr:
+                    if i in counter.keys():
+                        counter[i] +=1
+                    else:
+                        counter[i] = 1
+                return counter
 
-        if command == 'clean':
-            vocabulary_name = input('What vocabulary\n')
-            manager = Vocabulary_Manager()
-            manager.clean_vocabulary(vocabulary_name)
-        elif command == 'random':
-            print(utils.get_N_random_word_from_subtlex_longer_then_3(50))
+            #TODO: CHECK d1
+            def compare_to_dict(d1,d2):
+                if d1.keys() != d2.keys():
+                    print(f'Find dif in sets \n'
+                          f'1: {set(d1.keys())-set(d2.keys())}\n'
+                          f'2: {set(d2.keys())-set(d1.keys())}\n')
+
+                    raise ValueError('keys not the same ')
+                difs = {}
+                for i in d1.keys():
+                    if i in d1.keys() and i in d2.keys():
+                        difs[i] = d1[i]-d2[i]
+                    elif i not in d1.keys() and i in d2.keys():
+                        difs[i] = -d2[i]
+                    elif i in d1.keys() and i not in d2.keys():
+                        difs[i] = d1[i]
+
+                return difs
+
+            current_goal = 'Generate quiz linked list\n====================\n'
+            print(f'Current goal is: {current_goal}')
+            #create first element
+            arr = []
+            for i in range(0,50):
+                day = randint(1,29)
+                month = randint(1,12)
+                year = 2025
+                hour = randint(1,23)
+                minute = randint(1,59)
+                second = randint(1,59)
+                date = datetime.datetime(year=year,month=month,day=day,hour=hour,minute=minute,second=second)
+
+                arr.append(date)
+
+            print(f'\n\nOriginal arr: {arr}\n')
+            l = quiz.LinkedVocabulary(arr[0])
+            len_before_take_init_arg = len(arr)
+            arr = arr[1
+            if len_before_take_init_arg == len_after_take_init_arg:
+                raise IndexError(f'length of array  couldnt be the same {len_before_take_init_arg} == {len_after_take_init_arg}')
+            for i in arr:
+                l.insert(i)
+            print(f'Counter of initial arr: {count_data(arr)}\n'
+                  f'Counter of linked data: {count_data(l.print_all())}\n')
+                  # f'Differens between them: {compare_to_dict(count_data(arr),count_data(l.print_all()))}')
+            print(f'Inintial arr: {arr}')
+            print(f'Final result: {len(arr)} == {len(l.print_all())}')
+            #print
         elif command == 'test':
             test_words = utils.get_words_from_translation_cache()
             manager.create_empty_json_file('test')
@@ -58,12 +108,14 @@ def main():
             while True:
                 vocabulary_command = input(f'Write command to:\n'
                                            f'list: get list of dictionary\n'
-                                        
+                                           f'show: show vocabulary\n'
                                            f'open: to open vocabulary\n'
+                                           f'size: print size of vocabulary\n'
                                            f'back: to return in previous menu\n'
                                            f'quit: to close app\n')
                 if vocabulary_command == 'list':
                     print(manager.get_list_of_all_vocabularies())
+
                 elif vocabulary_command == 'open':
                     vocabulary_to_open = input(f'What vocabulary you want to open: {manager.get_list_of_all_vocabularies()}\n')
                     # CHOSEN VOCABULARY MENU
@@ -73,12 +125,17 @@ def main():
                                                 f'add: to add word in vocabulary\n'
                                                 f'delete: delete word from vocabulary\n'
                                                 f'display: to display words\n'
+                                                f'clean: if you want to clean vocabulary\n'
                                                 f'back: to back in previous menu\n'
                                                 f'quit: to close app\n')
-
-        elif command == 'show':
-            vocabulary = Vocabulary('known')
-            pprint.pprint(vocabulary.vocabulary)
+                        if command == 'show':
+                            vocabulary = Vocabulary('known')
+                            pprint.pprint(vocabulary.vocabulary)
+                        elif command == 'clean':
+                            vocabulary_name = input('What vocabulary\n')
+                            manager.collection[vocabulary_to_open].clean_vocabulary()
+                        elif command == 'size':
+                            pprint.pprint(Vocabulary('known').get_size())
         elif command == 'word':
             while True:
                 word_command = input(f'Write a command:\n'
@@ -134,8 +191,6 @@ def main():
                                 exit()
                     else:
                         print('Word does not exist in vocabulary\n'.upper())
-        elif command == 'size':
-            pprint.pprint(Vocabulary('known').get_size())
         elif command == 'quit':
             pprint.pprint(f'See later!')
             break

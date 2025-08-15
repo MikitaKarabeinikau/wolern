@@ -138,7 +138,6 @@ class Vocabulary():
 
     def get_vocabulary(self):
         if os.path.isfile(self.full_path):
-            print(f'{self.vocabulary_name} \t {self.full_path}')
             return json.loads(self.full_path.read_text(encoding="utf-8"))
         else:
             print(f'[INFO] File {self.full_path} does not exist!\n'

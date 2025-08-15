@@ -1,6 +1,6 @@
 import json
 import logging
-from datetime import timedelta
+from datetime import timedelta, datetime
 from pathlib import Path
 import utils
 from src.sound_manager import get_audio_path
@@ -279,5 +279,5 @@ class Word:
         if self.time_to_repeat is None:
             logging.error(f'Time of word {self.word.upper()} was not initialized')
             raise ValueError(f'Time was not defined')
-        print(f'TYPE OF DATE TO REPEAT  {type(self.time_to_repeat)}')
-        return self.time_to_repeat + timedelta(minutes=minutes)
+        self.time_to_repeat = datetime.strptime(self.time_to_repeat,'%d-%m-%Y %H:%M:%S') + timedelta(minutes=minutes)
+        return self.time_to_repeat
