@@ -1,5 +1,6 @@
 from random import randint
 
+import fetchers
 from vocabulary import Vocabulary
 from word import Word
 
@@ -10,10 +11,35 @@ class LinkedVocabulary:
         self.left = left
         self.right = right
         # print(f'{self.data} was created\n====================\n')
+    def __iter__(self):
+        """
+        Returns the iterator object (self) and initializes the current position.
+        """
+        self.current = self.move_to_begin()  # Start the iteration from the first node
+        return self
 
+    def __next__(self):
+        """
+        Returns the next item in the sequence.
+        """
+        if self.current is None:
+            raise StopIteration
+        else:
+            # Store the current node to be returned
+            node_to_return = self.current
+            # Move to the next node for the next call
+            self.current = self.current.right
+            # Return the node
+            return node_to_return
     def __str__(self):
-        return f'self: {self.data}\n\tleft: {self.left.data}\n\tright: {self.right.data}\n\n'
-
+        return f'=================================================================\n' \
+               f'Word: {self.data["word"]}\t\tTime to repeat: {self.data["time_to_repeat"]}\t\tAdded: {self.data["date_added"]}\n' \
+               f'________________________________________________________________________\n' \
+               f'Definition:\n' \
+               f'\t{"".join(fetchers.hide_similar_parts(self.data["word"],self.data["definition"]))}\n' \
+               f'Translation:\n' \
+               f'\t     \n' \
+               f'====================================================================='
     def add_to_left(self, data):
         self.left = LinkedVocabulary(data, left=self.left, right=self)
         # print(f'Word {data} was add to the left\n\n')
@@ -23,12 +49,12 @@ class LinkedVocabulary:
         # print(f'Word {data} was add to the right\n\n')
 
     def its_first(self, data):
-        if self.data > data and self.left is None:
+        if self.data['time_to_repeat'] > data['time_to_repeat'] and self.left is None:
             return True
         return False
 
     def its_last(self, data):
-        if self.data < data and self.right is None:
+        if self.data['time_to_repeat'] < data['time_to_repeat'] and self.right is None:
             return True
         return False
 
@@ -42,24 +68,27 @@ class LinkedVocabulary:
             return True
         return False
     def insert(self, data):
+        new_node = LinkedVocabulary(data)
+
         if self.its_first(data):
             self.add_to_left(data)
         elif self.its_last(data):
             self.add_to_right(data)
-        elif self.data > data > self.left.data:
+        elif self.data['time_to_repeat'] >= data['time_to_repeat'] >= self.left.data['time_to_repeat']:
             self.add_to_left(data)
-        elif self.data < data < self.right.data:
+        elif self.data['time_to_repeat'] <= data['time_to_repeat'] <= self.right.data['time_to_repeat']:
             self.add_to_right(data)
-        elif self.data < data and data > self.right.data:
+
+        elif self.data['time_to_repeat'] < data['time_to_repeat'] and data['time_to_repeat'] > self.right.data['time_to_repeat']:
             self.right.insert(data)
-        elif self.data > data and self.left and data < self.left.data:
+        elif self.data['time_to_repeat'] > data['time_to_repeat'] and self.left and data['time_to_repeat'] < self.left.data['time_to_repeat']:
             self.left.insert(data)
-        elif self.data == data:
-            self.add_to_right(data)
-        elif self.left is not None and data == self.left.data:
-            self.left.add_to_right(data)
-        elif self.right is not None and self.right.data == data:
-            self.right.add_to_right(data)
+
+        # CASE : ONE OF SIDE IS EMPTY
+        elif self.left is not None and data['time_to_repeat'] >= self.left.data['time_to_repeat']:
+            self.left = new_node
+        elif self.right is not None and self.right.data['time_to_repeat'] <= data['time_to_repeat']:
+            self.right = new_node
 
     def move_to_begin(self):
         current_node = self
@@ -72,17 +101,6 @@ class LinkedVocabulary:
         while current_node.right is not None:
             current_node = current_node.right
         return current_node
-
-
-    def print_all(self):
-
-        current_node = self.move_to_begin()
-        text = [current_node.data]
-        while current_node.its_end() is False:
-            current_node = current_node.right
-            text.append(current_node.data)
-        print(text)
-        return text
 
 def learn_words():
     pass
@@ -121,3 +139,4 @@ def change_five_random_data():
             f'Word to change after changing time: {word_to_change} \t==\t {learning_vocabulary[word_to_change]["time_to_repeat"]}\n')
         learning_vocabulary.saves()
         print(f'AFTER SAVE CHECK DATE : {Vocabulary("learning").vocabulary[word_obj.word]["time_to_repeat"]}')
+

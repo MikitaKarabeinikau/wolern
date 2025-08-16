@@ -9,6 +9,7 @@ from utils import PATH_TO_LOG_FILE
 
 logging.basicConfig(filename=PATH_TO_LOG_FILE, level=logging.INFO)
 from src.vocabulary import Vocabulary_Manager, Vocabulary
+from quiz import LinkedVocabulary
 import pprint
 
 
@@ -87,6 +88,7 @@ def main():
         elif command == 'quiz':
             while True:
                 quiz_command = input(f'Write command to:\n'
+                                     f'learn: to start learning\n'
                                      f'time: to get time to repeat\n'
                                      f'five_random: to test changing time\n'
                                      f'\n'
@@ -96,6 +98,24 @@ def main():
                     quiz.get_learning_words_with_date_to_repeate()
                 elif quiz_command == 'five_random':
                     quiz.change_five_random_data()
+                elif quiz_command == 'learn':
+                    #load words list
+                    vocabulary_obj = manager.collection['learning']
+                    list_of_words = vocabulary_obj.get_list_of_words()
+                    print(f'1 STEP: I GOT A LIST OF WORDS: {list_of_words}')
+
+                    #Init list
+                    vocabulary = vocabulary_obj.vocabulary
+                    print(f'2 STEP: INITIAL WORDS :')
+                    words_to_repetition = LinkedVocabulary(vocabulary[list_of_words[0]])
+                    print(f'3 STEP: CREATE FULL LIST')
+                    for word in list_of_words[1:]:
+
+                        words_to_repetition.insert(vocabulary[word])
+                    print(f'4 STEP: SHOW  ')
+                    for word in words_to_repetition:
+                        print(str(word))
+
                 elif quiz_command == 'back':
                     break
                 elif quiz_command == 'quit':
@@ -142,6 +162,7 @@ def main():
                                      f'delete: to delete word from vocabulary\n'
                                      f'example: to show examples\n'
                                      f'update: change word data\n'
+                                     f'\n'
                                      f'back: to change to previously\n'
                                      f'quit: to close app\n')
                 if word_command == 'definition':
