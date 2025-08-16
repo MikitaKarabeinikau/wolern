@@ -15,15 +15,30 @@ _cache_unchecked_words = json.loads(STANDART_UNCHECKED_PATH.read_text(encoding='
 
 logging.basicConfig(filename=PATH_TO_LOG_FILE)
 
+
 class Vocabulary_Manager():
     def __init__(self, owner=DEFUALT_USER):
         self.owner = owner
         self.dir = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / self.owner
 
         self.write_standart_vocabularies()
-
         self.collection = self.load_all_vocabularies()
+    def find_word(self, word):
+        result = {}
+        # go through the vocab
+        for vocabulary in self.collection.keys():
+            # is word in ?
+            if self.collection[vocabulary].is_word_in_vocabulary(word):
+                '''
+                WHY VOCABULARY HERE IS STR 
+                ITS SHOULD BE Vocabulary obj
+                '''
+                # add info
+                result[vocabulary] = self.collection[vocabulary].vocabulary[word]
+        # Do I need to check similarity of words or note?
+        # Words wouldn't be the identical (added_date)
 
+        return result
 
     def load_all_vocabularies(self):
         vocabularies = {}
@@ -39,7 +54,7 @@ class Vocabulary_Manager():
             raise ValueError(f'Vocabulary {self.dir / (vocabulary_name + ".json")} does not exist')
 
     def create_empty_json_file(self, vocabulary_name):
-        with open(self.dir / (vocabulary_name+".json"), 'w', encoding='utf-8') as vocabulary:
+        with open(self.dir / (vocabulary_name + ".json"), 'w', encoding='utf-8') as vocabulary:
             json.dump({}, vocabulary, ensure_ascii=False, indent=2)
             print(f'[INFO] {datetime.datetime.now()} Vocabulary {vocabulary_name} was created! {vocabulary}')
 
@@ -234,12 +249,11 @@ class Vocabulary():
     def pop_word_from_vocabulary(self):
         deleted_word_data = self.delete_word_from_vocabulary(self.vocabulary.keys()[-1])
         self.save()
-        logging.INFO(f'Word : {deleted_word_data.word} was poped from {self.vocabulary_name}. Vocabulary was is rewrote.')
+        logging.INFO(
+            f'Word : {deleted_word_data.word} was poped from {self.vocabulary_name}. Vocabulary was is rewrote.')
         return deleted_word_data
 
     def is_word_in_vocabulary(self, word):
-        # What if file_path will be uncorrect? Should I raise Error or new dict is enough?
-        # Could new dict make bugs in future ?
         if word is None:
             raise ValueError('Word should not be None')
         if len(word) <= 1:

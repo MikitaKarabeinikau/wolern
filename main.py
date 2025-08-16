@@ -63,15 +63,11 @@ def main():
                 minute = randint(1,59)
                 second = randint(1,59)
                 date = datetime.datetime(year=year,month=month,day=day,hour=hour,minute=minute,second=second)
-
                 arr.append(date)
 
             print(f'\n\nOriginal arr: {arr}\n')
             l = quiz.LinkedVocabulary(arr[0])
-            len_before_take_init_arg = len(arr)
-            arr = arr[1
-            if len_before_take_init_arg == len_after_take_init_arg:
-                raise IndexError(f'length of array  couldnt be the same {len_before_take_init_arg} == {len_after_take_init_arg}')
+            arr = arr[1]
             for i in arr:
                 l.insert(i)
             print(f'Counter of initial arr: {count_data(arr)}\n'
@@ -140,11 +136,12 @@ def main():
             while True:
                 word_command = input(f'Write a command:\n'
                                      f'words_in: show list of words\n'
+                                     f'where: show where word is\n'
                                      f'definition: if you want to get definition of the word\n'
                                      f'add: add word to vocabulary\n'
                                      f'delete: to delete word from vocabulary\n'
                                      f'example: to show examples\n'
-                                     f'update: change word data'
+                                     f'update: change word data\n'
                                      f'back: to change to previously\n'
                                      f'quit: to close app\n')
                 if word_command == 'definition':
@@ -154,10 +151,39 @@ def main():
                 elif word_command == 'delete':
                     word = input('input word:\n')
                     if voc.is_word_in_vocabulary(word): Vocabulary('known').delete_word_from_vocabulary(word)
+                elif word_command == 'where':
+                    word = input('Input word:\n')
+                    result = manager.find_word(word)
+                    if not result:
+                        print(f'Word not founded!\n============================\n')
+                    else:
+                        print(f'Word {word} is in next vocabularies : {" ".join(list(result.keys()))}\n==============================\n')
                 elif word_command == 'add':
+                    vocabularies = input(f'In what vocabularies you want to add new word:\n'
+                                         f'Write like:\n'
+                                         f'voc_name_1, voc_name_2\n')
+                    #Now here considered situation where user provide correct type of data
+                    #TODO: Develop and consider other situations
+                    vocabularies_array = vocabularies.strip().split(',')
+
+
                     word = input('input word:\n')
-                    if not Vocabulary('known').is_word_in_vocabulary(word): Vocabulary('known').add_word_to_vocabulary(
-                        word)
+                    for vocabulary in vocabularies_array:
+                        if vocabulary not in manager.collection.keys():
+                            while True:
+                                create_vocabulary_decision = input(f'The vocabulary named {vocabulary} doesn\'t exist. Do you want to create it?\nyes or no\n')
+                                if create_vocabulary_decision.upper() == 'YES':
+                                    manager.create_empty_json_file(vocabulary)
+                                    manager.collection = manager.load_all_vocabularies()
+                                    manager.collection[vocabulary].add_word_to_vocabulary(word)
+                                    print(f'Word {word} was added to vocabulary {vocabulary}\n')
+                                    break
+                                elif create_vocabulary_decision.upper() == 'NO':
+                                    break
+                        else:
+                            manager.collection[vocabulary].add_word_to_vocabulary(word)
+                            print(f'Word {word} was added to vocabulary {vocabulary}\n')
+
                 elif word_command == 'example':
                     word = input('input word\n')
                     if Vocabulary('known').is_word_in_vocabulary(word):
