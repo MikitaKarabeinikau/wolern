@@ -19,7 +19,7 @@ from pathlib import Path
 from random import randint
 
 import pandas as pd
-
+PATH_TO_LEARNING_CACHE = Path(__file__).resolve().parent.parent / 'data'/'cache'/ 'learning_cache.json'
 PATH_TO_LOG_FILE = Path(__file__).resolve().parent.parent / 'logs' / 'app.log'
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'cefr_cache.json'
 CEFR_VOCABULARY_PROFILE_FILE_PATH = Path(

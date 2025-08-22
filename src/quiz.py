@@ -1,8 +1,79 @@
+import json
+import os.path
 from random import randint
 
 import fetchers
-from vocabulary import Vocabulary
+import utils
+from utils import PATH_TO_LEARNING_CACHE
+from vocabulary import Vocabulary, Vocabulary_Manager
 from word import Word
+
+def check_sync_cache_with_vocabulary():
+    '''
+    check data synchronization cache with vocabulary
+    based on time review
+    if cache data is later
+    then change vocabulary data
+    save it
+    :return: True
+    '''
+    pass
+
+
+'''
+1. Check sync with cache
+2. Get linked vocabulary
+3. get input
+4. check answer -> percentage of wronge answer
+    
+    is perfect (100%)-> increase learning stage / reset counter 
+        perfect and stage == 4 and counter == 0 -> change vocabulary -> update cache -> save vocabulary
+    good (<= 80%) -> reset counter -> update cache 
+    bad (>80%) -> counter ++ -> update cache 
+5. set time to reapet
+    get interval 
+    set 
+    cache update
+    cahce save
+    add new LinkedNode to LinkedVocabulary  
+6. linkedVocabulary.insert(current_updated_node)
+
+'''
+
+def quiz_algorithm():
+    pass
+
+def calculate_accuracy(mistakes,word):
+    # 6 letter / 100
+    # 4 letters / x
+    # 4* 100 / 6 = 30
+    return float("%.2f" % (1 - (mistakes*100/len(word))))
+
+def is_answer_correct(accuracy):
+    if accuracy < 80:
+        return False
+    else:
+        return True
+
+
+
+# Save checked words to save their late
+'''
+{
+    'word': {
+        'last_reviewed: datetime
+        'count_of_wrong_answers': int 
+        'learning_stage': int
+        'time_to_repeat: datetime
+        'count_of_good_answers': int
+    }
+}
+'''
+manager = Vocabulary_Manager()
+if not os.path.exists(PATH_TO_LEARNING_CACHE):
+    cache = {}
+else:
+    cache = json.loads(PATH_TO_LEARNING_CACHE.read_text(encoding='utf-8'))
 
 
 class LinkedVocabulary:
@@ -10,7 +81,7 @@ class LinkedVocabulary:
         self.data = data
         self.left = left
         self.right = right
-        # print(f'{self.data} was created\n====================\n')
+
     def __iter__(self):
         """
         Returns the iterator object (self) and initializes the current position.
@@ -31,22 +102,22 @@ class LinkedVocabulary:
             self.current = self.current.right
             # Return the node
             return node_to_return
-    def __str__(self):
+
+    def __repr__(self):
         return f'=================================================================\n' \
                f'Word: {self.data["word"]}\t\tTime to repeat: {self.data["time_to_repeat"]}\t\tAdded: {self.data["date_added"]}\n' \
                f'________________________________________________________________________\n' \
                f'Definition:\n' \
-               f'\t{"".join(fetchers.hide_similar_parts(self.data["word"],self.data["definition"]))}\n' \
+               f'\t{"".join(fetchers.hide_similar_parts(self.data["word"], self.data["definition"]))}\n' \
                f'Translation:\n' \
                f'\t     \n' \
                f'====================================================================='
+
     def add_to_left(self, data):
         self.left = LinkedVocabulary(data, left=self.left, right=self)
-        # print(f'Word {data} was add to the left\n\n')
 
     def add_to_right(self, data):
         self.right = LinkedVocabulary(data, left=self, right=self.right)
-        # print(f'Word {data} was add to the right\n\n')
 
     def its_first(self, data):
         if self.data['time_to_repeat'] > data['time_to_repeat'] and self.left is None:
@@ -67,6 +138,7 @@ class LinkedVocabulary:
         if self.right is None:
             return True
         return False
+
     def insert(self, data):
         new_node = LinkedVocabulary(data)
 
@@ -79,9 +151,11 @@ class LinkedVocabulary:
         elif self.data['time_to_repeat'] <= data['time_to_repeat'] <= self.right.data['time_to_repeat']:
             self.add_to_right(data)
 
-        elif self.data['time_to_repeat'] < data['time_to_repeat'] and data['time_to_repeat'] > self.right.data['time_to_repeat']:
+        elif self.data['time_to_repeat'] < data['time_to_repeat'] and data['time_to_repeat'] > self.right.data[
+            'time_to_repeat']:
             self.right.insert(data)
-        elif self.data['time_to_repeat'] > data['time_to_repeat'] and self.left and data['time_to_repeat'] < self.left.data['time_to_repeat']:
+        elif self.data['time_to_repeat'] > data['time_to_repeat'] and self.left and data['time_to_repeat'] < \
+                self.left.data['time_to_repeat']:
             self.left.insert(data)
 
         # CASE : ONE OF SIDE IS EMPTY
@@ -89,6 +163,61 @@ class LinkedVocabulary:
             self.left = new_node
         elif self.right is not None and self.right.data['time_to_repeat'] <= data['time_to_repeat']:
             self.right = new_node
+
+    def formate_definition_to_display(self):
+        definition = self.data['definition']
+        formatted_definition = ""
+        for pos in definition.keys():
+            formatted_definition += f'{pos}:\n'
+            for index, df in enumerate(definition[pos]):
+                splited = df.split()
+                for word in range(0, len(splited)):
+                    splited[word] = fetchers.hide_similar_parts(self.data['word'], splited[word])
+                    splited[word] = ''.join(splited[word])
+
+                df = ' '.join(splited)
+
+                formatted_definition += f'\t{index}: {df}\n'
+        return formatted_definition
+
+    def formate_examples_to_display(self):
+        examples = self.data['examples']
+        formatted = 'Examples:\n'
+        for index, example in enumerate(examples):
+            formatted += f'\t{index}: {fetchers.hide_similar_parts(self.data["word"], example)}\n'
+        return examples
+
+    def formate_synonyms_to_display(self):
+        formatted = []
+        for word in self.data['synonyms']:
+            formatted.append(fetchers.hide_similar_parts(self.data['word'], word))
+        return formatted
+
+    def display_learning_info(self):
+        self.data['word']['last_reviewed'] = utils.current_datetime()
+        result = []
+        definition = self.formate_definition_to_display()
+        examples = self.formate_definition_to_display()
+        synonyms = self.formate_synonyms_to_display()
+
+        translation = self.data['translation']
+        formatted_translation = ''
+        for lang, trans in translation.items():
+            part = f'Language: {lang.upper()}\n'
+            if trans is not None:
+
+                translation_sentence = '\t'.join(trans)
+                formatted_translation += part + translation_sentence
+            else:
+                formatted_translation += '\n'
+        # Add element one by one
+        result.append(
+            f'Word: ... \tPart of speech: {" ".join(self.data["part_of_speech"])}\tFrequency: {self.data["frequency"]}\n')
+        result.append(f'Definition:\n{definition}\n')
+        result.append(f'Examples:\n{examples}\n')
+        result.append(f'Synonyms:\n\t{" ".join(synonyms)}\n')
+        result.append(f'Translation:\t {formatted_translation}')
+        return ''.join(result)
 
     def move_to_begin(self):
         current_node = self
@@ -102,8 +231,166 @@ class LinkedVocabulary:
             current_node = current_node.right
         return current_node
 
-def learn_words():
-    pass
+    def set_new_time_for_repeat(self,mistake):
+        word = self.data['word']
+        print(f'Word: {word}\n')
+        count_of_wrong_answers = 0 if cache[word] not in cache.keys() else cache[word]['count_of_wrong_answers']
+        print(f'Count of wrong answers :{count_of_wrong_answers} | Courant mistakes: {mistake}\n')
+        #IF perfect answer than change learning stage or reset count_of_wrong_answer
+        if mistake == 0 and self.data['learning_stage'] == 4 and count_of_wrong_answers == 0:
+            transfer_word_from_learning_to_known(self.data)
+        elif mistake == 0:
+            cache[word]['count_of_wrong_answers'] = 0
+
+        '''
+        If not perfect answer:
+            depends on counter_of_wrongs_ansers set new time to repeat 
+        
+        1. update data in cache 
+            A question arises, do i want to update my vocabularies already in place or from cache before exit() 
+                or do it both
+        2. update data in vocabulary from manager 
+        
+        '''
+        count_of_wrong_answers = cache['word']['count_of_wrong_answers'] if word in cache.keys() else 0
+
+        interval = time_range(self.data)
+        cache[self.data.word]['time_to_repeat'] = utils.change_repeat_time(interval)
+
+
+def save_cache():
+    with open(PATH_TO_LEARNING_CACHE, 'w', encoding='utf-8') as f:
+        json.dump(cache, indent=2, ensure_ascii=False)
+
+
+def different_size(word, answer):
+    if len(answer) < len(word):
+        for i in range(len(word) - len(answer)):
+            answer.append('*')
+        return same_length(word, answer)
+    elif len(answer) > len(word):
+        word = [i for i in word]
+        for i in range(len(answer) - len(word)):
+            word.append('*')
+        return same_length(word, answer)
+
+
+'''
+if wrong answer < 10
+                == 10
+    learning stage <5
+                == 5
+    
+'''
+
+
+def increase_count_of_wrong_answers(word):
+    if cache[word]['count_of_wrong_answers'] + 1 == 10 and word in cache.keys():
+        # I need to be sure that word record exist in
+        if cache[word]['learning_stage'] > 0:
+            cache[word]['learning_stage'] -= 1
+            cache[word]['count_of_wrong_answers'] = 0
+    else:
+        cache[word]['count_of_wrong_answers'] += 1
+
+    # save changes
+
+    save_cache()
+
+
+def same_length(word, answer):
+    """
+
+    :param word:
+    :param answer:
+    :return: count of wrong letters that using for set time for repeat
+    """
+    count_of_correct_letters = 0
+    comparing = []
+    if len(answer) == len(word):
+        for i in range(0, len(word)):
+            if word[i] == answer[i]:
+                comparing.append('_')
+                answer[i] = '_'
+                count_of_correct_letters += 1
+            else:
+                comparing.append(word[i])
+        print(f'Info:\n'
+              f'\tOriginal:    {" ".join(word)}\n'
+              f'\tAnswer:      {" ".join(answer)}\n'
+              f'\tDifferences: {" ".join(comparing)}\n'
+              f'\tWrong letters: {(len(word) - count_of_correct_letters)}\n')
+        return len(word) - count_of_correct_letters
+
+
+def learn_stage_conversation_in_time(stage):
+    if stage == 0:
+        return 5
+    elif stage == 1:
+        return 15
+    elif stage == 2:
+        return 60
+    elif stage == 3:
+        return 60 * 24
+    elif stage == 4:
+        return 60 * 24 * 7
+
+
+def calculate_time_to_repeate_based_on_count_of_wrong_answers(data, current_time):
+    counter = cache['word']['count_of_wrong_answers']
+    if current_time >= 60:
+        decrease_review_interval = current_time - ((counter / 10) * current_time)
+        print(f'Time to repeat was decreased from {current_time} to {decrease_review_interval}')
+        return decrease_review_interval
+
+
+def time_range(data):
+    # Get new time by learning stage
+    learn_stage = learn_stage_conversation_in_time(int(data['learning_stage']))
+    print(f'Minutes to add after learning stage')
+    interval = calculate_time_to_repeate_based_on_count_of_wrong_answers(learn_stage)
+
+    return interval
+
+
+def transfer_word_from_learning_to_known(data):
+    word = data['word']
+    data[word]['learning_stage'] = 5
+    cache[word]['learning_stage']
+    print(
+        f'Moving word from learning to known:\n Word {word} in learning {manager.collection["learning"].is_word_in_vocabulary(word)}\n')
+    manager.collection['learning'].delete_word_from_vocabulary(word)
+    print(
+        f'Moving word from learning to known:\n Word {word} in learning {manager.collection["learning"].is_word_in_vocabulary(word)}\n')
+    manager.collection['known'][word] = data
+    manager.collection['learning'].save()
+    manager.collection['known'].save()
+    Vocabulary('known').is_word_in_vocabulary()
+
+
+
+
+def sync_cache_to_vocabulary():
+    for word, data in cache.items():
+        manager.collection['learning'].vocabulary['learning_stage'] = data['learning_stage']
+        manager.collection['learning'].vocabulary['last_reviewed'] = data['last_reviewed']
+    manager.collection['learning'].vocabulary.save()
+
+
+def check_answer(word):
+    answer = input(f'Write your answer:')
+    if answer == 'qq':
+        save_cache()
+        sync_cache_to_vocabulary()
+        exit()
+
+    answer = [i for i in answer.strip().upper()]
+    word = [i for i in word.strip().upper()]
+
+    if len(answer) != len(word):
+        return different_size(word, answer)
+
+    return same_length(word, answer)
 
 
 def get_learning_words_with_date_to_repeate():
@@ -139,4 +426,3 @@ def change_five_random_data():
             f'Word to change after changing time: {word_to_change} \t==\t {learning_vocabulary[word_to_change]["time_to_repeat"]}\n')
         learning_vocabulary.saves()
         print(f'AFTER SAVE CHECK DATE : {Vocabulary("learning").vocabulary[word_obj.word]["time_to_repeat"]}')
-

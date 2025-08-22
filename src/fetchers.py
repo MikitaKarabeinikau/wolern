@@ -174,26 +174,21 @@ def get_index_of_similar_part(
     return best_start, best_end
 
 
-def hide_similar_parts(word: str, synonyms: list[str]) -> List[str]:
-    """
-    Mask the part of each synonym that overlaps with the given word using '...'.
+def hide_similar_parts(word: str, compared_word: list[str]) -> List[str]:
+    if word is None or compared_word is None:
+        raise ValueError('Could compare with None argument')
+    if len(word) < 3 or len(compared_word) < 3:
+        return compared_word
+    if type(word) is not type('text') or type(compared_word) is not type('text'):
+        raise ValueError('Values should be string type')
 
-    For each synonym, identifies the longest shared substring (≥ 3 characters)
-    and replaces it with '...'. Useful for hiding obvious morphological similarity.
-
-    Parameters:
-        word (str): The base word to compare against.
-        synonyms (list[str]): A list of synonym strings.
-
-    Returns:
-        List[str]: A list of modified synonyms with overlapping parts hidden.
-    """
-    masked_synonyms = []
-    for synonym in synonyms:
-        start, end = get_index_of_similar_part(word, synonym)
-        masked_synonyms.append(replace_part(synonym, start, end))
-    return masked_synonyms
-
+    start, end = get_index_of_similar_part(word,compared_word)
+    if start is None and end is None:
+        return compared_word
+    transformation = [i for i in compared_word]
+    for i in range(start,end):
+        transformation[i] = '.'
+    return ''.join(transformation)
 
 def get_synonyms(word: str) -> List[str]:
     """
@@ -253,24 +248,18 @@ def get_cefr_level(word):
 
 def get_definitions_by_pos(word):
 
-    definitions: dict[str, list[str]] = {}
+    definitions = {}
 
     for synset in wordnet.synsets(word):
         pos = synset.pos()
         readable_pos = POS_TAG_MAP.get(pos, pos)
-
         if readable_pos not in definitions:
             definitions[readable_pos] = []
 
         definition = synset.definition()
-        if definition not in definitions[readable_pos]:
+        if definition not in [item for values in definitions.values() for item in values]:
             definitions[readable_pos].append(definition)
-    format_definition = ''
-    for part in definitions.keys():
-        format_definition +=''.join(definitions[part])+' '
-        format_definition +='\n'
-    output_definitions = format_definition.split(';')
-    return output_definitions
+    return definitions
 
 
 def get_examples_from_wordnet(word: str) -> List[str]:

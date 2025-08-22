@@ -3,6 +3,7 @@ import time
 import logging
 from random import randint
 
+import fetchers
 import quiz
 import utils
 from utils import PATH_TO_LOG_FILE
@@ -17,6 +18,7 @@ def main():
     manager = Vocabulary_Manager()
     while True:
         command = input(f'Write a command:\n'
+                        f'def: get definition\n'
                         f'word: get word\n'
                         f'quiz: to open quiz menu\n'
                         f'vocabulary: to open vocabulary menu\n'
@@ -84,7 +86,6 @@ def main():
             for word in test_words:
                 print(f'Looking info for word {word.upper()}')
                 manager.collection['test'].add_word_to_vocabulary(word)
-                time.sleep(10)
         elif command == 'quiz':
             while True:
                 quiz_command = input(f'Write command to:\n'
@@ -102,24 +103,25 @@ def main():
                     #load words list
                     vocabulary_obj = manager.collection['learning']
                     list_of_words = vocabulary_obj.get_list_of_words()
-                    print(f'1 STEP: I GOT A LIST OF WORDS: {list_of_words}')
-
                     #Init list
                     vocabulary = vocabulary_obj.vocabulary
-                    print(f'2 STEP: INITIAL WORDS :')
                     words_to_repetition = LinkedVocabulary(vocabulary[list_of_words[0]])
-                    print(f'3 STEP: CREATE FULL LIST')
                     for word in list_of_words[1:]:
-
                         words_to_repetition.insert(vocabulary[word])
-                    print(f'4 STEP: SHOW  ')
-                    for word in words_to_repetition:
-                        print(str(word))
+                    for node in words_to_repetition:
+                        print(node.display_learning_info())
+                        word = node.data['word']
+                        mistakes = quiz.check_answer(word)
+                        quiz.set_new_time_for_repeat(mistakes,word)
 
                 elif quiz_command == 'back':
                     break
                 elif quiz_command == 'quit':
+                    manager.collection['learning'].save()
                     exit()
+        elif command == 'def':
+            word = LinkedVocabulary(Vocabulary('learning').vocabulary['voices'])
+            definition = word.formate_definition_to_display()
         elif command == 'vocabulary':
             while True:
                 vocabulary_command = input(f'Write command to:\n'
