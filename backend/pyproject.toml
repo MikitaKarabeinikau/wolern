@@ -1,0 +1,10 @@
+[project]
+home="backend"
+name="wolern"
+version="0.0.9"
+description="Coming soon..."
+readme="README.md"
+requires-python=">=3.8"
+authors=["Mikita Karabeinikau"]
+license="MIT"
+dependencies=[]

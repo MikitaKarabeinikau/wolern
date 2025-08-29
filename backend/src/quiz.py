@@ -8,67 +8,6 @@ from utils import PATH_TO_LEARNING_CACHE
 from vocabulary import Vocabulary, Vocabulary_Manager
 from word import Word
 
-def check_sync_cache_with_vocabulary():
-    '''
-    check data synchronization cache with vocabulary
-    based on time review
-    if cache data is later
-    then change vocabulary data
-    save it
-    :return: True
-    '''
-    pass
-
-
-'''
-1. Check sync with cache
-2. Get linked vocabulary
-3. get input
-4. check answer -> percentage of wronge answer
-    
-    is perfect (100%)-> increase learning stage / reset counter 
-        perfect and stage == 4 and counter == 0 -> change vocabulary -> update cache -> save vocabulary
-    good (<= 80%) -> reset counter -> update cache 
-    bad (>80%) -> counter ++ -> update cache 
-5. set time to reapet
-    get interval 
-    set 
-    cache update
-    cahce save
-    add new LinkedNode to LinkedVocabulary  
-6. linkedVocabulary.insert(current_updated_node)
-
-'''
-
-def quiz_algorithm():
-    pass
-
-def calculate_accuracy(mistakes,word):
-    # 6 letter / 100
-    # 4 letters / x
-    # 4* 100 / 6 = 30
-    return float("%.2f" % (1 - (mistakes*100/len(word))))
-
-def is_answer_correct(accuracy):
-    if accuracy < 80:
-        return False
-    else:
-        return True
-
-
-
-# Save checked words to save their late
-'''
-{
-    'word': {
-        'last_reviewed: datetime
-        'count_of_wrong_answers': int 
-        'learning_stage': int
-        'time_to_repeat: datetime
-        'count_of_good_answers': int
-    }
-}
-'''
 manager = Vocabulary_Manager()
 if not os.path.exists(PATH_TO_LEARNING_CACHE):
     cache = {}
@@ -231,14 +170,14 @@ class LinkedVocabulary:
             current_node = current_node.right
         return current_node
 
-    def set_new_time_for_repeat(self,mistake):
+    def set_new_time_for_repeat(self, mistake):
         word = self.data['word']
         print(f'Word: {word}\n')
         count_of_wrong_answers = 0 if cache[word] not in cache.keys() else cache[word]['count_of_wrong_answers']
         print(f'Count of wrong answers :{count_of_wrong_answers} | Courant mistakes: {mistake}\n')
-        #IF perfect answer than change learning stage or reset count_of_wrong_answer
+        # IF perfect answer than change learning stage or reset count_of_wrong_answer
         if mistake == 0 and self.data['learning_stage'] == 4 and count_of_wrong_answers == 0:
-            transfer_word_from_learning_to_known(self.data)
+            archive_to_known(self.data)
         elif mistake == 0:
             cache[word]['count_of_wrong_answers'] = 0
 
@@ -263,25 +202,60 @@ def save_cache():
         json.dump(cache, indent=2, ensure_ascii=False)
 
 
-def different_size(word, answer):
+def normalize_lengths_and_calculate_mistakes(answer, word):
     if len(answer) < len(word):
         for i in range(len(word) - len(answer)):
             answer.append('*')
-        return same_length(word, answer)
+        return calculate_mistakes(word, answer)
     elif len(answer) > len(word):
         word = [i for i in word]
         for i in range(len(answer) - len(word)):
             word.append('*')
-        return same_length(word, answer)
+        return calculate_mistakes(word, answer)
+
+
+def check_sync_cache_with_vocabulary():
+    '''
+    check data synchronization cache with vocabulary
+    based on time review
+    if cache data is later
+    then change vocabulary data
+    save it
+    :return: True
+    '''
+    pass
 
 
 '''
-if wrong answer < 10
-                == 10
-    learning stage <5
-                == 5
+1. Check sync with cache
+2. Get linked vocabulary
+3. get input
+4. check answer -> percentage of wronge answer
     
+    is perfect (100%)-> increase learning stage / reset counter 
+        perfect and stage == 4 and counter == 0 -> change vocabulary -> update cache -> save vocabulary
+    good (<= 80%) -> reset counter -> update cache 
+    bad (>80%) -> counter ++ -> update cache 
+5. set time to reapet
+    get interval 
+    set 
+    cache update
+    cahce save
+    add new LinkedNode to LinkedVocabulary  
+6. linkedVocabulary.insert(current_updated_node)
+
 '''
+
+
+def calculate_accuracy(mistakes, word):
+    # 6 letter / 100
+    # 4 letters / x
+    # 4* 100 / 6 = 30
+    return float("%.2f" % (1 - (mistakes * 100 / len(word))))
+
+
+def is_answer_correct(accuracy):
+    return False if accuracy < 80 else True
 
 
 def increase_count_of_wrong_answers(word):
@@ -298,29 +272,29 @@ def increase_count_of_wrong_answers(word):
     save_cache()
 
 
-def same_length(word, answer):
-    """
+def calculate_mistakes(answer, word):
+    count_of_incorrect_letters = 0
+    if len(answer) == len(word):
+        for i in range(0, len(word)):
+            if word[i] != answer[i]:
+                count_of_incorrect_letters += 1
+        return count_of_incorrect_letters
 
-    :param word:
-    :param answer:
-    :return: count of wrong letters that using for set time for repeat
-    """
-    count_of_correct_letters = 0
+
+def display_differences(answer, word):
     comparing = []
     if len(answer) == len(word):
         for i in range(0, len(word)):
             if word[i] == answer[i]:
                 comparing.append('_')
                 answer[i] = '_'
-                count_of_correct_letters += 1
             else:
                 comparing.append(word[i])
-        print(f'Info:\n'
+        print(f'Info: \n'
               f'\tOriginal:    {" ".join(word)}\n'
               f'\tAnswer:      {" ".join(answer)}\n'
               f'\tDifferences: {" ".join(comparing)}\n'
-              f'\tWrong letters: {(len(word) - count_of_correct_letters)}\n')
-        return len(word) - count_of_correct_letters
+              f'\tNumber of wrong letters: {calculate_mistakes(answer, word)}\n')
 
 
 def learn_stage_conversation_in_time(stage):
@@ -336,7 +310,7 @@ def learn_stage_conversation_in_time(stage):
         return 60 * 24 * 7
 
 
-def calculate_time_to_repeate_based_on_count_of_wrong_answers(data, current_time):
+def calculate_time_to_repeat_based_on_count_of_wrong_answers(data, current_time):
     counter = cache['word']['count_of_wrong_answers']
     if current_time >= 60:
         decrease_review_interval = current_time - ((counter / 10) * current_time)
@@ -348,37 +322,48 @@ def time_range(data):
     # Get new time by learning stage
     learn_stage = learn_stage_conversation_in_time(int(data['learning_stage']))
     print(f'Minutes to add after learning stage')
-    interval = calculate_time_to_repeate_based_on_count_of_wrong_answers(learn_stage)
+    interval = calculate_time_to_repeat_based_on_count_of_wrong_answers(learn_stage)
 
     return interval
 
 
-def transfer_word_from_learning_to_known(data):
+def archive_to_known(data):
     word = data['word']
     data[word]['learning_stage'] = 5
     cache[word]['learning_stage']
     print(
-        f'Moving word from learning to known:\n Word {word} in learning {manager.collection["learning"].is_word_in_vocabulary(word)}\n')
+        f'Moving word from learning to known: \n Word {word} in learning {manager.collection["learning"].is_word_in_vocabulary(word)}\n')
     manager.collection['learning'].delete_word_from_vocabulary(word)
     print(
-        f'Moving word from learning to known:\n Word {word} in learning {manager.collection["learning"].is_word_in_vocabulary(word)}\n')
+        f'Moving word from learning to known: \n Word {word} in learning {manager.collection["learning"].is_word_in_vocabulary(word)}\n')
     manager.collection['known'][word] = data
     manager.collection['learning'].save()
     manager.collection['known'].save()
     Vocabulary('known').is_word_in_vocabulary()
 
 
-
-
 def sync_cache_to_vocabulary():
     for word, data in cache.items():
-        manager.collection['learning'].vocabulary['learning_stage'] = data['learning_stage']
-        manager.collection['learning'].vocabulary['last_reviewed'] = data['last_reviewed']
+        if data['last_reviewed'] > manager.collection['learning'].vocabulary['last_reviewed']:
+            manager.collection['learning'].vocabulary['learning_stage'] = data['learning_stage']
+            manager.collection['learning'].vocabulary['last_reviewed'] = data['last_reviewed']
     manager.collection['learning'].vocabulary.save()
 
 
-def check_answer(word):
-    answer = input(f'Write your answer:')
+def get_valid_answer(prompt):
+    while True:
+        user_input = input(prompt)
+        if user_input is not None and user_input.strip() != "":
+            return user_input
+        print("Invalid input. Please try again.")
+
+
+def get_answer():
+    answer = get_valid_answer(f'Write your answer: \n')
+    return answer
+
+
+def display_info_about_answer(answer, word):
     if answer == 'qq':
         save_cache()
         sync_cache_to_vocabulary()
@@ -388,12 +373,29 @@ def check_answer(word):
     word = [i for i in word.strip().upper()]
 
     if len(answer) != len(word):
-        return different_size(word, answer)
+        return normalize_lengths_and_calculate_mistakes(word, answer)
 
-    return same_length(word, answer)
+    return calculate_mistakes(word, answer)
 
 
-def get_learning_words_with_date_to_repeate():
+def is_answer_perfect(accuracy):
+    return True if accuracy == 100 else False
+
+
+# TODO:FINISH IT
+def check_answer(answer, word):
+    accuracy = calculate_accuracy()
+    number_of_mistake = calculate_mistakes(answer, word)
+    accuracy = calculate_accuracy(number_of_mistake, word)
+    if is_answer_correct(accuracy):
+        if is_answer_perfect(accuracy):
+            if cache[word] + 1 == 5:
+                archive_to_known()
+    else:
+        pass
+
+
+def get_learning_words_with_date_to_repeat():
     learning_vocabulary = Vocabulary('learning').vocabulary
     date_to_repeat = {}
     for word in learning_vocabulary.keys():
@@ -412,7 +414,7 @@ def change_five_random_data():
         if index not in words_index:
             words_index.append(index)
             num_of_words += 1
-    words = get_learning_words_with_date_to_repeate()
+    words = get_learning_words_with_date_to_repeat()
     for index in words_index:
         word_to_change = list(words.keys())[index]
         print(

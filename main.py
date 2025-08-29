@@ -96,7 +96,7 @@ def main():
                                      f'back: to back in previous menu\n'
                                      f'quit: to close app\n')
                 if quiz_command == 'time':
-                    quiz.get_learning_words_with_date_to_repeate()
+                    quiz.get_learning_words_with_date_to_repeat()
                 elif quiz_command == 'five_random':
                     quiz.change_five_random_data()
                 elif quiz_command == 'learn':
@@ -110,9 +110,11 @@ def main():
                         words_to_repetition.insert(vocabulary[word])
                     for node in words_to_repetition:
                         print(node.display_learning_info())
+
                         word = node.data['word']
-                        mistakes = quiz.check_answer(word)
-                        quiz.set_new_time_for_repeat(mistakes,word)
+                        answer = quiz.get_answer(word)
+
+
 
                 elif quiz_command == 'back':
                     break

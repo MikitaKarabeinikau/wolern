@@ -20,7 +20,6 @@ class Vocabulary_Manager():
     def __init__(self, owner=DEFUALT_USER):
         self.owner = owner
         self.dir = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / self.owner
-
         self.write_standart_vocabularies()
         self.collection = self.load_all_vocabularies()
     def find_word(self, word):
