@@ -2,14 +2,17 @@ import datetime
 import time
 import logging
 from random import randint
+import sys
+import os 
 
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))
 import fetchers
 import quiz
 import utils
 from utils import PATH_TO_LOG_FILE
 
 logging.basicConfig(filename=PATH_TO_LOG_FILE, level=logging.INFO)
-from src.vocabulary import Vocabulary_Manager, Vocabulary
+from vocabulary import Vocabulary_Manager, Vocabulary
 from quiz import LinkedVocabulary
 import pprint
 

@@ -3,7 +3,11 @@ import logging
 from datetime import timedelta, datetime
 from pathlib import Path
 import utils
-from src.sound_manager import get_audio_path
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src")) 
+
+from sound_manager import get_audio_path
 
 logging.basicConfig(filename=(Path(__file__).resolve().parent.parent / 'logs' / 'app.log'), level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

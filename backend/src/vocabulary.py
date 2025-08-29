@@ -1,13 +1,15 @@
 import datetime
 import logging
 import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))
 
-from src.sound_manager import generate_audio, get_audio_path
+from sound_manager import generate_audio, get_audio_path
 
-from src.utils import current_datetime, parse_time_to_str, initial_repeat_time, STANDART_VOCABULARY_PATH, \
+from utils import current_datetime, parse_time_to_str, initial_repeat_time, STANDART_VOCABULARY_PATH, \
     STANDART_UNCHECKED_PATH, VOCABULARY_DIR_PATH, STANDART_VOCABULARIES_SET, DEFUALT_USER, PATH_TO_LOG_FILE, \
     delete_audio
-from src.fetchers import *
+from fetchers import *
 from word import Word
 
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "cache" / "cefr_cache.json"

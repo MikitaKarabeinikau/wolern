@@ -17,6 +17,11 @@ import logging
 import os.path
 from pathlib import Path
 from random import randint
+import sys
+import os
+
+# Add backend to sys.path so 'src' is importable
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
 
 import pandas as pd
 PATH_TO_LEARNING_CACHE = Path(__file__).resolve().parent.parent / 'data'/'cache'/ 'learning_cache.json'

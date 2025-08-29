@@ -3,6 +3,11 @@ This module provides utilities for fetching word data such as
 frequencies, CEFR levels, synonyms, and translations.
 """
 from pathlib import Path
+import os 
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))  
+
 import json
 import csv
 import warnings
@@ -16,8 +21,10 @@ import nltk
 from nltk.corpus import wordnet
 from deep_translator import LingueeTranslator,exceptions
 
-from src.utils import convert_pos, POS_TAG_MAP, CEFR_ORDER, TRANSLATION_CACHE_PATH, \
+from utils import convert_pos, POS_TAG_MAP, CEFR_ORDER, TRANSLATION_CACHE_PATH, \
     PATH_TO_SUBTLEXus, FREQUENCIES_CACHE_PATH, CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH, CEFR_CACHE_PATH
+
+
 _translation_cache: dict[str, dict]
 if TRANSLATION_CACHE_PATH.exists():
     _translation_cache = json.loads(TRANSLATION_CACHE_PATH.read_text(encoding="utf-8"))

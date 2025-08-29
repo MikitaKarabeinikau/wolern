@@ -16,7 +16,7 @@ function App() {
       <Route path="/sign-in/*" element={<AuthenticationPage/>} />
       <Route path="/sign-up/*" element={<AuthenticationPage/>} />
       <Route element={<Layout/>}>
-        <Route path="/" element={<VocabulariesPanel/>} />
+        <Route path="/vocabularies" element={<VocabulariesPanel/>} />
         <Route path="/statistics" element={<StatisticPanel/>} />
       </Route>
     </Routes>

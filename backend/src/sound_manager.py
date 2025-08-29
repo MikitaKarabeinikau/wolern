@@ -24,11 +24,14 @@ import time
 from pathlib import Path
 from gtts import gTTS
 import pyttsx3
-
+import os 
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))  
 
 from requests import RequestException
 
-from src.utils import STANDART_AUDIO_FILES_DIR
+from utils import STANDART_AUDIO_FILES_DIR
 
 
 def _filename(word: str, suffix: str) -> Path:

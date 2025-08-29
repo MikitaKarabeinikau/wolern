@@ -1,5 +1,9 @@
 import json
 import os.path
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))
+
 from random import randint
 
 import fetchers
