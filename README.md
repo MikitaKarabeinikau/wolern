@@ -5,7 +5,7 @@
 <table>
 <tr>
 <td width="40%">
-  <img src="data/images/wide_version.png" alt="Wolern Banner" width=100% height="300"/>
+  <img src="backend/data/images/wide_version.png" alt="Wolern Banner" width=100% height="300"/>
 </td>
 <td>
   
