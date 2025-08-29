@@ -8,9 +8,17 @@
   <img src="data/images/wide_version.png" alt="Wolern Banner" width=100% height="300"/>
 </td>
 <td>
-  <p><strong>Wolern is a Python-based personal project designed to help me (and others) learn English vocabulary effectively using technology.</strong></p>
-  <p>The project aims to combine basic programming, Natural Language Processing (NLP) techniques, and interactive exercises.</p>
-  <p>Personal project combining Python, NLP, and smart exercises.</p>
+  
+**Wolern** is a modern web application for vocabulary learning and language progress tracking.
+
+- 🚀 **Frontend:** React + Clerk authentication + FastAPI backend
+- 📚 **Features:**  
+  - User authentication  
+  - Vocabulary management  
+  - Learning statistics  
+  - Translation and text-to-speech tools
+
+Built for language learners who want to track and expand their vocabulary efficiently.
 </td>
 </tr>
 </table>
