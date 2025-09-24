@@ -3,16 +3,16 @@
 
  export function AuthenticationPage() {
     return <div className="auth-container">
+        <SignedOut>
+            <SignIn routing="path"  path="/sign-in"/>
+            <SignUp routing="path"  path="/sign-up"/>
+        </SignedOut>
         <SignedIn>
             <div className="redicrect-message">
                 <p>You are signed in!</p>
             </div>
         </SignedIn>
-        <SignedOut>
-            <div>You are signed out!</div>
-            <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
-            <SignUp path="/sign-up" routing="path" signInUrl="/sign-in" />
-        </SignedOut>
+        
 
     </div>
 }

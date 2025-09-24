@@ -1,6 +1,6 @@
 import "react"
 
-export function EXrercisesPanel() {
+export function ExercisesPanel() {
   return (
     <div>
       <h1>Exercises Panel</h1>
