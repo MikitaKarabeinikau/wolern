@@ -21,7 +21,7 @@ import nltk
 from nltk.corpus import wordnet
 from deep_translator import LingueeTranslator,exceptions
 
-from utils import convert_pos, POS_TAG_MAP, CEFR_ORDER, TRANSLATION_CACHE_PATH, \
+from .utils import convert_pos, POS_TAG_MAP, CEFR_ORDER, TRANSLATION_CACHE_PATH, \
     PATH_TO_SUBTLEXus, FREQUENCIES_CACHE_PATH, CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH, CEFR_CACHE_PATH
 
 
@@ -250,8 +250,42 @@ def get_parts_of_speech(word: str) -> List[str]:
     return list(pos_tags)
 
 def get_cefr_level(word):
-    _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
-    return _cefr_cache.get(word.lower(), "UNKNOWN")
+
+    CEFR_ORDER_MAP = {
+    "A1": 1,
+    "A2": 2,
+    "B1": 3,
+    "B2": 4,
+    "C1": 5,
+    "C2": 6
+}
+# A reverse map to convert the numerical rank back to a CEFR string
+    CEFR_RANK_TO_LEVEL = {v: k for k, v in CEFR_ORDER_MAP.items()}
+
+    try:
+        _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return "ERROR: Cache file not found"
+    
+    word_data = _cefr_cache.get(word.lower(), {})
+    levels = word_data.get("level", []) 
+    
+    if not levels:
+        return "UNKNOWN"
+
+    ranks = [
+        CEFR_ORDER_MAP[level] 
+        for level in levels 
+        if level in CEFR_ORDER_MAP
+    ]
+
+    if not ranks:
+        return "UNKNOWN"
+    ranks.sort()
+    middle_index = len(ranks) // 2 
+    median_rank = ranks[middle_index] 
+
+    return CEFR_RANK_TO_LEVEL.get(median_rank, "UNKNOWN")
 
 def get_definitions_by_pos(word):
 
@@ -262,7 +296,6 @@ def get_definitions_by_pos(word):
         readable_pos = POS_TAG_MAP.get(pos, pos)
         if readable_pos not in definitions:
             definitions[readable_pos] = []
-
         definition = synset.definition()
         if definition not in [item for values in definitions.values() for item in values]:
             definitions[readable_pos].append(definition)

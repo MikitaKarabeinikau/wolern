@@ -22,8 +22,9 @@ def authenticate_and_get_user_details(request):
             raise HTTPException(status_code=401, detail="Invailid token")
         
         user_id = request_state.payload.get("sub")
-
+        print("Authenticated user ID:", user_id)
         return {"user_id": user_id}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    

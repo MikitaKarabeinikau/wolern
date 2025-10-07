@@ -178,6 +178,28 @@ class Vocabulary():
             warnings.append("No CEFR level found")
         return warnings
 
+    def get_word_with_full_data(self, word):
+        word = {
+            "word": word.lower(),
+            "translation": get_translation_from_cache(word),
+            "synonyms": get_synonyms(word),
+            "definition": get_definitions_by_pos(word) if get_definitions_by_pos(word) else {},
+            "examples": [get_examples_from_wordnet(word)] if get_examples_from_wordnet(word) else [],
+            "part_of_speech": get_parts_of_speech(word),
+            "date_added": parse_time_to_str(current_datetime()),
+            "last_reviewed": parse_time_to_str(current_datetime()),
+            "review_count": 0,
+            "learning_stage": 0,
+            "time_to_repeat": parse_time_to_str(initial_repeat_time()),
+            "notes": "",
+            "difficulty": get_cefr_level(word),
+            "tags": get_tags_from_wordnet(word) if get_tags_from_wordnet(word) else [],
+            "audio_url": str(get_audio_path(word)),
+            'frequency': get_frequency(word)
+        }
+
+        return word
+        
     def add_word_to_vocabulary(self, word):
         print(f'Looking for data ...')
         if word is None:
@@ -192,24 +214,7 @@ class Vocabulary():
         translation = get_translation(word)
         audio_url = generate_audio(word)
 
-        word = {
-            "word": word.lower(),
-            "translation": get_translation_from_cache(word),
-            "synonyms": get_synonyms(word),
-            "definition": get_definitions_by_pos(word) if get_definitions_by_pos(word) else [],
-            "examples": [get_examples_from_wordnet(word)] if get_examples_from_wordnet(word) else [],
-            "part_of_speech": get_parts_of_speech(word),
-            "date_added": parse_time_to_str(current_datetime()),
-            "last_reviewed": parse_time_to_str(current_datetime()),
-            "review_count": 0,
-            "learning_stage": 0,
-            "time_to_repeat": parse_time_to_str(initial_repeat_time()),
-            "notes": "",
-            "level": get_cefr_level(word),
-            "tags": get_tags_from_wordnet(word) if get_tags_from_wordnet(word) else [],
-            "audio_url": str(get_audio_path(word)),
-            'frequency': get_frequency(word)
-        }
+        word = Word(word).to_dict()
 
         warnings = self.find_warnings(word)
         word['warnings'] = warnings

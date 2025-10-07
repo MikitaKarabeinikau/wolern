@@ -2,17 +2,49 @@ import json
 import logging
 from datetime import timedelta, datetime
 from pathlib import Path
-import utils
+from . import utils
 import os
 import sys
+from .fetchers import (get_cefr_level,
+                        get_definitions_by_pos, 
+                        get_examples_from_wordnet,
+                        get_frequency,
+                        get_parts_of_speech,
+                        get_synonyms,       
+                        get_tags_from_wordnet,
+                        get_translation_from_cache,
+                        )
+from .utils import (current_datetime,   
+                   initial_repeat_time, 
+                   parse_str_to_time, 
+                   parse_time_to_str)
 sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src")) 
 
-from sound_manager import get_audio_path
+from .sound_manager import get_audio_path
 
 logging.basicConfig(filename=(Path(__file__).resolve().parent.parent / 'logs' / 'app.log'), level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class Word:
+    def __init__(self,word):
+            self.word = word.lower(),
+            self.translation = get_translation_from_cache(word)
+            self.synonyms = get_synonyms(word)
+            self.defenition = get_definitions_by_pos(word) if get_definitions_by_pos(word) else {},
+            self.examples  = [get_examples_from_wordnet(word)] if get_examples_from_wordnet(word) else [],
+            self.part_of_speech = get_parts_of_speech(word)
+            self.date_added =  parse_time_to_str(current_datetime())
+            self.last_reviewed = parse_time_to_str(current_datetime())
+            self.review_count = 0
+            self. learning_stage =  0
+            self.time_to_repeat =  parse_time_to_str(initial_repeat_time())
+            self.notes =  ""
+            self.difficulty = get_cefr_level(word)
+            self.tags = get_tags_from_wordnet(word) if get_tags_from_wordnet(word) else []
+            self.audio_url = str(get_audio_path(word)),
+            self.frequency = get_frequency(word)
+        
+
     def __init__(self, word_data):
         self.word = word_data["word"]
         self.translation = word_data["translation"]

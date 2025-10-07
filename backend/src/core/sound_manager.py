@@ -31,7 +31,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))
 
 from requests import RequestException
 
-from utils import STANDART_AUDIO_FILES_DIR
+from .utils import STANDART_AUDIO_FILES_DIR
 
 
 def _filename(word: str, suffix: str) -> Path:

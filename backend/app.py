@@ -1,9 +1,14 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-
-
+import os 
+import psycopg2
+from dotenv import load_dotenv
+from backend.src.routes.app_routes import router as clerk_webhook_router
 
 app = FastAPI()
+
+app.include_router(clerk_webhook_router , prefix="/webhooks")
+
 
 origins = [
     "http://localhost:5173",

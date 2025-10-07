@@ -31,8 +31,8 @@ CEFR_VOCABULARY_PROFILE_FILE_PATH = Path(
     __file__).resolve().parent.parent / 'data' / 'source' / 'cefr_sources' / 'cefrj-vocabulary-profile-1.5.csv'
 CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH = Path(
     __file__).resolve().parent.parent / 'data' / 'source' / 'cefr_sources' / 'octanove-vocabulary-profile-c1c2-1.0.csv'
-PATH_TO_SUBTLEXus = Path(__file__).resolve().parent.parent / 'data' / 'source' / 'frequencies_source' / 'SUBTLEX.xls'
-FREQUENCIES_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'frequency_cache.json'
+PATH_TO_SUBTLEXus = Path(__file__).resolve().parent.parent.parent / 'data' / 'source' / 'frequencies_source' / 'SUBTLEX.xls'
+FREQUENCIES_CACHE_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'frequency_cache.json'
 TRANSLATION_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'translation_cache.json'
 STANDART_VOCABULARY_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'vocabulary.json'
 STANDART_UNCHECKED_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'unchecked.json'
@@ -47,10 +47,14 @@ from datetime import datetime, timedelta
 DEFUALT_USER = 'scoobykot'
 STANDART_VOCABULARIES_SET = ['known', 'unknown', 'weird','learning']
 
+if not PATH_TO_LOG_FILE.parent.exists():
+    PATH_TO_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(filename=PATH_TO_LOG_FILE)
 
 # CEFR progression scale
 CEFR_ORDER = ["A1", "A2", "B1", "B2", "C1", "C2"]
+
+
 
 POS_TAG_MAP = {
     'n': 'noun',
