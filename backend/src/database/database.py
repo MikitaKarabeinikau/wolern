@@ -61,59 +61,82 @@ def update_username(db: Session, clerk_id: int, new_username: str):
 def get_all_words(db: Session, clerk_id: str):
     return db.query(models.Words.word).filter(models.Words.added_by_user_id == clerk_id).all()
 
+def get_word_id_by_word(db: Session, word: str):
+    word_entry = db.query(models.Words.id).filter(models.Words.word == word.strip()).first()
+    return word_entry.id if word_entry else None
+
 #When i will want to add a different translation language i will modify this function
-def add_word(db: Session, new_word: dict,clerk_id: str):
-    if new_word.get("word") is None:
+def add_word(db: Session, word: Word, clerk_id: str):
+    if word is None:
         raise ValueError("Word is required")
-    if new_word in get_all_words(db, clerk_id):
+    if word.word in get_all_words(db, clerk_id):
         raise ValueError("Word already exists in the database")
-    word_to_add = Word(new_word)
-    db_word = models.Words(word=word_to_add.word,
+    print("Word object created:", word)
+    db_word = models.Words(word=word.word,
                            added_by_user_id=clerk_id,
-                           notes=word_to_add.notes,
-                           audio_url=word_to_add.audio_url, 
-                           frequency=word_to_add.frequency,
-                           difficulty=word_to_add.difficulty)
+                           frequency=word.frequency,
+                           difficulty=word.difficulty)
     
     db.add(db_word)
+    db.commit()
+    db.refresh(db_word)
+    print("Word added to database:", db_word.word)
+    word_id = get_word_id_by_word(db, word.word)
     
-    for lang, translation in word_to_add.translations.items():
+    for lang, translation in word.translation.items():
         if translation:  # Ensure translation is not empty
-            db_translation = models.Translation(word_id=db_word.id,
-                                               language=lang,
-                                               translation=translation)
-            db.add(db_translation)  
+            for t in word.translation[lang]:
+                print ("Adding translation:", t, "for language:", lang)
+                db_translation = models.Translation(word_id=db_word.id,
+                                                language=lang,
+                                                translation=t)
+                db.add(db_translation)  
 
-    for synonym in word_to_add.synonyms:
+    for synonym in word.synonyms:
+        print("Adding synonym:", synonym)
         db_synonym = models.Synonym(word_id=db_word.id,
                                     synonym=synonym)
         db.add(db_synonym)
+        
+    print("Definitions to add:", word.definition)
+    for part_of_speech, definitions in word.definition.items():
+        for definition in definitions:
+            print("Adding definition:", definition, "for part of speech:", part_of_speech)
+            db_definition = models.Definition(word_id=db_word.id,
+                                            part_of_speech=part_of_speech,
+                                            definition=definition)
+            db.add(db_definition)
 
-    for part_of_speech,definition in word_to_add.definitions:
-        db_definition = models.Definition(word_id=db_word.id,
-                                          part_of_speech=part_of_speech,
-                                          definition=definition)
-        db.add(db_definition)
-    
-    for part_of_speech, example in word_to_add.examples:
-        db_example = models.Example(word_id=db_word.id,
-                                    example=example,
-                                    part_of_speech=part_of_speech)
-        db.add(db_example)
+    print("Examples to add:", word.examples)
+    for part_of_speech,example in word.examples.items():
+        for ex in example:
+            print("Adding example:", ex, "for part of speech:", part_of_speech)
+            db_example = models.Example(word_id=db_word.id,
+                                        part_of_speech=part_of_speech,
+                                        example=ex)
+            db.add(db_example)
 
-    for tag in word_to_add.tags:
+    for tag in word.tags:
+        if len(tag) == 0 :
+            break
+        print("Adding tag:", tag)
         db_tag = models.Tag(word_id=db_word.id,
                             tag=tag)
         db.add(db_tag)
 
-    for warning in word_to_add.warnings:
+    for warning in word.warnings:
+        if len(warning) == 0 :
+            break
+        print("Adding warning:", warning)
         db_warning = models.Warning(word_id=db_word.id,
                                     warning_message=warning)
         db.add(db_warning)
     
     db.commit()
-    db.refresh(db_word) 
+     
     
+    def get_word_translations(db: Session, word: int):
+        return db.query(models.Translation).filter(models.Translation.word == word.strip()).all()
 
   
      

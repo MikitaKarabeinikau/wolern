@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException,Request
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from typing import List, Dict, Optional
 from backend.src.database import models
 from ..database.database import (
     get_user_by_clerk_id,
@@ -16,8 +16,12 @@ from datetime import datetime
 from fastapi import APIRouter, Request, HTTPException
 import os 
 from svix.webhooks import Webhook
-from backend.src.database.database import get_database
-
+from backend.src.core.word import Word
+from backend.src.database.database import (
+                        get_database,
+                        add_word, 
+                        get_all_words, 
+                        get_word_id_by_word)
 
 router = APIRouter()
 
@@ -25,6 +29,27 @@ class WebhookPayload(BaseModel):
     data: dict
     object: str
     type: str
+
+
+class UserCreateRequest(BaseModel):
+    clerk_user_id: str
+    username: str = None
+    email: str
+
+class AddWordRequest(BaseModel):
+    word: str
+    # translation: Dict[str, str]  # language: translation
+    # synonyms: List[str] = []
+    # definitions: Dict[str, List[str]]  # pos: [definitions]
+    # examples: List[str] = []
+    # notes: str = None
+    # audio_url: str = None   
+    # frequency: float = 0.0
+    # difficulty: str = None
+    # tags: List[str] = []
+    # warnings: List[str] = []
+    
+    
 
 
 
@@ -100,8 +125,48 @@ async def my_vocabulary(request: Request, db: Session = Depends(get_database)):
     my_vocabulary = get_user_vocabulary(db, user_id=user_id)
     return {"vocabulary": my_vocabulary}
 
+@router.post("/user/words")
+async def add_new_word(request: Request, word_request: AddWordRequest, db: Session = Depends(get_database)):
+    
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+        new_word = Word(word=word_request.word)
+        print("adding wprd:",new_word)
+        add_word(db, new_word, clerk_id)
+        return {"success": True, "message": "Word added successfully"}
+    
+    except HTTPException as http_exc:  
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+         # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail="Failed to add word: " + str(e))
 
-class UserCreateRequest(BaseModel):
-    clerk_user_id: str
-    username: str = None
-    email: str
+@router.get("/user/words/{word}")
+async def get_word_id(request: Request, word: str, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request)
+        clerk_id = user_details["user_id"]
+        word_id = await get_word_id_by_word(db, word)
+        if word_id is None:
+            raise HTTPException(status_code=404, detail="Word not found")
+        return {"word": word, "word_id": word_id}
+    except HTTPException as http_exc:
+        raise HTTPException(status_code=http_exc.status_code,detail=http_exc.detail)  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to retrieve word ID: " + str(e))
+
+@router.get("/user/words")
+async def get_all_words(request: Request, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request)
+        clerk_id = user_details["user_id"]
+        words = await get_all_words(db, clerk_id)
+        return {"words": words}
+    except HTTPException as http_exc:
+        raise HTTPException(status_code=http_exc.status_code,detail=http_exc.detail)  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to retrieve words: " + str(e))
+    

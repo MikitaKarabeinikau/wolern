@@ -24,24 +24,24 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
 
 import pandas as pd
-PATH_TO_LEARNING_CACHE = Path(__file__).resolve().parent.parent / 'data'/'cache'/ 'learning_cache.json'
-PATH_TO_LOG_FILE = Path(__file__).resolve().parent.parent / 'logs' / 'app.log'
-CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'cefr_cache.json'
+PATH_TO_LEARNING_CACHE = Path(__file__).resolve().parent.parent.parent / 'data'/'cache'/ 'learning_cache.json'
+PATH_TO_LOG_FILE = Path(__file__).resolve().parent.parent.parent / 'logs' / 'app.log'
+CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'cefr_cache.json'
 CEFR_VOCABULARY_PROFILE_FILE_PATH = Path(
     __file__).resolve().parent.parent / 'data' / 'source' / 'cefr_sources' / 'cefrj-vocabulary-profile-1.5.csv'
 CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH = Path(
     __file__).resolve().parent.parent / 'data' / 'source' / 'cefr_sources' / 'octanove-vocabulary-profile-c1c2-1.0.csv'
 PATH_TO_SUBTLEXus = Path(__file__).resolve().parent.parent.parent / 'data' / 'source' / 'frequencies_source' / 'SUBTLEX.xls'
 FREQUENCIES_CACHE_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'frequency_cache.json'
-TRANSLATION_CACHE_PATH = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'translation_cache.json'
-STANDART_VOCABULARY_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'vocabulary.json'
-STANDART_UNCHECKED_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'unchecked.json'
-PATH_TO_WEIRD_WORDS_VOCABULARY = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies' / 'weird_words.json'
+TRANSLATION_CACHE_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'translation_cache.json'
+STANDART_VOCABULARY_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'vocabularies' / 'vocabulary.json'
+STANDART_UNCHECKED_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'vocabularies' / 'unchecked.json'
+PATH_TO_WEIRD_WORDS_VOCABULARY = Path(__file__).resolve().parent.parent.parent / 'data' / 'vocabularies' / 'weird_words.json'
 STANDART_SORTED_UNCHECKED_PATH = Path(
-    __file__).resolve().parent.parent / "data" / "vocabularies" / "sorted_unchecked.json"
-STANDART_AUDIO_FILES_DIR = Path(__file__).resolve().parent.parent / 'data' / 'cache' / 'audio'
-TEST_VOCABULARY = Path(__file__).resolve().parent.parent / 'tests' / 'data' / 'test_vocabulary.json'
-VOCABULARY_DIR_PATH = Path(__file__).resolve().parent.parent / 'data' / 'vocabularies'
+    __file__).resolve().parent.parent.parent / "data" / "vocabularies" / "sorted_unchecked.json"
+STANDART_AUDIO_FILES_DIR = Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'audio'
+TEST_VOCABULARY = Path(__file__).resolve().parent.parent.parent / 'tests' / 'data' / 'test_vocabulary.json'
+VOCABULARY_DIR_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'vocabularies'
 from datetime import datetime, timedelta
 
 DEFUALT_USER = 'scoobykot'

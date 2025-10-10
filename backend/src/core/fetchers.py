@@ -7,7 +7,7 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
 sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))  
-
+import logging
 import json
 import csv
 import warnings
@@ -66,7 +66,8 @@ def get_frequency(word: str) -> float | None:
     """
     frequency = _frequency_cache.get(word)
     if frequency is None:
-        print(f"Couldn't find frequency for word '{word}'")
+        return 0.0
+        logging.info(f"[frequency] '{word}' not found in frequency cache.")
     return frequency
 
 
@@ -250,7 +251,6 @@ def get_parts_of_speech(word: str) -> List[str]:
     return list(pos_tags)
 
 def get_cefr_level(word):
-
     CEFR_ORDER_MAP = {
     "A1": 1,
     "A2": 2,
@@ -261,6 +261,7 @@ def get_cefr_level(word):
 }
 # A reverse map to convert the numerical rank back to a CEFR string
     CEFR_RANK_TO_LEVEL = {v: k for k, v in CEFR_ORDER_MAP.items()}
+    logging.info(f'Fetching CEFR level for word: {word}')
 
     try:
         _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
@@ -268,24 +269,25 @@ def get_cefr_level(word):
         return "ERROR: Cache file not found"
     
     word_data = _cefr_cache.get(word.lower(), {})
-    levels = word_data.get("level", []) 
+    logging.info(f"Word data from cache: {word_data}")
+    level = word_data
+    logging.info(f"Levels from word data: {level}")
+    temp_levels = []
+    for lvl in level:
+        if lvl in CEFR_ORDER_MAP:
+            temp_levels.append(CEFR_ORDER_MAP[lvl])
+    temp_levels = sorted(temp_levels)
+    level = []
+    for lvl in temp_levels:
+        for k, v in CEFR_ORDER_MAP.items():
+            if v == lvl:
+                level.append(k)
+    if len(level) == 0:
+        return level[0]
+
     
-    if not levels:
+    if not level:
         return "UNKNOWN"
-
-    ranks = [
-        CEFR_ORDER_MAP[level] 
-        for level in levels 
-        if level in CEFR_ORDER_MAP
-    ]
-
-    if not ranks:
-        return "UNKNOWN"
-    ranks.sort()
-    middle_index = len(ranks) // 2 
-    median_rank = ranks[middle_index] 
-
-    return CEFR_RANK_TO_LEVEL.get(median_rank, "UNKNOWN")
 
 def get_definitions_by_pos(word):
 
@@ -302,21 +304,18 @@ def get_definitions_by_pos(word):
     return definitions
 
 
-def get_examples_from_wordnet(word: str) -> List[str]:
-    """
-    Retrieve unique example sentences for a given word from WordNet.
-
-    Parameters:
-        word (str): The word to retrieve example sentences for.
-
-    Returns:
-        List[str]: A list of unique example sentences using the word.
-    """
-    examples = set()
+def AAamples_from_wordnet(word: str) -> List[str]:
+    
+    
+    examples = {}
     for syn in wordnet.synsets(word):
+        print("\n\n\n\nSynset:", syn.name())
+        print("Part of Speech:", POS_TAG_MAP[syn.pos()]) 
+        if POS_TAG_MAP[syn.pos()] not in examples:
+            examples[POS_TAG_MAP[syn.pos()]] = []
         for ex in syn.examples():
-            examples.add(ex)
-    return list(examples)
+            examples[POS_TAG_MAP[syn.pos()]].append(ex)
+    return examples
 
 
 def get_tags_from_wordnet(word: str) -> List[str]:
@@ -375,24 +374,15 @@ def highest_cefr(existing: str | None, new: str) -> str:
 def build_cefr_dict(files):
     """
     Build a dictionary mapping words to their highest CEFR level from multiple CSV files.
-
-    Parameters:
-        files (Iterable[Path]): A list or iterable of CSV file paths containing
-                                'headword' and 'CEFR' columns.
-
-    Returns:
-        dict[str, str]: A dictionary where each word is mapped to its highest CEFR level.
     """
     cefr: dict[str, str] = {}
-    c = []
     for csv_path in files:
         with csv_path.open(encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 word = row["headword"].strip().lower()
                 level = row["CEFR"].strip().upper()
-                if level not in c : c.append(level)
-                cefr[word] = c
+                cefr[word] = level  # Store level as a string
     return cefr
 
 
@@ -404,12 +394,16 @@ def get_translation_from_cache(word: str) -> dict[str, list[str]] | None:
 def get_translation(
     word: str, target_lang: str = "russian"
 ) -> dict[str, list[str] | None]:
-
+    """
+    Retrieve translation for a word, using cache if available.
+    """
     w = word.lower()
 
     cached = _translation_cache.get(w)
-    if cached and target_lang in cached:
-        return {target_lang: cached[target_lang]}
+    if cached:
+        translation = cached.get(target_lang)
+        if translation is not None:
+            return {target_lang: translation}
 
     try:
         translated_words = LingueeTranslator(source="english", target=target_lang).translate(word, return_all=True)
@@ -421,20 +415,16 @@ def get_translation(
         _translation_cache.setdefault(w, {})[target_lang] = None
         _save_translation_cache()
         return {target_lang: None}
+    except Exception as e:
+        warnings.warn(f"[translation] {word} → {target_lang} failed with unexpected error: {e}")
+        _translation_cache.setdefault(w, {})[target_lang] = None
+        _save_translation_cache()
+        return {target_lang: None}
 
 
 def cefr_from_csv_to_json():
     """
     Build a CEFR dictionary from CSV files and save it to a JSON file.
-
-    Uses CSV_PATH_1 and CSV_PATH_2 as input sources and stores the combined
-    result at CACHE_PATH in a pretty-printed JSON format.
-
-    Returns:
-        None
-
-    Side effects:
-        - Overwrites the file at CACHE_PATH with the new CEFR data.
     """
     data = build_cefr_dict([CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH])
     CEFR_CACHE_PATH.write_text(

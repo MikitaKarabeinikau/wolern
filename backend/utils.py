@@ -24,7 +24,9 @@ def authenticate_and_get_user_details(request):
         user_id = request_state.payload.get("sub")
         print("Authenticated user ID:", user_id)
         return {"user_id": user_id}
+    except clerk_sdk.errors.ClerkError as e:
+        raise HTTPException(status_code=500, detail="Clerk error:\n\t"+str(e))
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Authentivation problem:\n\t"+str(e))
     

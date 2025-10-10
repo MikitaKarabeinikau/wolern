@@ -13,6 +13,7 @@ from .fetchers import (get_cefr_level,
                         get_synonyms,       
                         get_tags_from_wordnet,
                         get_translation_from_cache,
+                        get_translation
                         )
 from .utils import (current_datetime,   
                    initial_repeat_time, 
@@ -27,45 +28,24 @@ logging.basicConfig(filename=(Path(__file__).resolve().parent.parent / 'logs' / 
 
 class Word:
     def __init__(self,word):
-            self.word = word.lower(),
-            self.translation = get_translation_from_cache(word)
+            self.word = word.lower()
+            self.translation = get_translation(word)
             self.synonyms = get_synonyms(word)
-            self.defenition = get_definitions_by_pos(word) if get_definitions_by_pos(word) else {},
-            self.examples  = [get_examples_from_wordnet(word)] if get_examples_from_wordnet(word) else [],
+            self.definition = get_definitions_by_pos(word) if get_definitions_by_pos(word) else {}
+            self.examples  = get_examples_from_wordnet(word) if get_examples_from_wordnet(word) else {}
             self.part_of_speech = get_parts_of_speech(word)
             self.date_added =  parse_time_to_str(current_datetime())
             self.last_reviewed = parse_time_to_str(current_datetime())
             self.review_count = 0
-            self. learning_stage =  0
+            self.learning_stage =  0
             self.time_to_repeat =  parse_time_to_str(initial_repeat_time())
             self.notes =  ""
             self.difficulty = get_cefr_level(word)
             self.tags = get_tags_from_wordnet(word) if get_tags_from_wordnet(word) else []
-            self.audio_url = str(get_audio_path(word)),
+            # self.audio_url = str(get_audio_path(word))
             self.frequency = get_frequency(word)
+            self.warnings = self.find_warnings(self.to_dict())
         
-
-    def __init__(self, word_data):
-        self.word = word_data["word"]
-        self.translation = word_data["translation"]
-        self.synonyms = word_data.get("synonyms", [])
-        self.definition = word_data.get("definition", [])
-        self.examples = word_data.get("examples", [])
-        self.part_of_speech = word_data["part_of_speech"]
-        self.date_added = word_data["date_added"]
-        self.last_reviewed = word_data["last_reviewed"]
-        self._review_count = word_data["review_count"]
-        self.learning_stage = word_data["learning_stage"]
-        self.time_to_repeat = word_data["time_to_repeat"]
-        self.notes = word_data.get("notes", [])
-        self.level = word_data.get("level", None)
-        self.tags = word_data.get("tags", [])
-        self.audio_url = word_data.get("audio_url", get_audio_path(self.word))
-        self.frequency = word_data.get("frequency", None)
-
-    def __str__(self):
-        return f'{self.word.upper()}\t\tLearning Stage: {self.learning_stage}\tFrequency: {self.frequency}\nTranslation:\n\t{self.get_translation("russian")}\nExamples: \n\t{self.get_examples()}TAGS:\n\t{self.tags}'
-
     def to_dict(self):
         return {
             "word": self.word,
@@ -76,15 +56,33 @@ class Word:
             "part_of_speech": self.part_of_speech,
             "date_added": self.date_added,
             "last_reviewed": self.last_reviewed,
-            "review_count": self._review_count,
+            "review_count": self.review_count,
             "learning_stage": self.learning_stage,
             "time_to_repeat": self.time_to_repeat,
             "notes": self.notes,
-            "level": self.level,
+            "difficulty": self.difficulty,
             "tags": self.tags,
-            "audio_url": self.audio_url,
+            # "audio_url": self.audio_url,
             "frequency": self.frequency
         }
+    
+    def find_warnings(self, word_data):
+        warnings = []
+        if not word_data.get("translation"):
+            warnings.append("Missing translation")
+        if not word_data.get("synonyms"):
+            warnings.append("No synonyms found")
+        if not word_data.get("definition"):
+            warnings.append("No definitions available")
+        if not word_data.get("examples"):
+            warnings.append("No example sentences")
+        if not word_data.get("part_of_speech"):
+            warnings.append("Missing part of speech")
+        if not word_data.get("frequency"):
+            warnings.append("Missing frequency")
+        if not word_data.get("level"):
+            warnings.append("No CEFR level found")
+        return warnings
 
     def add_tags(self, tag):
         if tag not in self.tags:
