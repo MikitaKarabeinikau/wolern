@@ -58,8 +58,11 @@ def update_username(db: Session, clerk_id: int, new_username: str):
         db.refresh(user)
     return user
 
-def get_all_words(db: Session, clerk_id: str):
-    return db.query(models.Words.word).filter(models.Words.added_by_user_id == clerk_id).all()
+def get_all_words_from_db(db: Session, clerk_id: str):
+    words  = db.query(models.Words.word).filter(models.Words.added_by_user_id == clerk_id).all()
+    words = [word[0] for word in words if word[0] is not None]
+    print(f'Words after processing: {words} ')
+    return words
 
 def get_word_id_by_word(db: Session, word: str):
     word_entry = db.query(models.Words.id).filter(models.Words.word == word.strip()).first()
@@ -69,7 +72,7 @@ def get_word_id_by_word(db: Session, word: str):
 def add_word(db: Session, word: Word, clerk_id: str):
     if word is None:
         raise ValueError("Word is required")
-    if word.word in get_all_words(db, clerk_id):
+    if word.word in get_all_words_from_db(db, clerk_id):
         raise ValueError("Word already exists in the database")
     print("Word object created:", word)
     db_word = models.Words(word=word.word,

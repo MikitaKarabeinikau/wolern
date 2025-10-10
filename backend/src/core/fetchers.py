@@ -304,7 +304,7 @@ def get_definitions_by_pos(word):
     return definitions
 
 
-def AAamples_from_wordnet(word: str) -> List[str]:
+def get_examples_from_wordnet(word: str) -> List[str]:
     
     
     examples = {}

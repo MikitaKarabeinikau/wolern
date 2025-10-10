@@ -7,10 +7,12 @@ import { useAuth } from "@clerk/clerk-react"
 function AddWordContainer(){
     const [words, setWords] = useState([]);
     const [error, setError ] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const { getToken } = useAuth();
 
 
     const fetchWords = async () => {
+        setIsLoading(true);
         try {
             const token = await getToken();
             const response = await fetch("http://localhost:8000/user/words", {
@@ -28,8 +30,10 @@ function AddWordContainer(){
             setWords(data.words); // Assuming the response is { "words": [...] }
             setError(null);
         } catch (e) {
-            setError(e.message);
+            setError("Failed to load words.");
             setWords([]);
+        }finally {
+            setIsLoading(false);
         }
     };
 
@@ -63,8 +67,8 @@ return (
         <div>
             <h2>Words List</h2>
             <ul>
-                {words.map((word, index) => (
-                    <li key={index}>{word.word}</li>
+                {words.map((data, index) => (
+                    <li key={index}>{data}</li>
                 ))}
             </ul>
         </div>

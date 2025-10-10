@@ -7,7 +7,9 @@ from backend.src.database import models
 from ..database.database import (
     get_user_by_clerk_id,
     create_user, get_user_by_username,
-    get_user_by_id,get_user_vocabulary,SessionLocal
+    get_user_by_id,
+    get_user_vocabulary,
+    SessionLocal
 )
 
 from backend.utils import authenticate_and_get_user_details
@@ -20,7 +22,7 @@ from backend.src.core.word import Word
 from backend.src.database.database import (
                         get_database,
                         add_word, 
-                        get_all_words, 
+                        get_all_words_from_db, 
                         get_word_id_by_word)
 
 router = APIRouter()
@@ -119,7 +121,7 @@ async def get_users(db: Session = Depends(get_database)):
 
 @router.get("/my-vocabulary")
 async def my_vocabulary(request: Request, db: Session = Depends(get_database)):
-    user_details = authenticate_and_get_user_details(request)
+    user_details = authenticate_and_get_user_details(request = request)
     user_id = user_details["user_id"]
 
     my_vocabulary = get_user_vocabulary(db, user_id=user_id)
@@ -147,7 +149,7 @@ async def add_new_word(request: Request, word_request: AddWordRequest, db: Sessi
 @router.get("/user/words/{word}")
 async def get_word_id(request: Request, word: str, db: Session = Depends(get_database)):
     try:
-        user_details = authenticate_and_get_user_details(request)
+        user_details = authenticate_and_get_user_details(request = request)
         clerk_id = user_details["user_id"]
         word_id = await get_word_id_by_word(db, word)
         if word_id is None:
@@ -161,9 +163,9 @@ async def get_word_id(request: Request, word: str, db: Session = Depends(get_dat
 @router.get("/user/words")
 async def get_all_words(request: Request, db: Session = Depends(get_database)):
     try:
-        user_details = authenticate_and_get_user_details(request)
+        user_details = authenticate_and_get_user_details(request = request)
         clerk_id = user_details["user_id"]
-        words = await get_all_words(db, clerk_id)
+        words = get_all_words_from_db(db, clerk_id)
         return {"words": words}
     except HTTPException as http_exc:
         raise HTTPException(status_code=http_exc.status_code,detail=http_exc.detail)  # Re-raise HTTP exceptions to be handled by FastAPI
