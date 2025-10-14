@@ -20,7 +20,7 @@ class Words(Base):
     word = Column(String, unique=True, index=True, nullable=False)
     added_by_user_id = Column(String,ForeignKey("users.clerk_id"), nullable=False)
     last_reviewed = Column(DateTime, default=datetime.utcnow)
-    learning_stage = Column(Integer, nullable=False, deafualt=0)
+    learning_stage = Column(Integer, nullable=False, default=0)
     repeats_number = Column(Integer, default=0)
     time_to_reapet = Column(DateTime, default=datetime.utcnow)
     notes = Column(String, nullable=True)

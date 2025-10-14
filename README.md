@@ -11,27 +11,17 @@
   
 **Wolern** is a modern web application for vocabulary learning and language progress tracking.
 
-- 🚀 **Frontend:** React + Clerk authentication + FastAPI backend
-- 📚 **Features:**  
-  - User authentication  
-  - Vocabulary management  
-  - Learning statistics  
-  - Translation and text-to-speech tools
+TODO:
+NOW : Make word component
+1. Change word adding logic. If word have to many warnings it shouldnt be add to vocabulary.
 
-Built for language learners who want to track and expand their vocabulary efficiently.
-</td>
-</tr>
-</table>
-<p align="left">
-  
-</p>
 
-## 🎯 Project Goals
 
-- Improve and expand English vocabulary.
-- Use Python to develop learning tools.
-- Experiment with NLP libraries like NLTK, spaCy, and Hugging Face.
-- Practice project management and software development skills.
+
+
+
+
+
 
 
 ### Data sources 

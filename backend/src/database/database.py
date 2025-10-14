@@ -59,10 +59,18 @@ def update_username(db: Session, clerk_id: int, new_username: str):
     return user
 
 def get_all_words_from_db(db: Session, clerk_id: str):
-    words  = db.query(models.Words.word).filter(models.Words.added_by_user_id == clerk_id).all()
-    words = [word[0] for word in words if word[0] is not None]
-    print(f'Words after processing: {words} ')
-    return words
+    words  = db.query(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
+    print(words)
+    word_list = [
+        {
+            "id": word.id,
+            "word": word.word
+        }
+        for word in words
+    ]
+    
+    print(f'Words after processing: {word_list} ')
+    return word_list
 
 def get_word_id_by_word(db: Session, word: str):
     word_entry = db.query(models.Words.id).filter(models.Words.word == word.strip()).first()

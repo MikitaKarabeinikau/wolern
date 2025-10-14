@@ -11,8 +11,6 @@ bs4==0.0.2
 certifi==2025.7.14
 cffi==1.17.1
 charset-normalizer==3.4.2
-clerk-backend-api==3.3.1
-clerk-sdk-python==0.1.0
 click==8.1.8
 cryptography==45.0.7
 deep-translator==1.11.4
@@ -70,7 +68,6 @@ typing_extensions==4.14.1
 tzdata==2025.2
 urllib3==2.5.0
 uvicorn==0.35.0
--e git+ssh://git@github.com/MikitaKarabeinikau/wolern.git@85cc4556f5fe2f3406e8c5475bab089cd60066df#egg=wolern
 wrapt==1.17.3
 xlrd==2.0.2
 yarl==1.20.1

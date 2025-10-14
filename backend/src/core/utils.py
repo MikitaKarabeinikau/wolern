@@ -18,12 +18,18 @@ import os.path
 from pathlib import Path
 from random import randint
 import sys
-import os
 
 # Add backend to sys.path so 'src' is importable
 sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
 
 import pandas as pd
+if (not os.path.exists(Path(__file__).resolve().parent.parent.parent / 'data' / 'cache')):
+    os.makedirs(Path(__file__).resolve().parent.parent.parent / 'data' / 'cache')
+if (not os.path.exists(Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'audio')):
+    os.makedirs(Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'audio')
+
+
+
 PATH_TO_LEARNING_CACHE = Path(__file__).resolve().parent.parent.parent / 'data'/'cache'/ 'learning_cache.json'
 PATH_TO_LOG_FILE = Path(__file__).resolve().parent.parent.parent / 'logs' / 'app.log'
 CEFR_CACHE_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'cefr_cache.json'

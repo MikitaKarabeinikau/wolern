@@ -1,0 +1,15 @@
+.add-word-container {
+  display: flex;
+  gap: 2rem; /* Adds space between the two columns */
+}
+
+.left-panel {
+  flex: 1; /* Each panel takes up half the space */
+  padding: 1rem;
+  border-right: 1px solid #ccc; /* Adds a visual separator */
+}
+
+.right-panel {
+  flex: 1; /* Each panel takes up half the space */
+  padding: 1rem;
+}
