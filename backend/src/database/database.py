@@ -59,18 +59,8 @@ def update_username(db: Session, clerk_id: int, new_username: str):
     return user
 
 def get_all_words_from_db(db: Session, clerk_id: str):
-    words  = db.query(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
-    print(words)
-    word_list = [
-        {
-            "id": word.id,
-            "word": word.word
-        }
-        for word in words
-    ]
-    
-    print(f'Words after processing: {word_list} ')
-    return word_list
+    return db.query(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
+
 
 def get_word_id_by_word(db: Session, word: str):
     word_entry = db.query(models.Words.id).filter(models.Words.word == word.strip()).first()
@@ -146,8 +136,48 @@ def add_word(db: Session, word: Word, clerk_id: str):
     db.commit()
      
     
-    def get_word_translations(db: Session, word: int):
-        return db.query(models.Translation).filter(models.Translation.word == word.strip()).all()
 
-  
-     
+def delete_word(db: Session, word: str, clerk_id: str):
+    word_entry = db.query(models.Words).filter(models.Words.word == word.strip(), models.Words.added_by_user_id == clerk_id).first()
+    if word_entry:
+        db.delete(word_entry)
+        db.commit()
+        return True
+    return False
+
+def get_word_translations_from_db(db: Session, word: str, clerk_id: str):
+    data =  db.query(models.Words).join(models.Translation).filter(models.Words.word == word.strip(), models.Words.added_by_user_id == clerk_id).all()
+    print("\n\nRaw translation data from DB:", data)  # Debug log
+    print(f'fetching translations for word {data}')
+    return data
+
+def get_word_synonyms_from_db(db: Session, word: str, clerk_id: str):
+    return db.query(models.Words).join(models.Synonym).filter(models.Words.word == word.strip(), models.Words.added_by_user_id == clerk_id).all()
+
+def get_word_tags_from_db(db: Session, word: str, clerk_id: str):
+    return db.query(models.Words).join(models.Tag).filter(models.Words.word == word.strip(), models.Words.added_by_user_id == clerk_id).all()
+
+def get_word_warnings_from_db(db: Session, word: str, clerk_id: str):
+    return db.query(models.Words).join(models.Warning).filter(models.Words.word == word.strip(), models.Words.added_by_user_id == clerk_id).all()
+
+def get_word_part_of_speech_from_db(db: Session, word: str, clerk_id: str):
+    return db.query(models.Words).join(models.Definition.part_of_speech).filter(models.Words.word == word.strip(), models.Words.added_by_user_id == clerk_id).all()
+
+def get_all_translations_for_user_from_db(db: Session, clerk_id: str):
+    return db.query(models.Translation).join(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
+
+def get_all_definitions_for_user_from_db(db: Session, clerk_id: str):
+    return db.query(models.Definition).join(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()   
+
+def get_all_examples_for_user_from_db(db: Session, clerk_id: str):
+    return db.query(models.Example).join(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
+
+def get_all_synonyms_for_user_from_db(db: Session, clerk_id: str):
+    return db.query(models.Synonym).join(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
+
+def get_all_tags_for_user_from_db(db: Session, clerk_id: str):
+    return db.query(models.Tag).join(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
+
+def get_all_warnings_for_user_from_db(db: Session, clerk_id: str):
+    return db.query(models.Warning).join(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
+

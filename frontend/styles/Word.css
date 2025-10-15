@@ -43,6 +43,8 @@
 }
 
 .collapsible-content-inner {
-  padding: 1rem;
+  padding: 15px;
   border-top: 1px solid #ddd;
+  max-height: 300px; /* Set a maximum height */
+  overflow-y: auto;
 }

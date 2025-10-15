@@ -1,34 +1,29 @@
-import "react"
-import React, {useState} from "react"
+import React, { useState } from 'react';
 
+function AddWord({ onAdd }) {
+  const [inputValue, setInputValue] = useState('');
 
-function AddWord({onAdd}){
-    const [inputWord, setInputWord] = useState("");
-
-    const handleInputChange = (event) => {
-        setInputWord(event.target.value);
-        console.log("Word:",event.target.value);
+  const handleClick = () => {
+    if (inputValue.trim()) {
+      // FIX: Pass only the string value from the input field.
+      // Do NOT pass an object like { word: inputValue }.
+      onAdd(inputValue);
+      setInputValue(''); // Clear the input after adding
     }
-    
-    const handleButtonChange = (event) => {
-        event.preventDefault();
-        onAdd({word: inputWord});
-        setInputWord("");
-    };
-    
-    return (
-        <>
-        <div>
-            <label>Word</label>
-            <input type='text' 
-            value={inputWord}
-            onChange={handleInputChange} />
-        </div>
-        <button 
-        onClick={handleButtonChange}>Add Word
-        </button>
-        </>
-    )
+  };
+
+  return (
+    <div>
+      <h3>Add New Word</h3>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Enter a word"
+      />
+      <button onClick={handleClick}>Add Word</button>
+    </div>
+  );
 }
 
 export default AddWord;

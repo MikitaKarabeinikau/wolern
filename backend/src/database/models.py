@@ -75,7 +75,7 @@ class Example(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     word_id = Column(Integer, ForeignKey("words.id"), nullable=False)
     part_of_speech = Column(String, nullable=True)
-    example = Column(String, nullable=False)
+    example_sentence = Column(String, nullable=False)
 
     word = relationship("Words", back_populates="examples")
 
