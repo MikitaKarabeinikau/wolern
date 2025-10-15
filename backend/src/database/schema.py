@@ -34,7 +34,7 @@ class SynonymResponse(BaseModel):
 class Definition(BaseModel):
     id: int
     word_id: int
-    part_of_speech: str
+    part_of_speech: Optional[str] = None
     definition: str
 
     class Config:

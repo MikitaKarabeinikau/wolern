@@ -103,7 +103,7 @@ export function VocabulariesPanel() {
           <AddWordContainer onWordAdded={handleWordAdded} />
         </div>
         <div className="right-panel">
-          {isLoading ? <p>Loading...</p> : <WordList words={words} translationsMap = {translationMap} definitionsMap={definitionMap} examplesMap={exampleMap} synonymsMap={synonymMap} warningsMap={warningMap} tagsMap={tagMap} />}
+          {isLoading ? <p>Loading...</p> : <WordList words={words} translationsMap = {translationMap} definitionsMap={definitionMap} examplesMap={exampleMap} synonymsMap={synonymMap} warningsMap={warningMap} tagsMap={tagMap} onDataChange={handleWordAdded} getToken={getToken}/>}
         </div>
       </div>
     </div>

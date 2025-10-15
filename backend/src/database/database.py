@@ -114,7 +114,7 @@ def add_word(db: Session, word: Word, clerk_id: str):
             print("Adding example:", ex, "for part of speech:", part_of_speech)
             db_example = models.Example(word_id=db_word.id,
                                         part_of_speech=part_of_speech,
-                                        example=ex)
+                                        example_sentence=ex)
             db.add(db_example)
 
     for tag in word.tags:
@@ -181,3 +181,24 @@ def get_all_tags_for_user_from_db(db: Session, clerk_id: str):
 def get_all_warnings_for_user_from_db(db: Session, clerk_id: str):
     return db.query(models.Warning).join(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
 
+def delete_definition_by_id(db: Session,clerk_id:str, definition_id: int):
+    to_delete = db.query(models.Definition).join(models.Words).filter(models.Definition.id == definition_id, models.Words.added_by_user_id == clerk_id).first()
+    if not to_delete:
+        print("No definition found or user does not have permission to delete it.")
+        return None
+    db.delete(to_delete)
+    db.commit()
+    print("Definition deleted successfully.")
+    return True  # Indicate successful deletion
+
+def get_definition_by_id(db: Session, definition_id: int):
+    return db.query(models.Definition).filter(models.Definition.id == definition_id).first()
+
+def update_definition_by_id(db: Session, definition_id: int, new_definition: str):
+    definition_entry = get_definition_by_id(db, definition_id)
+    if definition_entry:
+        definition_entry.definition = new_definition
+        db.commit()
+        db.refresh(definition_entry)
+        return definition_entry
+    return None

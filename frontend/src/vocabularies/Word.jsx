@@ -1,7 +1,9 @@
 import React from 'react'; // Removed unused useState, useEffect
 import Collapsible from './Collapsible';
+import '../../styles/Word.css';
+import UnitCell from './UnitCell';
 
-function Word({ wordData, translations, definitions, examples, synonyms, warnings, tags }) {
+function Word({ wordData, translations, definitions, examples, synonyms, warnings, tags, onDataChange, getToken }) {
   const { word } = wordData;
 
   // This logic correctly groups your flat list of translations into an
@@ -42,7 +44,6 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
             <div key={language}>
               <strong>{language}:</strong>
               <ul>
-                
                 {translationsByLanguage[language].map(trans => (
                   <li key={trans.id}>
                     {trans.id}. {trans.translation}
@@ -60,15 +61,63 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
         <h4>Definitions</h4>
         {Object.keys(definitionsByPartOfLanguage).length > 0 ? (
           Object.keys(definitionsByPartOfLanguage).map(pos => (
+            // FIX: Add a return statement before the inner map.
+            // Or, ensure the inner map implicitly returns the component.
+            // The simplest fix is to wrap the inner map's content in a div.
             <div key={pos}>
               <strong>{pos}:</strong>
-              <ul>
-                {definitionsByPartOfLanguage[pos].map(def => (
-                  <li key={def.id}>
-                    {def.id}. {def.definition}
-                  </li>
-                ))}
-              </ul>
+              {definitionsByPartOfLanguage[pos].map(def => (
+                <UnitCell
+                  key={def.id}
+                  item={{ id: def.id, text: def.definition }}
+                  onUpdate={async (id, newText) => {
+                    try{
+                      const token = await getToken();
+                      const response = await fetch(`http://localhost:8000/user/words/definitions/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ definition: newText, id: id, word_id: def.word_id }), // Adjust payload as needed
+                      });
+                      if (response.ok) {
+                        console.log(`Definition ${id} updated successfully`);
+                        onDataChange(); // Notify parent to refresh data
+                      } else {
+                        console.error('Failed to update definition');
+                      }
+                    } catch (error) {
+                      console.error('Error updating definition:', error);
+                    }
+
+ 
+                    console.log(`Update ${id} with new text: ${newText}`);
+                  }}
+                  onDelete={async (id) => {
+                    console.log(`Delete button clicked for definition ID: ${id}`);
+                    console.log('getToken function:', getToken);
+                    try {
+                      const token = await getToken();
+                      const response = await fetch(`http://localhost:8000/user/words/definitions/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          Authorization: `Bearer ${token}`,
+                        },
+                      });
+                      if (response.ok) {
+                        console.log(`Definition ${id} deleted successfully`);
+                        onDataChange(); // Notify parent to refresh data
+                      } else {
+                        console.error('Failed to delete definition');
+                      } 
+                    } catch (error) {
+                      console.error('Error deleting definition:', error);
+                    }
+                  }}
+                />  
+              ))}
             </div>
           ))
         ) : (
@@ -85,7 +134,6 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
                 {examplesByPartOfLanguage[pos].map(ex => (
                   <li key={ex.id}>
                     {ex.id}. {ex.example_sentence}
-                    {console.log("Example sentence:", ex.example_sentence)}
                   </li>
                 ))}
               </ul>

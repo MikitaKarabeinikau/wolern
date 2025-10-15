@@ -1,0 +1,67 @@
+.unit-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  gap: 10px;
+}
+
+.unit-cell:last-child {
+  border-bottom: none;
+}
+
+.unit-cell-text {
+  flex-grow: 1;
+  word-break: break-word;
+}
+
+.unit-cell-actions {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.unit-cell-btn {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+.unit-cell-btn.edit {
+  background-color: #f0f0f0;
+}
+
+.unit-cell-btn.delete {
+  background-color: #fff0f0;
+  color: #d9534f;
+  border-color: #d9534f;
+}
+
+.unit-cell-btn.save {
+  background-color: #e8f5e9;
+  color: #4caf50;
+  border-color: #4caf50;
+}
+
+.unit-cell-btn.cancel {
+  background-color: #f0f0f0;
+}
+
+.unit-cell.editing {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.unit-cell-textarea {
+  width: 100%;
+  min-height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  margin-bottom: 8px;
+  font-family: inherit;
+  font-size: inherit;
+}

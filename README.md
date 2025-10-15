@@ -13,6 +13,11 @@
 
 TODO:
 NOW : Make word component
+  delete word
+  delete definition/example/translation/etc
+  add definition/etc
+  update definition/etc
+  
 1. Change word adding logic. If word have to many warnings it shouldnt be add to vocabulary.
 
 

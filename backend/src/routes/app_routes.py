@@ -31,7 +31,10 @@ from backend.src.database.database import (
                         get_all_warnings_for_user_from_db,
                         get_all_definitions_for_user_from_db,
                         get_all_examples_for_user_from_db,
-                        get_all_synonyms_for_user_from_db)
+                        get_all_synonyms_for_user_from_db,
+                        get_definition_by_id,
+                        delete_definition_by_id,
+                        update_definition_by_id)
 
 router = APIRouter()
 
@@ -275,3 +278,61 @@ async def get_all_warnings_for_user(request: Request, db: Session = Depends(get_
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to retrieve warnings: " + str(e))
 
+@router.delete("/user/words/definitions/{id}",status_code=204)
+async def delete_definition(request: Request, id: int, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        was_deleted = delete_definition_by_id(db=db, clerk_id=clerk_id, definition_id=id)
+
+        if not was_deleted:
+            # This path is taken if the item wasn't found.
+            raise HTTPException(status_code=404, detail="Definition not found or user does not have permission.")
+        
+        # If was_deleted is True, the commit was successful. We can safely return.
+        # A 204 response should not have a body.
+        return None
+
+    except HTTPException as http_exc:
+        # If our own HTTPException is raised, just re-raise it.
+        raise http_exc
+    except Exception as e:
+        # For any other unexpected errors, return a 500.
+        # We avoid db.rollback() here as the state of the transaction is uncertain.
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")
+        
+        db.delete(definition)
+        db.commit()
+        return {"success": True, "message": "Definition deleted successfully"}
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+         # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail="Failed to delete definition: " + str(e))
+    
+
+@router.put("/user/words/definitions/{id}", status_code=204)
+async def update_definition(request: Request, id: int, definition_update: Definition, db: Session = Depends(get_database),):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        existing_definition = get_definition_by_id(db, id)
+        if not existing_definition or existing_definition.word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=404, detail="Definition not found or user does not have permission.")
+
+        update_definition_by_id(db, id, definition_update.definition)
+
+        db.commit()
+        return None  # 204 No Content should not return a body
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+         # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail="Failed to update definition: " + str(e))

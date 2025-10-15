@@ -2,7 +2,7 @@ import React from "react";
 import Word from "./Word";
 
 // FIX: Accept 'translationsMap' as a prop
-function WordList({ words, translationsMap, definitionsMap, examplesMap, synonymsMap, warningsMap, tagsMap }) {
+function WordList({ words, translationsMap, definitionsMap, examplesMap, synonymsMap, warningsMap, tagsMap, onDataChange, getToken}) {
    if (!words || words.length === 0) {
         return (
             <div>
@@ -33,6 +33,8 @@ function WordList({ words, translationsMap, definitionsMap, examplesMap, synonym
                         synonyms={synonyms}
                         warnings={warnings}
                         tags={tags}
+                        onDataChange={onDataChange}
+                        getToken={getToken}
                     />
                 );
             })}
