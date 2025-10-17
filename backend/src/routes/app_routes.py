@@ -11,6 +11,7 @@ from ..database.database import (
     get_user_vocabulary,
     SessionLocal
 )
+from fastapi import Body
 from ..database.schema import TranslationResponse, Translation, SynonymResponse, Synonym, DefinitionResponse, Definition, ExampleResponse, Example, TagResponse, Tag, WarningResponse, Warning
 
 from backend.utils import authenticate_and_get_user_details
@@ -34,7 +35,18 @@ from backend.src.database.database import (
                         get_all_synonyms_for_user_from_db,
                         get_definition_by_id,
                         delete_definition_by_id,
-                        update_definition_by_id)
+                        update_definition_by_id,
+                        delete_word_by_id_from_db,
+                        delete_example_by_id, 
+                        get_example_by_id,
+                        update_example_by_id,
+                        delete_translation_by_id,
+                        delete_tags_by_id,
+                        delete_synonym_by_id,
+                        update_synonym_by_id,
+                        delete_warning_by_id,
+                        update_warning_by_id,
+                        get_warning_by_id)
 
 router = APIRouter()
 
@@ -314,17 +326,74 @@ async def delete_definition(request: Request, id: int, db: Session = Depends(get
         raise HTTPException(status_code=500, detail="Failed to delete definition: " + str(e))
     
 
+@router.delete("/user/words/examples/{id}",status_code=204)
+def delete_example(request: Request, id: int, db: Session = Depends(get_database)):
+    print("Delete example called with id:", id)
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        was_deleted = delete_example_by_id(db=db, clerk_id=clerk_id, example_id=id)
+
+        if not was_deleted:
+            # This path is taken if the item wasn't found.
+            raise HTTPException(status_code=404, detail="Example not found or user does not have permission.")
+        return None
+    except HTTPException as http_exc:
+        # If our own HTTPException is raised, just re-raise it.
+        raise http_exc
+    except Exception as e:
+        # For any other unexpected errors, return a 500.
+        # We avoid db.rollback() here as the state of the transaction is uncertain.
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")
+
+    
+@router.delete("/user/words/{word_id}",status_code=204)
+async def delete_word_by_id(request: Request, word_id: int, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        was_deleted = delete_word_by_id_from_db(db=db, word_id=word_id, clerk_id=clerk_id)
+
+        if not was_deleted:
+            # This path is taken if the item wasn't found.
+            raise HTTPException(status_code=404, detail="Word not found or user does not have permission.")
+        
+        # If was_deleted is True, the commit was successful. We can safely return.
+        # A 204 response should not have a body.
+        return None
+    except HTTPException as http_exc:
+        # If our own HTTPException is raised, just re-raise it.
+        raise http_exc
+    except Exception as e:
+        # For any other unexpected errors, return a 500.
+        # We avoid db.rollback() here as the state of the transaction is uncertain.
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")
+    
+from fastapi import Body
+
 @router.put("/user/words/definitions/{id}", status_code=204)
-async def update_definition(request: Request, id: int, definition_update: Definition, db: Session = Depends(get_database),):
+async def update_definition(
+    request: Request,
+    id: int,
+    definition: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
     try:
         user_details = authenticate_and_get_user_details(request=request)
         clerk_id = user_details["user_id"]
 
         existing_definition = get_definition_by_id(db, id)
-        if not existing_definition or existing_definition.word.added_by_user_id != clerk_id:
-            raise HTTPException(status_code=404, detail="Definition not found or user does not have permission.")
+        if not existing_definition:
+            raise HTTPException(status_code=404, detail="Definition not found")
+        
+        # Get the word associated with the definition
+        word = db.query(models.Words).filter(models.Words.id == existing_definition.word_id).first()
+        if not word or word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission.")
 
-        update_definition_by_id(db, id, definition_update.definition)
+        update_definition_by_id(db, id, definition)
 
         db.commit()
         return None  # 204 No Content should not return a body
@@ -336,3 +405,260 @@ async def update_definition(request: Request, id: int, definition_update: Defini
         db.rollback()
          # Log the error for debugging purposes
         raise HTTPException(status_code=500, detail="Failed to update definition: " + str(e))
+    
+@router.put("/user/words/examples/{id}", status_code=204)
+def update_example(
+    request: Request,
+    id: int,
+    example_sentence: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        existing_example = get_example_by_id(db, id)
+        if not existing_example:
+            raise HTTPException(status_code=404, detail="Example not found")
+
+        # Get the word associated with the example
+        word = db.query(models.Words).filter(models.Words.id == existing_example.word_id).first()
+        if not word or word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission.")
+
+        update_example_by_id(db, example_id=id, new_example=example_sentence, word_id=existing_example.word_id)
+
+        db.commit()
+        return None  # 204 No Content should not return a body
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+        # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail=f"Failed to update example: {e}")
+    
+@router.delete("/user/words/translations/{id}",status_code=204)
+async def delete_translation(request: Request, id: int, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+        print("Deleting translation with id:", id, "for user:", clerk_id)
+        was_deleted = delete_translation_by_id(db=db, clerk_id=clerk_id, translation_id=id)
+
+        if not was_deleted:
+            # This path is taken if the item wasn't found.
+            raise HTTPException(status_code=404, detail="Translation not found or user does not have permission.")
+        return None
+
+    except HTTPException as http_exc:
+        # If our own HTTPException is raised, just re-raise it.
+        raise http_exc
+    except Exception as e:
+        # For any other unexpected errors, return a 500.
+        # We avoid db.rollback() here as the state of the transaction is uncertain.
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")
+
+@router.put("/user/words/translations/{id}")
+async def update_translation(
+    request: Request,
+    id: int,
+    translation: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        existing_translation = db.query(models.Translation).filter(models.Translation.id == id).first()
+        if not existing_translation:
+            raise HTTPException(status_code=404, detail="Translation not found")
+        
+        # Get the word associated with the translation
+        word = db.query(models.Words).filter(models.Words.id == existing_translation.word_id).first()
+        if not word or word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission.")
+
+        existing_translation.translation = translation
+        db.commit()
+        return None  # 204 No Content should not return a body
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+         # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail="Failed to update translation: " + str(e))
+    
+@router.delete("/user/words/tags/{id}",status_code=204)
+async def delete_tag(request: Request, id: int, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        was_deleted = delete_tags_by_id(db=db, clerk_id=clerk_id, tag_id=id)
+
+        if not was_deleted:
+            raise HTTPException(status_code=404, detail="Tag not found or user does not have permission.")
+        return None
+
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")
+
+@router.put("/user/words/tags/{id}", status_code=204)
+async def update_tag(
+    request: Request,
+    id: int,
+    tag: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        existing_tag = db.query(models.Tag).filter(models.Tag.id == id).first()
+        if not existing_tag:
+            raise HTTPException(status_code=404, detail="Tag not found")
+        
+        # Get the word associated with the tag
+        word = db.query(models.Words).filter(models.Words.id == existing_tag.word_id).first()
+        if not word or word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission.")
+
+        existing_tag.tag = tag
+        db.commit()
+        return None  # 204 No Content should not return a body
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+         # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail="Failed to update tag: " + str(e))
+    
+@router.delete("/user/words/synonyms/{id}",status_code=204)
+async def delete_synonym(request: Request, id: int, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        was_deleted = delete_synonym_by_id(db=db, clerk_id=clerk_id, synonym_id=id)
+
+        if not was_deleted:
+            raise HTTPException(status_code=404, detail="Synonym not found or user does not have permission.")
+        return None
+
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")
+    
+@router.put("/user/words/synonyms/{id}", status_code=204)
+async def update_synonym(
+    request: Request,
+    id: int,
+    synonym: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        existing_synonym = db.query(models.Synonym).filter(models.Synonym.id == id).first()
+        if not existing_synonym:
+            raise HTTPException(status_code=404, detail="Synonym not found")
+        
+        # Get the word associated with the synonym
+        word = db.query(models.Words).filter(models.Words.id == existing_synonym.word_id).first()
+        if not word or word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission.")
+
+        existing_synonym.synonym = synonym
+        db.commit()
+        return None  # 204 No Content should not return a body
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+         # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail="Failed to update synonym: " + str(e))
+    
+@router.delete("/user/words/warnings/{id}",status_code=204)
+async def delete_warning(request: Request, id: int, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        was_deleted = delete_warning_by_id(db=db, clerk_id=clerk_id, warning_id=id)
+
+        if not was_deleted:
+            raise HTTPException(status_code=404, detail="Warning not found or user does not have permission.")
+        return None
+
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")
+    
+
+@router.put("/user/words/warnings/{id}", status_code=204)
+async def update_warning(
+    request: Request,
+    id: int,
+    warning: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        existing_warning = get_warning_by_id(db, id)
+        if not existing_warning:
+            raise HTTPException(status_code=404, detail="Warning not found")
+        
+        # Get the word associated with the warning
+        word = db.query(models.Words).filter(models.Words.id == existing_warning.word_id).first()
+        if not word or word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission.")
+
+        update_warning_by_id(db, id, warning, word.id)
+
+        db.commit()
+        return None  # 204 No Content should not return a body
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+         # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail="Failed to update warning: " + str(e))
+    
+@router.post("/user/words/synonyms", status_code=201)
+async def add_synonym(request: Request, word_id: int = Body(..., embed=True), synonym: str = Body(..., embed=True), db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        # Verify that the word exists and belongs to the user
+        word = db.query(models.Words).filter(models.Words.id == word_id, models.Words.added_by_user_id == clerk_id).first()
+        if not word:
+            raise HTTPException(status_code=404, detail="Word not found or user does not have permission.")
+
+        new_synonym = add_synonym(db, word_id, synonym)
+        return {"synonym": new_synonym}
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        db.rollback()
+         # Log the error for debugging purposes
+        raise HTTPException(status_code=500, detail="Failed to add synonym: " + str(e))

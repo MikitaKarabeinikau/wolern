@@ -68,6 +68,7 @@ def get_word_id_by_word(db: Session, word: str):
 
 #When i will want to add a different translation language i will modify this function
 def add_word(db: Session, word: Word, clerk_id: str):
+    
     if word is None:
         raise ValueError("Word is required")
     if word.word in get_all_words_from_db(db, clerk_id):
@@ -135,16 +136,49 @@ def add_word(db: Session, word: Word, clerk_id: str):
     
     db.commit()
      
-    
+def delete_word_by_id_from_db(db: Session, word_id: int, clerk_id: str):
+    print(f"Attempting to delete word with ID {word_id} for user {clerk_id}")
+    word_to_delete = db.query(models.Words).filter(models.Words.id == word_id, models.Words.added_by_user_id == clerk_id).first()
+    print("Word to delete:", clerk_id)
+    if word_to_delete: 
+        # Delete dependent rows explicitly to avoid nulling non-null FK columns
+            db.query(models.Translation).filter(models.Translation.word_id == word_id).delete(synchronize_session=False)
+            db.query(models.Synonym).filter(models.Synonym.word_id == word_id).delete(synchronize_session=False)
+            db.query(models.Definition).filter(models.Definition.word_id == word_id).delete(synchronize_session=False)
+            db.query(models.Example).filter(models.Example.word_id == word_id).delete(synchronize_session=False)
+            db.query(models.Tag).filter(models.Tag.word_id == word_id).delete(synchronize_session=False)
+            db.query(models.Warning).filter(models.Warning.word_id == word_id).delete(synchronize_session=False)
+
+            db.delete(word_to_delete)
+            db.commit()
+            print(f"Word with ID {word_id} deleted successfully.")
+            return True
+    return False
 
 def delete_word(db: Session, word: str, clerk_id: str):
-    word_entry = db.query(models.Words).filter(models.Words.word == word.strip(), models.Words.added_by_user_id == clerk_id).first()
+    word_entry = get_word_by_id(db, word, clerk_id)
     if word_entry:
         db.delete(word_entry)
         db.commit()
         return True
     return False
 
+def get_word_by_id(db: Session, word_or_id: str, clerk_id: str):
+    """
+    Accept either a numeric id or a word string.
+    - If int: lookup by id.
+    - Otherwise: lookup by word text.
+    """
+    try:
+        if isinstance(word_or_id, int):
+            return db.query(models.Words).filter(models.Words.id == word_or_id, models.Words.added_by_user_id == clerk_id).first()
+        # handle numeric strings too
+        if isinstance(word_or_id, str) and word_or_id.isdigit():
+            return db.query(models.Words).filter(models.Words.id == int(word_or_id), models.Words.added_by_user_id == clerk_id).first()
+        return db.query(models.Words).filter(models.Words.word == word_or_id.strip(), models.Words.added_by_user_id == clerk_id).first()
+    except Exception:
+        return None
+    
 def get_word_translations_from_db(db: Session, word: str, clerk_id: str):
     data =  db.query(models.Words).join(models.Translation).filter(models.Words.word == word.strip(), models.Words.added_by_user_id == clerk_id).all()
     print("\n\nRaw translation data from DB:", data)  # Debug log
@@ -195,10 +229,133 @@ def get_definition_by_id(db: Session, definition_id: int):
     return db.query(models.Definition).filter(models.Definition.id == definition_id).first()
 
 def update_definition_by_id(db: Session, definition_id: int, new_definition: str):
-    definition_entry = get_definition_by_id(db, definition_id)
-    if definition_entry:
-        definition_entry.definition = new_definition
+    definition_to_update = get_definition_by_id(db, definition_id)
+    if definition_to_update:
+        definition_to_update.definition = new_definition
         db.commit()
-        db.refresh(definition_entry)
-        return definition_entry
+        db.refresh(definition_to_update)
+        return definition_to_update
     return None
+
+def delete_example_by_id(db: Session, clerk_id: str, example_id: int):
+    to_delete = db.query(models.Example).join(models.Words).filter(models.Example.id == example_id, models.Words.added_by_user_id == clerk_id).first()
+    if not to_delete:
+        print("No example found or user does not have permission to delete it.")
+        return None
+    db.delete(to_delete)
+    db.commit()
+    print("Example deleted successfully.")
+    return True  # Indicate successful deletion
+
+def get_example_by_id(db: Session, example_id: int):
+    return db.query(models.Example).filter(models.Example.id == example_id).first()
+
+def update_example_by_id(db: Session, example_id: int, new_example: str, word_id: int):
+    example_to_update = get_example_by_id(db, example_id)
+    if example_to_update:
+        example_to_update.example_sentence = new_example
+        example_to_update.word_id = word_id
+        db.commit()
+        db.refresh(example_to_update)
+        return example_to_update
+    return None
+
+
+def delete_translation_by_id(db: Session, clerk_id: str, translation_id: int):
+    to_delete = db.query(models.Translation).join(models.Words).filter(models.Translation.id == translation_id, models.Words.added_by_user_id == clerk_id).first()
+    if not to_delete:
+        print("No translation found or user does not have permission to delete it.")
+        return None
+    db.delete(to_delete)
+    db.commit()
+    print("Translation deleted successfully.")
+    return True  # Indicate successful deletion
+
+def get_translation_by_id(db: Session, translation_id: int):
+    return db.query(models.Translation).filter(models.Translation.id == translation_id).first()
+
+def update_translation_by_id(db: Session, translation_id: int, new_translation: str, word_id: int):
+    translation_to_update = get_translation_by_id(db, translation_id)
+    if translation_to_update:
+        translation_to_update.translation = new_translation
+        translation_to_update.word_id = word_id
+        db.commit()
+        db.refresh(translation_to_update)
+        return translation_to_update
+    return None
+
+def delete_tags_by_id(db: Session, clerk_id: str, tag_id: int):
+    to_delete = db.query(models.Tag).join(models.Words).filter(models.Tag.id == tag_id, models.Words.added_by_user_id == clerk_id).first()
+    if not to_delete:
+        print("No tag found or user does not have permission to delete it.")
+        return None
+    db.delete(to_delete)
+    db.commit()
+    print("Tag deleted successfully.")
+    return True  # Indicate successful deletion
+
+def get_tag_by_id(db: Session, tag_id: int):
+    return db.query(models.Tag).filter(models.Tag.id == tag_id).first()
+
+def update_tag_by_id(db: Session, tag_id: int, new_tag: str, word_id: int):
+    tag_to_update = get_tag_by_id(db, tag_id)
+    if tag_to_update:
+        tag_to_update.tag = new_tag
+        tag_to_update.word_id = word_id
+        db.commit()
+        db.refresh(tag_to_update)
+        return tag_to_update
+    return None
+
+def delete_synonym_by_id(db: Session, clerk_id: str, synonym_id: int):
+    to_delete = db.query(models.Synonym).join(models.Words).filter(models.Synonym.id == synonym_id, models.Words.added_by_user_id == clerk_id).first()
+    if not to_delete:
+        print("No synonym found or user does not have permission to delete it.")
+        return None
+    db.delete(to_delete)
+    db.commit()
+    print("Synonym deleted successfully.")
+    return True  # Indicate successful deletion
+
+def get_synonym_by_id(db: Session, synonym_id: int):
+    return db.query(models.Synonym).filter(models.Synonym.id == synonym_id).first()
+
+def update_synonym_by_id(db: Session, synonym_id: int, new_synonym: str, word_id: int):
+    synonym_to_update = get_synonym_by_id(db, synonym_id)
+    if synonym_to_update:
+        synonym_to_update.synonym = new_synonym
+        synonym_to_update.word_id = word_id
+        db.commit()
+        db.refresh(synonym_to_update)
+        return synonym_to_update
+    return None
+
+def delete_warning_by_id(db: Session, clerk_id: str, warning_id: int):
+    to_delete = db.query(models.Warning).join(models.Words).filter(models.Warning.id == warning_id, models.Words.added_by_user_id == clerk_id).first()
+    if not to_delete:
+        print("No warning found or user does not have permission to delete it.")
+        return None
+    db.delete(to_delete)
+    db.commit()
+    print("Warning deleted successfully.")
+    return True  # Indicate successful deletion
+
+def get_warning_by_id(db: Session, warning_id: int):
+    return db.query(models.Warning).filter(models.Warning.id == warning_id).first()
+
+def update_warning_by_id(db: Session, warning_id: int, new_warning: str, word_id: int):
+    warning_to_update = get_warning_by_id(db, warning_id)
+    if warning_to_update:
+        warning_to_update.warning_message = new_warning
+        warning_to_update.word_id = word_id
+        db.commit()
+        db.refresh(warning_to_update)
+        return warning_to_update
+    return None
+
+def add_synonym(db: Session, word_id: int, synonym: str):
+    db_synonym = models.Synonym(word_id=word_id, synonym=synonym)
+    db.add(db_synonym)
+    db.commit()
+    db.refresh(db_synonym)
+    return db_synonym

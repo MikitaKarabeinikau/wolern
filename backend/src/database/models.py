@@ -18,7 +18,7 @@ class Words(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     word = Column(String, unique=True, index=True, nullable=False)
-    added_by_user_id = Column(String,ForeignKey("users.clerk_id"), nullable=False)
+    added_by_user_id = Column(String,ForeignKey("users.clerk_id", ondelete="CASCADE"), nullable=False)
     last_reviewed = Column(DateTime, default=datetime.utcnow)
     learning_stage = Column(Integer, nullable=False, default=0)
     repeats_number = Column(Integer, default=0)
@@ -44,7 +44,7 @@ class Translation(Base):
     __tablename__ = "translations"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    word_id = Column(Integer, ForeignKey("words.id"), nullable=False)
+    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False)
     language = Column(String, nullable=False,default="russian")
     translation = Column(String, nullable=False)
 
@@ -54,7 +54,7 @@ class Synonym(Base):
     __tablename__ = "synonyms"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    word_id = Column(Integer, ForeignKey("words.id"), nullable=False)
+    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False)
     synonym = Column(String, nullable=False)
 
     word = relationship("Words", back_populates="synonyms")
@@ -73,7 +73,7 @@ class Example(Base):
     __tablename__ = "examples"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    word_id = Column(Integer, ForeignKey("words.id"), nullable=False)
+    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False)
     part_of_speech = Column(String, nullable=True)
     example_sentence = Column(String, nullable=False)
 
@@ -83,7 +83,7 @@ class Tag(Base):
     __tablename__ = "tags"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    word_id = Column(Integer, ForeignKey("words.id"), nullable=False)
+    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False)
     tag = Column(String, nullable=False)
 
     word = relationship("Words", back_populates="tags")
@@ -92,7 +92,7 @@ class Warning(Base):
     __tablename__ = "warnings"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    word_id = Column(Integer, ForeignKey("words.id"), nullable=False)
+    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False)
     warning_message = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 

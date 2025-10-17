@@ -17,7 +17,6 @@ function UnitCell({item, onUpdate, onDelete}) {
         console.log(`Delete requested for item ID: ${item.id}`);
         onDelete(item.id);
 }
-
     const handleUpdate = () => {
         onUpdate(item.id, editedText);
         setIsEditing(false);
@@ -51,7 +50,7 @@ function UnitCell({item, onUpdate, onDelete}) {
 
     return (
     <div className="unit-cell">
-        <span className="unit-cell-text">{item.id}: {item.text}</span>
+        <span className="unit-cell-text"> {item.text}</span>
         <div className="unit-cell-actions">
             <button onClick={startEditing} className='unit-cell-btn edit'>Edit</button>
             <button onClick={handleDelete} className='unit-cell-btn delete'>Delete</button>

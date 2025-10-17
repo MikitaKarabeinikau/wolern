@@ -2,12 +2,12 @@ import React from 'react'; // Removed unused useState, useEffect
 import Collapsible from './Collapsible';
 import '../../styles/Word.css';
 import UnitCell from './UnitCell';
+import CollapsibleInfo from './CollapsibleInfo';
 
 function Word({ wordData, translations, definitions, examples, synonyms, warnings, tags, onDataChange, getToken }) {
   const { word } = wordData;
 
-  // This logic correctly groups your flat list of translations into an
-  // object where each key is a language.
+
   const translationsByLanguage = (translations || []).reduce((acc, trans) => {
     const lang = trans.language || 'Unknown';
     if (!acc[lang]) {
@@ -34,9 +34,32 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
     return acc;
   }, {});
   return (
-    <Collapsible title={word}>
-      <div>
-        <h4>Translations</h4>
+    <Collapsible title={word}
+    wordId = {wordData.id}
+      onDelete={async (id) => {
+        try{
+          const token = await getToken();
+          const response = await fetch(`http://localhost:8000/user/words/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (response.ok) {
+            console.log(`Word ${id} deleted successfully`);
+            onDataChange(); // Notify parent to refresh data
+          } else {
+            console.error('Failed to delete word');
+          }
+        } catch (error) {
+          console.error('Error deleting word:', error);
+        }
+      }}
+      >
+      
+      {/* Translations Section */}
+      <CollapsibleInfo title="Translations">
         {/* This correctly checks if there are any translations to display */}
         {Object.keys(translationsByLanguage).length > 0 ? (
           // This maps over each language (e.g., "Spanish", "French")
@@ -45,9 +68,53 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
               <strong>{language}:</strong>
               <ul>
                 {translationsByLanguage[language].map(trans => (
-                  <li key={trans.id}>
-                    {trans.id}. {trans.translation}
-                  </li>
+                  <UnitCell
+                    key={trans.id}
+                    item={{ id: trans.id, text: trans.translation }}
+                    onUpdate={async (id, newText) => {
+                      try {
+                        const token = await getToken();
+                        const response = await fetch(`http://localhost:8000/user/words/translations/${id}`, {
+                          method: 'PUT',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                          },
+                          body: JSON.stringify({ translation: newText }), // Adjust payload as needed
+                        });
+                        if (response.ok) {
+                          console.log(`Translation ${id} updated successfully`);
+                          onDataChange(); // Notify parent to refresh data
+                        } else {
+                          console.error('Failed to update translation');
+                        }
+                      } catch (error) {
+                        console.error('Error updating translation:', error);
+                      }
+                      console.log(`Update ${id} with new text: ${newText}`);
+                    }}
+                    onDelete={async (id) => {
+                      console.log(`Delete button clicked for translation ID: ${id}`);
+                      try {
+                        const token = await getToken();
+                        const response = await fetch(`http://localhost:8000/user/words/translations/${id}`, {
+                          method: 'DELETE',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                          },
+                        });
+                        if (response.ok) {
+                          console.log(`Translation ${id} deleted successfully`);
+                          onDataChange(); // Notify parent to refresh data
+                        } else {
+                          console.error('Failed to delete translation');
+                        }
+                      } catch (error) {
+                        console.error('Error deleting translation:', error);
+                      }
+                    }}
+                  />  
                 ))}
               </ul>
             </div>
@@ -56,133 +123,300 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
 
           <p>No translations available.</p>
         )}
-      </div>
-      <div style={{ marginTop: '1rem' }}>
-        <h4>Definitions</h4>
+      </CollapsibleInfo>
+      <CollapsibleInfo title="Definitions">
         {Object.keys(definitionsByPartOfLanguage).length > 0 ? (
           Object.keys(definitionsByPartOfLanguage).map(pos => (
-            // FIX: Add a return statement before the inner map.
-            // Or, ensure the inner map implicitly returns the component.
-            // The simplest fix is to wrap the inner map's content in a div.
+            
             <div key={pos}>
               <strong>{pos}:</strong>
               {definitionsByPartOfLanguage[pos].map(def => (
-                <UnitCell
-                  key={def.id}
-                  item={{ id: def.id, text: def.definition }}
-                  onUpdate={async (id, newText) => {
-                    try{
-                      const token = await getToken();
-                      const response = await fetch(`http://localhost:8000/user/words/definitions/${id}`, {
-                        method: 'PUT',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ definition: newText, id: id, word_id: def.word_id }), // Adjust payload as needed
-                      });
-                      if (response.ok) {
-                        console.log(`Definition ${id} updated successfully`);
-                        onDataChange(); // Notify parent to refresh data
-                      } else {
-                        console.error('Failed to update definition');
+               <UnitCell
+                    key={def.id}
+                    item={{ id: def.id, text: def.definition }}
+                    onUpdate={async (id, newText) => {
+                      try{
+                        const token = await getToken();
+                        const response = await fetch(`http://localhost:8000/user/words/definitions/${id}`, {
+                          method: 'PUT',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                          },
+                          body: JSON.stringify({ definition: newText }), // Adjust payload as needed
+                        });
+                        if (response.ok) {
+                          console.log(`Definition ${id} updated successfully`);
+                          onDataChange(); // Notify parent to refresh data
+                        } else {
+                          console.error('Failed to update definition');
+                        }
+                      } catch (error) {
+                        console.error('Error updating definition:', error);
                       }
-                    } catch (error) {
-                      console.error('Error updating definition:', error);
-                    }
-
- 
-                    console.log(`Update ${id} with new text: ${newText}`);
-                  }}
-                  onDelete={async (id) => {
-                    console.log(`Delete button clicked for definition ID: ${id}`);
-                    console.log('getToken function:', getToken);
-                    try {
-                      const token = await getToken();
-                      const response = await fetch(`http://localhost:8000/user/words/definitions/${id}`, {
-                        method: 'DELETE',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${token}`,
-                        },
-                      });
-                      if (response.ok) {
-                        console.log(`Definition ${id} deleted successfully`);
-                        onDataChange(); // Notify parent to refresh data
-                      } else {
-                        console.error('Failed to delete definition');
-                      } 
-                    } catch (error) {
-                      console.error('Error deleting definition:', error);
-                    }
-                  }}
-                />  
+                        console.log(`Update ${id} with new text: ${newText}`);
+                    }}
+                    onDelete={async (id) => {
+                      console.log(`Delete button clicked for definition ID: ${id}`);
+                      try {
+                        const token = await getToken();
+                        const response = await fetch(`http://localhost:8000/user/words/definitions/${id}`, {
+                          method: 'DELETE',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                          },
+                        });
+                        if (response.ok) {
+                          console.log(`Definition ${id} deleted successfully`);
+                          onDataChange(); // Notify parent to refresh data
+                        } else {
+                          console.error('Failed to delete definition');
+                        } 
+                      } catch (error) {
+                        console.error('Error deleting definition:', error);
+                      }
+                    }}
+                  />
               ))}
             </div>
           ))
         ) : (
           <p>No definitions available.</p>
         )}
-      </div>
-      <div style={{ marginTop: '1rem' }}>
-        <h4>Examples</h4>
-        {Object.keys(examplesByPartOfLanguage).length > 0 ? (
+      </CollapsibleInfo>
+        <CollapsibleInfo title="Examples">
+         {Object.keys(examplesByPartOfLanguage).length > 0 ? (
           Object.keys(examplesByPartOfLanguage).map(pos => (
+            
             <div key={pos}>
               <strong>{pos}:</strong>
-              <ul>
-                {examplesByPartOfLanguage[pos].map(ex => (
-                  <li key={ex.id}>
-                    {ex.id}. {ex.example_sentence}
-                  </li>
-                ))}
-              </ul>
+              {examplesByPartOfLanguage[pos].map(example => (
+                <UnitCell
+                    key={example.id}
+                    item={{ id: example.id, text: example.example_sentence }}
+                    onUpdate={async (id, newText) => {
+                      try {
+                        const token = await getToken();
+                        const response = await fetch(
+                          `http://localhost:8000/user/words/examples/${id}`,
+                          {
+                            method: "PUT",
+                            headers: {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({ example_sentence: newText }),
+                          }
+                        );
+                        if (response.ok) {
+                          console.log(`Example ${id} updated successfully`);
+                          onDataChange(); // Notify parent to refresh data
+                        } else {
+                          console.error("Failed to update example");
+                        }
+                      } catch (error) {
+                        console.error("Error updating example:", error);
+                      }
+                      console.log(`Update ${id} with new text: ${newText}`);
+                    }}
+                    onDelete={async (id) => {
+                      console.log(`Delete button clicked for example ID: ${id}`);
+                      try {
+                        const token = await getToken();
+                        const response = await fetch(`http://localhost:8000/user/words/examples/${id}`, {
+                          method: "DELETE",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                          },
+                        });
+                        if (response.ok) {
+                          console.log(`Definition ${id} deleted successfully`);
+                          onDataChange(); // Notify parent to refresh data
+                        } else {
+                          console.error("Failed to delete definition");
+                        }
+                      } catch (error) {
+                        console.error("Error deleting definition:", error);
+                      }
+                    }}
+                  />
+              ))}
             </div>
           ))
         ) : (
-          <p>No examples available.</p>
+          <p>No definitions available.</p>
         )}
-      </div>
-      <div>
-        <h4>Synonyms</h4>
+      </CollapsibleInfo>
+      <CollapsibleInfo title="Synonyms">
         {synonyms && synonyms.length > 0 ? (
           <ul>
             {synonyms.map(syn => (
-              <li key={syn.id}>
-                {syn.id}. {syn.synonym}
-              </li>
+              <UnitCell 
+                key={syn.id}
+                item={{ id: syn.id, text: syn.synonym }}
+                onUpdate={async (id, newText) => {
+                  try {
+                    const token = await getToken();
+                    const response = await fetch(`http://localhost:8000/user/words/synonyms/${id}`, {
+                      method: 'PUT',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({ synonym: newText }), // Adjust payload as needed
+                    });
+                    if (response.ok) {
+                      console.log(`Synonym ${id} updated successfully`);
+                      onDataChange(); // Notify parent to refresh data
+                    } else {
+                      console.error('Failed to update synonym');
+                    }
+                  } catch (error) {
+                    console.error('Error updating synonym:', error);
+                  }
+                  console.log(`Update ${id} with new text: ${newText}`);
+                }}
+                onDelete={async (id) => {
+                  try {
+                    const token = await getToken();
+                    const response = await fetch(`http://localhost:8000/user/words/synonyms/${id}`, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                      },
+                    });
+                    if (response.ok) {
+                      console.log(`Synonym ${id} deleted successfully`);
+                      onDataChange(); // Notify parent to refresh data
+                    } else {
+                      console.error('Failed to delete synonym');
+                    }
+                  } catch (error) {
+                    console.error('Error deleting synonym:', error);
+                  }
+                }}
+              />
             ))}
           </ul>
         ) : (
           <p>No synonyms available.</p>
         )}
-      </div>
-      <div>
-        <h4>Tags</h4>
+      </CollapsibleInfo>
+      <CollapsibleInfo title="Tags">
+
         {tags && tags.length > 0 ? (
           <ul>
             {tags.map(tag => (
-              <li key={tag.id}> {tag.tag} </li>
+              <UnitCell 
+                key={tag.id}
+                item={{ id: tag.id, text: tag.tag }}
+                onUpdate={async (id, newText) => {
+                  try {
+                    const token = await getToken();
+                    const response = await fetch(`http://localhost:8000/user/words/tags/${id}`, {
+                      method: 'PUT',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({ tag: newText }), // Adjust payload as needed
+                    });
+                    if (response.ok) {
+                      console.log(`Tag ${id} updated successfully`);
+                      onDataChange(); // Notify parent to refresh data
+                    } else {
+                      console.error('Failed to update tag');
+                    }
+                  } catch (error) {
+                    console.error('Error updating tag:', error);
+                  }
+                  console.log(`Update ${id} with new text: ${newText}`);
+                }}
+                onDelete={async (id) => {
+                  try {
+                    const token = await getToken();
+                    const response = await fetch(`http://localhost:8000/user/words/tags/${id}`, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                      },
+                    });
+                    if (response.ok) {
+                      console.log(`Tag ${id} deleted successfully`);
+                      onDataChange(); // Notify parent to refresh data
+                    } else {
+                      console.error('Failed to delete tag');
+                    }
+                  } catch (error) {
+                    console.error('Error deleting tag:', error);
+                  }
+                }}
+              />
             ))}
           </ul>
         ) : (
           <p>No tags available.</p>
         )}  
-      </div>
-      <div>
-        <h4>Warnings</h4>
+      </CollapsibleInfo>
+      <CollapsibleInfo title="Warnings">
         {warnings && warnings.length > 0 ? (
           <ul>
             {warnings.map(warn => (
-              <li key={warn.id}>
-                {warn.id}. {warn.warning}
-              </li>
+              <UnitCell 
+                key={warn.id}
+                  item={{ id: warn.id, text: warn.warning }}
+                  onUpdate={async (id, newText) => {
+                    try {
+                      const token = await getToken();
+                      const response = await fetch(`http://localhost:8000/user/words/warnings/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ warning: newText }), // Adjust payload as needed
+                      });
+                      if (response.ok) {
+                        console.log(`Warning ${id} updated successfully`);
+                        onDataChange(); // Notify parent to refresh data
+                      } else {
+                        console.error('Failed to update warning');
+                      }
+                    } catch (error) {
+                      console.error('Error updating warning:', error);
+                    }
+                  }}
+                onDelete={async (id) => {
+                  try {
+                    const token = await getToken();
+                    const response = await fetch(`http://localhost:8000/user/words/warnings/${id}`, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                      },
+                    });
+                    if (response.ok) {
+                      console.log(`Warning ${id} deleted successfully`);
+                      onDataChange(); // Notify parent to refresh data
+                    } else {
+                      console.error('Failed to delete warning');
+                    }
+                  } catch (error) {
+                    console.error('Error deleting warning:', error);
+                  }
+                }}
+              />
             ))}
           </ul>
         ) : (
           <p>No warnings available.</p>
         )}
-      </div>
+      </CollapsibleInfo>
     </Collapsible>
   );
 }

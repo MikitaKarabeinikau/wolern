@@ -1,0 +1,37 @@
+.collapsible {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.collapsible-header {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.collapsible-content {
+  padding: 10px;
+  transition: height 0.3s ease-out;
+  height: auto; /* Adjust as needed */
+  max-height: 500; /* Set a maximum height */
+  overflow-y: auto; /* Add a scrollbar if content exceeds max-height */
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-content:not(.open) {
+  display: none;
+}
+ul {
+  list-style-type: none; /* Removes the bullet points */
+  padding-left: 0; /* Optional: Removes the default left padding */
+}

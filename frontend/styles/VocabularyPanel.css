@@ -1,15 +1,23 @@
 .add-word-container {
   display: flex;
-  gap: 2rem; /* Adds space between the two columns */
+  padding: 5px;
+  transition: height 0.3s ease-out;
+  height: auto; /* Adjust as needed */
+  max-height: none; /* Remove any maximum height */
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  width: 100%; /* Take up full width */
+  box-sizing: border-box; /* Include padding and border in width calculation */
 }
 
 .left-panel {
-  flex: 1; /* Each panel takes up half the space */
+  flex: 0 0 auto; /* Adjust as needed */
+  width: auto;
   padding: 1rem;
   border-right: 1px solid #ccc; /* Adds a visual separator */
 }
 
 .right-panel {
-  flex: 1; /* Each panel takes up half the space */
+  flex: 1; /* Right panel takes up remaining space */
   padding: 1rem;
+  width: auto;
 }
