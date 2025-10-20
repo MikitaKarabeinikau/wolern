@@ -4,6 +4,9 @@ import '../../styles/Word.css';
 import UnitCell from './UnitCell';
 import CollapsibleInfo from './CollapsibleInfo';
 
+const defaultVocabularies = ['known', 'unknown', 'studying', 'strange']; // Define default vocabularies
+
+
 function Word({ wordData, translations, definitions, examples, synonyms, warnings, tags, onDataChange, getToken }) {
   const { word } = wordData;
 
@@ -16,6 +19,7 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
     acc[lang].push(trans);
     return acc;
   }, {});
+
   const definitionsByPartOfLanguage = (definitions || []).reduce((acc, def) => {
     const pos = def.part_of_speech || 'Unknown';
     if (!acc[pos]) {
@@ -33,13 +37,14 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
     acc[pos].push(ex);
     return acc;
   }, {});
+
   return (
     <Collapsible title={word}
     wordId = {wordData.id}
       onDelete={async (id) => {
         try{
           const token = await getToken();
-          const response = await fetch(`http://localhost:8000/user/words/${id}`, {
+          const response = await fetch(`http://localhost:8000/user/words/${id}/vocabulary`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -56,6 +61,29 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
           console.error('Error deleting word:', error);
         }
       }}
+      onChangeVocabulary={async (id, new_vocabulary) => {
+        try {
+          const token = await getToken();
+          const response = await fetch(`http://localhost:8000/words/vocabulary/${new_vocabulary}/${id}`, { // Corrected URL
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            console.log(`Change Vocabulary for Word ${id} successfully`);
+            onDataChange(); // Notify parent to refresh data
+          } else {
+            console.error('Failed to change vocabulary for word');
+          }
+        } catch (error) {
+          console.error('Error changing vocabulary:', error);
+        }
+      }}
+      vocabularies = {defaultVocabularies}
+
       >
       
       {/* Translations Section */}

@@ -3,6 +3,7 @@ import AddWordContainer from "./AddWordContainer";
 import WordList from "./WordList";
 import { useAuth } from "@clerk/clerk-react";
 import '../../styles/VocabularyPanel.css';
+import Vocabularies from "./Vocabularies";
 
 
 const createMapByWordId = (items, key) => {
@@ -29,7 +30,10 @@ export function VocabulariesPanel() {
   const [synonymMap, setSynonymMap] = useState({});
   const [warningMap, setWarningMap] = useState({});
   const [tagMap, setTagMap] = useState({});
+  const [vocabularies, setVocabularies] = useState([]);
   const { getToken } = useAuth();
+  const [selectedVocabulary, setSelectedVocabulary] = useState(null); // New state
+
 
   const fetchWords = async () => {
     // This function now ONLY fetches words.
@@ -52,14 +56,15 @@ export function VocabulariesPanel() {
       fetch(`http://localhost:8000/user/words/examples/all`, { headers }),
       fetch(`http://localhost:8000/user/words/synonyms/all`, { headers }),
       fetch(`http://localhost:8000/user/words/warnings/all`, { headers }),
-      fetch(`http://localhost:8000/user/words/tags/all`, { headers })
+      fetch(`http://localhost:8000/user/words/tags/all`, { headers }),
+      fetch(`http://localhost:8000/user/vocabularies`, { headers })
     ]);
 
     for (const res of responses) {
       if (!res.ok) throw new Error(`Failed to fetch word info: ${res.statusText}`);
     }
 
-    const [translationsData, definitionsData, examplesData, synonymsData, warningsData, tagsData] = await Promise.all(responses.map(res => res.json()));
+    const [translationsData, definitionsData, examplesData, synonymsData, warningsData, tagsData, vocabulariesData,] = await Promise.all(responses.map(res => res.json()));
 
     setTranslationMap(createMapByWordId(translationsData, 'translations'));
     setDefinitionMap(createMapByWordId(definitionsData, 'definitions'));
@@ -67,14 +72,13 @@ export function VocabulariesPanel() {
     setSynonymMap(createMapByWordId(synonymsData, 'synonyms'));
     setWarningMap(createMapByWordId(warningsData, 'warnings'));
     setTagMap(createMapByWordId(tagsData, 'tags'));
+    setVocabularies(vocabulariesData.vocabularies || []);
   };
 
-  // FIX 1: Create a single function for the initial data load.
   const fetchInitialData = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Fetch both sets of data concurrently for speed.
       await Promise.all([fetchWords(), fetchWordInfo()]);
     } catch (e) {
       setError(e.message);
@@ -83,27 +87,39 @@ export function VocabulariesPanel() {
     }
   };
 
-  // FIX 2: Create a handler that refreshes ALL data after a word is added.
   const handleWordAdded = async () => {
-    // We can just call the initial fetch function again.
-    // This ensures the new word AND its details are loaded.
     await fetchInitialData();
   };
 
   useEffect(() => {
     // On component mount, fetch all initial data.
+    console.log("selectedVocabulary changed:", selectedVocabulary); // Add this line
+
     fetchInitialData();
   }, []);
 
+  const  handleVocabularySelect = (vocabulary) => {
+    console.log("Selected vocabulary:", vocabulary); // Add this line
+    setSelectedVocabulary(vocabulary);
+  };
+
+  const filteredWords = selectedVocabulary
+    ? words.filter(word => word.vocabulary === selectedVocabulary)
+    : words;
+
   return (
     <div>
+     
       {error && <div style={{ color: "red", padding: "1rem" }}>Error: {error}</div>}
       <div className="add-word-container">
         <div className="left-panel">
+          <Vocabularies vocabularies= {vocabularies} onVocabularySelect={handleVocabularySelect} />
+        </div>
+        <div className="middle-panel">
           <AddWordContainer onWordAdded={handleWordAdded} />
         </div>
         <div className="right-panel">
-          {isLoading ? <p>Loading...</p> : <WordList words={words} translationsMap = {translationMap} definitionsMap={definitionMap} examplesMap={exampleMap} synonymsMap={synonymMap} warningsMap={warningMap} tagsMap={tagMap} onDataChange={handleWordAdded} getToken={getToken}/>}
+          {isLoading ? <p>Loading...</p> : <WordList words={filteredWords} translationsMap = {translationMap} definitionsMap={definitionMap} examplesMap={exampleMap} synonymsMap={synonymMap} warningsMap={warningMap} tagsMap={tagMap} onDataChange={handleWordAdded} getToken={getToken}/>}
         </div>
       </div>
     </div>

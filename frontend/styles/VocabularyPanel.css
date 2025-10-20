@@ -8,8 +8,14 @@
   width: 100%; /* Take up full width */
   box-sizing: border-box; /* Include padding and border in width calculation */
 }
-
 .left-panel {
+  flex: 0 0 auto; /* Adjust as needed */
+  width: auto;
+  padding: 1rem;
+  border-right: 1px solid #ccc; /* Adds a visual separator */
+} 
+
+.middle-panel {
   flex: 0 0 auto; /* Adjust as needed */
   width: auto;
   padding: 1rem;

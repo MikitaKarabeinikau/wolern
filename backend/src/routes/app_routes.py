@@ -46,7 +46,7 @@ from backend.src.database.database import (
                         update_synonym_by_id,
                         delete_warning_by_id,
                         update_warning_by_id,
-                        get_warning_by_id)
+                        get_warning_by_id,get_user_vocabularies)
 
 router = APIRouter()
 
@@ -119,8 +119,29 @@ async def handle_user_created(request: Request, db: Session = Depends(get_databa
 
         
     return {"success": True, "message": f"Event type {payload['type']} handled"}
-        
-            
+
+@router.put("/words/vocabulary/{new_vocabulary}/{id}")
+async def change_word_vocabulary(id: int, new_vocabulary: str, request: Request, db: Session = Depends(get_database)):
+    user_details = authenticate_and_get_user_details(request=request)
+    clerk_id = user_details["user_id"]
+    print(f"Attempting to update word with id: {id} for clerk_id: {clerk_id}")  # Add this line
+    word = db.query(models.Words).filter(models.Words.id == id, models.Words.added_by_user_id == clerk_id).first()
+
+    if not word:
+        raise HTTPException(status_code=404, detail="Word not found")
+
+    word.vocabulary = new_vocabulary
+    db.commit()
+    return True
+
+@router.get("/user/vocabularies")
+async def get_vocabularies(request: Request, db: Session = Depends(get_database)):
+    user_details = authenticate_and_get_user_details(request = request)
+    user_id = user_details["user_id"]
+
+    vocabularies = get_user_vocabularies(db, user_id=user_id)
+    print("Vocabularies fetched:", vocabularies)
+    return {"vocabularies": vocabularies}        
 
 @router.get("/users/")
 async def get_users(db: Session = Depends(get_database)):
@@ -607,6 +628,7 @@ async def delete_warning(request: Request, id: int, db: Session = Depends(get_da
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")
     
+
 
 @router.put("/user/words/warnings/{id}", status_code=204)
 async def update_warning(

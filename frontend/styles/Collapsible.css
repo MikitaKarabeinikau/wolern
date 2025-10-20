@@ -35,3 +35,25 @@ ul {
   list-style-type: none; /* Removes the bullet points */
   padding-left: 0; /* Optional: Removes the default left padding */
 }
+
+.vocabulary-menu {
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.vocabulary-menu button {
+  display: block;
+  padding: 5px 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.vocabulary-menu button:hover {
+  background-color: #ddd;
+}

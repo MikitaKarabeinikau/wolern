@@ -29,6 +29,7 @@ class Words(Base):
     difficulty = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    vocabulary = Column(String, nullable=False, default="unknown")
 
     user = relationship("Users", back_populates="vocabulary")
     translations = relationship("Translation", back_populates="word")

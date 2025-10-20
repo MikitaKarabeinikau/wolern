@@ -1,21 +1,25 @@
 from sqlalchemy import create_engine,text
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 from . import models
-import psycopg2
 import os
 from backend.src.core.word import Word
 from datetime import datetime
+import logging
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__),"../../../.env"))  # Load environment variables from .env
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+Base = declarative_base()
 
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+logging.basicConfig(level=logging.DEBUG)  # Configure logging
 
 
 def get_database():
@@ -30,6 +34,16 @@ with engine.connect() as connection:
 
     result = connection.execute(text("SELECT version();"))
     print("PostgreSQL version:", result.scalar())
+
+
+
+def get_user_vocabularies(db: Session, user_id: str):
+    logging.debug(f"Fetching vocabularies for user: {user_id}")
+    vocabularies = db.query(models.Words.vocabulary).filter(models.Words.added_by_user_id == user_id).group_by(models.Words.vocabulary).all()
+    logging.debug(f"Raw vocabularies from database: {vocabularies}")
+    result = [v[0] for v in vocabularies]
+    logging.debug(f"Transformed vocabularies: {result}")
+    return result
 
 def get_user_by_id(db: Session, user_id: int):
     return db.query(models.Users).filter(models.Users.id == user_id).first()
