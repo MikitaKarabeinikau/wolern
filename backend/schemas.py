@@ -1,21 +1,34 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
-# This schema defines the structure for a single translation
+class WebhookPayload(BaseModel):
+    data: dict
+    object: str
+    type: str
+
+
+class UserCreateRequest(BaseModel):
+    clerk_user_id: str
+    username: str = None
+    email: str
+
+class AddWordRequest(BaseModel):
+    word: str
+    
+
 class Translation(BaseModel):
     id: int
     word_id: int
     language: Optional[str] = None
     
-    # FIX: Tell Pydantic that the 'translated_word' field in the JSON
-    # should be populated from the 'translation' attribute of the database object.
+
     translated_word: str = Field(alias='translation')
 
     class Config:
-        from_attributes = True # Allows Pydantic to read data from ORM models
-        populate_by_name = True # Allows using the alias for both input and output
+        from_attributes = True
+        populate_by_name = True 
 
-# This schema defines the structure for the final API response
+
 class TranslationResponse(BaseModel):
     translations: List[Translation]
 

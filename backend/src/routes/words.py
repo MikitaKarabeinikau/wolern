@@ -1,0 +1,119 @@
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from backend.src.database import get_database
+from backend.utils import authenticate_and_get_user_details
+from backend.src.database.models import Words
+from backend.src.database.words import get_user_vocabulary, get_word_id_by_word, get_all_words_from_db, delete_word_by_id_from_db, add_word
+from backend.schemas import AddWordRequest
+from backend.src.core.word import Word
+import logging
+
+router = APIRouter()
+logger = logging.getLogger(__name__)
+
+
+@router.post("/user/words")
+async def add_new_word(request: Request, word_request: AddWordRequest, db: Session = Depends(get_database)):
+    
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+        new_word = Word(word=word_request.word)
+        add_word(db, new_word, clerk_id)
+        logger.info(f"Word '{new_word.word}' added successfully by user '{clerk_id}'.")
+        return {"success": True, "message": "Word added successfully"}
+    
+    except HTTPException as http_exc:  
+        db.rollback()
+        raise http_exc  
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to add word: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to add word: " + str(e))
+
+@router.put("/words/vocabulary/{new_vocabulary}/{id}")
+async def change_word_vocabulary(id: int, new_vocabulary: str, request: Request, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+        
+        word = db.query(Words).filter(Words.id == id, Words.added_by_user_id == clerk_id).first()
+
+        if not word:
+            raise HTTPException(status_code=404, detail="Word not found")
+
+        word.vocabulary = new_vocabulary
+        db.commit()
+        logger.info(f"Vocabulary for word with ID '{id}' updated to '{new_vocabulary}' by user '{clerk_id}'.")
+        return True
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to update vocabulary for word with ID '{id}': {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to update vocabulary: " + str(e))
+
+@router.get("/my-vocabulary")
+async def my_vocabulary(request: Request, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request = request)
+        user_id = user_details["user_id"]
+
+        my_vocabulary = get_user_vocabulary(db, user_id=user_id)
+        logger.info(f"Retrieved vocabulary for user '{user_id}': {my_vocabulary}")
+        return {"vocabulary": my_vocabulary}
+    except Exception as e:
+        logger.error(f"Failed to retrieve vocabulary: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to retrieve vocabulary: " + str(e))
+
+
+@router.get("/user/words/{word}")
+async def get_word_id(request: Request, word: str, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request = request)
+        clerk_id = user_details["user_id"]
+        word_id = await get_word_id_by_word(db, word)
+        if word_id is None:
+            raise HTTPException(status_code=404, detail="Word not found")
+        logger.info(f"Retrieved word ID '{word_id}' for word '{word}' by user '{clerk_id}'.")
+        return {"word": word, "word_id": word_id}
+    except HTTPException as http_exc:
+        raise HTTPException(status_code=http_exc.status_code,detail=http_exc.detail)  
+    except Exception as e:
+        logger.error(f"Failed to retrieve word ID: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to retrieve word ID: " + str(e))
+
+
+@router.get("/user/words")
+async def get_all_words(request: Request, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request = request)
+        clerk_id = user_details["user_id"]
+        words = get_all_words_from_db(db, clerk_id)
+        logger.info(f"Retrieved all words for user '{clerk_id}'.")
+        return {"words": words}
+    except HTTPException as http_exc:
+        raise HTTPException(status_code=http_exc.status_code,detail=http_exc.detail) 
+    except Exception as e:
+        logger.error(f"Failed to retrieve words: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to retrieve words: " + str(e))
+    
+@router.delete("/user/words/{word_id}",status_code=204)
+async def delete_word_by_id(request: Request, word_id: int, db: Session = Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        was_deleted = delete_word_by_id_from_db(db=db, word_id=word_id, clerk_id=clerk_id)
+
+        if not was_deleted:
+            raise HTTPException(status_code=404, detail="Word not found or user does not have permission.")
+        logger.info(f"Word with ID '{word_id}' deleted successfully by user '{clerk_id}'.")
+        return None
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        logger.error(f"Failed to delete word: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred after the transaction: {e}")

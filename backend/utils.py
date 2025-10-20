@@ -3,7 +3,6 @@ from clerk_backend_api import Clerk,AuthenticateRequestOptions
 import os 
 from dotenv import load_dotenv
 
-# Get absolute path to the root .env file
 env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.env'))
 load_dotenv(env_path)
 

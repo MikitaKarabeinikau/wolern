@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from . import models
-from .schema import Word
+from ...schemas import Word
 import logging
 from sqlalchemy.orm.exc import NoResultFound
 
