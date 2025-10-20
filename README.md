@@ -12,11 +12,9 @@
 **Wolern** is a modern web application for vocabulary learning and language progress tracking.
 
 TODO:
-NOW : Make word component
-  delete word
-  delete definition/example/translation/etc
-  add definition/etc
-  update definition/etc
+ NOW :
+  1. Refactoring app_routes
+  2. Refactor database
   
 1. Change word adding logic. If word have to many warnings it shouldnt be add to vocabulary.
 
