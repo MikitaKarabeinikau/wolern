@@ -4,7 +4,7 @@ import '../../styles/Word.css';
 import UnitCell from './UnitCell';
 import CollapsibleInfo from './CollapsibleInfo';
 
-const defaultVocabularies = ['known', 'unknown', 'studying', 'strange']; // Define default vocabularies
+const defaultVocabularies = ['known', 'unknown', 'learning', 'strange']; // Define default vocabularies
 
 
 function Word({ wordData, translations, definitions, examples, synonyms, warnings, tags, onDataChange, getToken }) {
@@ -44,7 +44,7 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
       onDelete={async (id) => {
         try{
           const token = await getToken();
-          const response = await fetch(`http://localhost:8000/user/words/${id}/vocabulary`, {
+          const response = await fetch(`http://localhost:8000/user/words/${id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',

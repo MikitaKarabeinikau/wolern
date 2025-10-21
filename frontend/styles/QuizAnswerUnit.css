@@ -1,0 +1,37 @@
+.answer-unit-container {
+  display: flex;
+  flex-direction: column; /* Stack header and body vertically */
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  margin: 0; /* Remove margin */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.answer-unit-container:hover,
+.answer-unit-container.hovered {
+  background-color: #f0f0f0;
+}
+
+/* Remove margin from the first unit */
+.answer-unit-container.first-child {
+  margin-left: 0;
+}
+
+.hint-header {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.hint-body {
+  font-size: 1rem;
+  color: #333;
+}
+
+.answer-unit-container.collapsed .hint-body {
+  display: none; /* Hide the hint body when collapsed */
+}

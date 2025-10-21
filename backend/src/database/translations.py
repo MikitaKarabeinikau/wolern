@@ -21,6 +21,27 @@ def add_translation(db: Session, word_id: int, language: str, translation: str):
         db.rollback()
         raise
 
+def get_translations_for_quiz(db: Session, clerk_id: str):
+    """Get all translations for quiz words for a specific user."""
+    try:
+        translations = (
+            db.query(models.Translation)
+            .join(models.Words)
+            .filter(
+                models.Words.added_by_user_id == clerk_id,
+                (models.Words.vocabulary == "learning") | (models.Words.vocabulary == "unknown")
+            )
+            .all()
+        )
+        if not translations:
+            logger.info(f"No translations found for quiz words for user '{clerk_id}'.")
+            return []
+        logger.info(f"Found {len(translations)} translations for quiz words for user '{clerk_id}'.")
+        return translations
+    except Exception as e:
+        logger.error(f"Error getting translations for quiz words for user '{clerk_id}': {e}", exc_info=True)
+        raise
+
 def get_word_translations_from_db(db: Session, word: str, clerk_id: str):
     """Get all translations associated with a word for a specific user."""
     try:

@@ -2,7 +2,7 @@ import React from "react";
 import Word from "./Word";
 
 // FIX: Accept 'translationsMap' as a prop
-function WordList({ words, translationsMap, definitionsMap, examplesMap, synonymsMap, warningsMap, tagsMap, onDataChange, getToken}) {
+function WordList({ selectedVocabulary, words, translationsMap, definitionsMap, examplesMap, synonymsMap, warningsMap, tagsMap, onDataChange, getToken}) {
    if (!words || words.length === 0) {
         return (
             <div>
@@ -14,7 +14,7 @@ function WordList({ words, translationsMap, definitionsMap, examplesMap, synonym
 
     return (
         <div>
-            <h2>Word List</h2>
+            <h2>{selectedVocabulary}</h2>
             
             {words.map((wordObj) => {
                 const translations = (translationsMap && translationsMap[wordObj.id]) || [];

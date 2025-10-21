@@ -19,6 +19,51 @@ def add_example(db: Session, example_sentence: str, word_id: int):
         db.rollback()
         raise
 
+def get_examples_for_quiz(db: Session, clerk_id: str):
+    """Get all examples for quiz words for a specific user."""
+    try:
+        examples = (
+            db.query(models.Example)
+            .join(models.Words)
+            .filter(
+                models.Words.added_by_user_id == clerk_id,
+                (models.Words.vocabulary == "learning") | (models.Words.vocabulary == "unknown")
+            )
+            .all()
+        )
+        if not examples:
+            logger.info(f"No examples found for quiz words for user '{clerk_id}'.")
+            return []
+        logger.info(f"Found {len(examples)} examples for quiz words for user '{clerk_id}'.")
+        return examples
+    except Exception as e:
+        logger.error(f"Error getting examples for quiz words for user '{clerk_id}': {e}", exc_info=True)
+        raise
+
+def get_examples_by_word(db: Session, word: str, clerk_id: str):
+    """Get all examples associated with a word for a specific user."""
+    try:
+        examples = (
+            db.query(models.Example)
+            .join(models.Words)
+            .filter(
+                models.Words.word == word.strip(),
+                models.Words.added_by_user_id == clerk_id,
+            )
+            .all()
+        )
+        if not examples:
+            logger.info(f"No examples found for word '{word}' and user '{clerk_id}'.")
+            return []
+        logger.info(f"Found {len(examples)} examples for word '{word}' and user '{clerk_id}'.")
+        return examples
+    except Exception as e:
+        logger.error(
+            f"Error getting examples for word '{word}' and user '{clerk_id}': {e}",
+            exc_info=True,
+        )
+        raise
+
 def get_example_by_id(db: Session, example_id: int):
     """Get a example by its ID."""
     try:

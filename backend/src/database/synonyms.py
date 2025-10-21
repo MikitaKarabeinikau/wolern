@@ -29,6 +29,27 @@ def get_word_synonyms_from_db(db: Session, word: str, clerk_id: str):
         )
         raise
 
+def get_synonyms_for_quiz(db: Session, clerk_id: str):
+    """Get all synonyms for quiz words for a specific user."""
+    try:
+        synonyms = (
+            db.query(models.Synonym)
+            .join(models.Words)
+            .filter(
+                models.Words.added_by_user_id == clerk_id,
+                (models.Words.vocabulary == "learning") | (models.Words.vocabulary == "unknown")
+            )
+            .all()
+        )
+        if not synonyms:
+            logger.info(f"No synonyms found for quiz words for user '{clerk_id}'.")
+            return []
+        logger.info(f"Found {len(synonyms)} synonyms for quiz words for user '{clerk_id}'.")
+        return synonyms
+    except Exception as e:
+        logger.error(f"Error getting synonyms for quiz words for user '{clerk_id}': {e}", exc_info=True)
+        raise
+
 def get_all_synonyms_for_user_from_db(db: Session, clerk_id: str):
     """Get all synonyms for a specific user."""
     try:

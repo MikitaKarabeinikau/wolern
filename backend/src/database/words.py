@@ -1,66 +1,13 @@
 from sqlalchemy.orm import Session
 from . import models
-from ...schemas import Word
+from backend.schemas import AddWordRequest
 import logging
-from sqlalchemy.orm.exc import NoResultFound
-
 logger = logging.getLogger(__name__)
+from .warnings import get_number_of_warnings_for_word
 
-def get_all_words_from_db(db: Session, clerk_id: str):
-    """Get all words for a specific user."""
-    try:
-        words = db.query(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
-        logger.info(f"Found {len(words)} words for user '{clerk_id}'.")
-        return words
-    except Exception as e:
-        logger.error(f"Error getting all words for user '{clerk_id}': {e}", exc_info=True)
-        raise
 
-def get_word_id_by_word(db: Session, word: str):
-    """Get the ID of a word."""
-    try:
-        word_entry = db.query(models.Words.id).filter(models.Words.word == word.strip()).first()
-        if word_entry:
-            logger.info(f"Found ID for word '{word}': {word_entry.id}")
-            return word_entry.id
-        else:
-            logger.warning(f"Word '{word}' not found.")
-            return None
-    except Exception as e:
-        logger.error(f"Error getting word ID by word '{word}': {e}", exc_info=True)
-        raise
 
-def get_word_by_id(db: Session, word_or_id: str, clerk_id: str):
-    """Get a word by its ID or word, ensuring the user has permission."""
-    try:
-        if isinstance(word_or_id, int) or (isinstance(word_or_id, str) and word_or_id.isdigit()):
-            word_id = int(word_or_id)
-            word = db.query(models.Words).filter(models.Words.id == word_id, models.Words.added_by_user_id == clerk_id).first()
-        else:
-            word = db.query(models.Words).filter(models.Words.word == word_or_id.strip(), models.Words.added_by_user_id == clerk_id).first()
-
-        if word:
-            logger.info(f"Found word '{word.word}' for user '{clerk_id}'.")
-            return word
-        else:
-            logger.warning(f"Word with ID/word '{word_or_id}' not found for user '{clerk_id}', or user does not have permission.")
-            return None
-    except Exception as e:
-        logger.error(f"Error getting word by ID/word '{word_or_id}' for user '{clerk_id}': {e}", exc_info=True)
-        raise
-
-def get_user_vocabularies(db: Session, user_id: str):
-    """Get all vocabularies for a specific user."""
-    try:
-        vocabularies = db.query(models.Words.vocabulary).filter(models.Words.added_by_user_id == user_id).group_by(models.Words.vocabulary).all()
-        result = [v[0] for v in vocabularies]
-        logger.info(f"Found {len(result)} vocabularies for user '{user_id}'.")
-        return result
-    except Exception as e:
-        logger.error(f"Error getting vocabularies for user '{user_id}': {e}", exc_info=True)
-        raise
-
-def add_word(db: Session, word: Word, clerk_id: str):
+def add_word(db: Session, word: AddWordRequest, clerk_id: str):
     """Add a new word."""
     if word is None:
         raise ValueError("Word is required")
@@ -134,13 +81,73 @@ def add_word(db: Session, word: Word, clerk_id: str):
             )
             db.add(db_warning)
             logger.info(f"Warning '{warning}' added for word '{word.word}'.")
-
+            
         db.commit()
+        logger.info(f"Word '{word.word}' added successfully for user '{clerk_id}'.")
+        if get_number_of_warnings_for_word(db, db_word.id) >= 3:
+            logger.warning(f"Word '{word.word}' has warnings associated with it.")
+            db_word.vocabulary = "strange"
+            db.commit()
         return True
 
     except Exception as e:
         logger.error(f"Error adding word '{word.word}' for user '{clerk_id}': {e}", exc_info=True)
         db.rollback()
+        raise
+
+
+def get_all_words_from_db(db: Session, clerk_id: str):
+    """Get all words for a specific user."""
+    try:
+        words = db.query(models.Words).filter(models.Words.added_by_user_id == clerk_id).all()
+        logger.info(f"Found {len(words)} words for user '{clerk_id}'.")
+        return words
+    except Exception as e:
+        logger.error(f"Error getting all words for user '{clerk_id}': {e}", exc_info=True)
+        raise
+
+def get_word_id_by_word(db: Session, word: str):
+    """Get the ID of a word."""
+    try:
+        word_entry = db.query(models.Words.id).filter(models.Words.word == word.strip()).first()
+        if word_entry:
+            logger.info(f"Found ID for word '{word}': {word_entry.id}")
+            return word_entry.id
+        else:
+            logger.warning(f"Word '{word}' not found.")
+            return None
+    except Exception as e:
+        logger.error(f"Error getting word ID by word '{word}': {e}", exc_info=True)
+        raise
+
+def get_word_by_id(db: Session, word_or_id: str, clerk_id: str):
+    """Get a word by its ID or word, ensuring the user has permission."""
+    try:
+        if isinstance(word_or_id, int) or (isinstance(word_or_id, str) and word_or_id.isdigit()):
+            word_id = int(word_or_id)
+            word = db.query(models.Words).filter(models.Words.id == word_id, models.Words.added_by_user_id == clerk_id).first()
+        else:
+            word = db.query(models.Words).filter(models.Words.word == word_or_id.strip(), models.Words.added_by_user_id == clerk_id).first()
+
+        if word:
+            logger.info(f"Found word '{word.word}' for user '{clerk_id}'.")
+            return word
+        else:
+            logger.warning(f"Word with ID/word '{word_or_id}' not found for user '{clerk_id}', or user does not have permission.")
+            return None
+    except Exception as e:
+        logger.error(f"Error getting word by ID/word '{word_or_id}' for user '{clerk_id}': {e}", exc_info=True)
+        raise
+
+def get_user_vocabularies(db: Session, user_id: str):
+    """Get all vocabularies for a specific user."""
+    try:
+        vocabularies = db.query(models.Words.vocabulary).filter(models.Words.added_by_user_id == user_id).group_by(models.Words.vocabulary).all()
+        result = [v[0] for v in vocabularies]
+        logger.info(f"Found {len(result)} vocabularies for user '{user_id}'.")
+        return result
+    except Exception as e:
+        logger.error(f"Error getting vocabularies for user '{user_id}': {e}", exc_info=True)
         raise
 
 def delete_word(db: Session, word: str, clerk_id: str):
@@ -184,5 +191,24 @@ def delete_word_by_id_from_db(db: Session, word_id: int, clerk_id: str):
             return False
     except Exception as e:
         logger.error(f"Error deleting word with ID {word_id} for user {clerk_id}: {e}", exc_info=True)
+        db.rollback()
+        raise
+
+def delete_word(db: Session, word: str, clerk_id: str):
+    """Delete a word."""
+    try:
+        logger.info(f"Attempting to delete word '{word}' for user '{clerk_id}'.")
+        word_to_delete = get_word_by_id(db, word, clerk_id)
+        if word_to_delete:
+            logger.info(f"Word to delete: {word_to_delete.word}, ID: {word_to_delete.id}")
+            db.delete(word_to_delete)
+            db.commit()
+            logger.info(f"Word '{word}' deleted successfully for user '{clerk_id}'.")
+            return True
+        else:
+            logger.warning(f"Word '{word}' not found for user '{clerk_id}', or user does not have permission.")
+            return False
+    except Exception as e:
+        logger.error(f"Error deleting word '{word}' for user '{clerk_id}': {e}", exc_info=True)
         db.rollback()
         raise

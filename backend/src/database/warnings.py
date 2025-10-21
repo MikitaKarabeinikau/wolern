@@ -19,6 +19,16 @@ def create_warning(db: Session, word_id: int, warning_text: str):
         db.rollback()
         raise
 
+def get_number_of_warnings_for_word(db: Session, word_id: int):
+    """Get the number of warnings associated with a specific word."""
+    try:
+        count = db.query(models.Warning).filter(models.Warning.word_id == word_id).count()
+        logger.info(f"Number of warnings for word_id '{word_id}': {count}")
+        return count
+    except Exception as e:
+        logger.error(f"Error getting number of warnings for word_id '{word_id}': {e}", exc_info=True)
+        raise
+
 def get_word_warnings_from_db(db: Session, word: str, clerk_id: str):
     """Get all warnings associated with a word for a specific user."""
     try:

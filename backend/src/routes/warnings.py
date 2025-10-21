@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Body
 from sqlalchemy.orm import Session
-from backend.src.database import get_database
+from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Words, Warning
-from backend.src.database.warnings import add_warning, get_all_warnings_for_user_from_db, delete_warning_by_id, update_warning_by_id, get_warning_by_id
+from backend.src.database.warnings import create_warning, get_all_warnings_for_user_from_db, delete_warning_by_id, update_warning_by_id, get_warning_by_id
 from backend.schemas import WarningResponse  # Assuming you create a schemas.py file
 import logging
 

@@ -48,7 +48,50 @@ def get_word_part_of_speech_from_db(db: Session, word: str, clerk_id: str):
         )
         raise
 
+def get_definitions_for_quiz(db: Session, clerk_id: str):
+    """Get all definitions for quiz words for a specific user."""
+    try:
+        definitions = (
+            db.query(models.Definition)
+            .join(models.Words)
+            .filter(
+                models.Words.added_by_user_id == clerk_id,
+                (models.Words.vocabulary == "learning") | (models.Words.vocabulary == "unknown")
+            )
+            .all()
+        )
+        if not definitions:
+            logger.info(f"No definitions found for quiz words for user '{clerk_id}'.")
+            return []
+        logger.info(f"Found {len(definitions)} definitions for quiz words for user '{clerk_id}'.")
+        return definitions
+    except Exception as e:
+        logger.error(f"Error getting definitions for quiz words for user '{clerk_id}': {e}", exc_info=True)
+        raise
 
+def get_definitions_by_word(db: Session, word: str, clerk_id: str):
+    """Get definitions for a specific word and user."""
+    try:
+        definitions = (
+            db.query(models.Definition)
+            .join(models.Words)
+            .filter(
+                models.Words.word == word.strip(),
+                models.Words.added_by_user_id == clerk_id,
+            )
+            .all()
+        )
+        if not definitions:
+            logger.info(f"No definitions found for word '{word}' and user '{clerk_id}'.")
+            return []
+        logger.info(f"Found {len(definitions)} definitions for word '{word}' and user '{clerk_id}'.")
+        return definitions
+    except Exception as e:
+        logger.error(
+            f"Error getting definitions for word '{word}' and user '{clerk_id}': {e}",
+            exc_info=True,
+        )
+        raise
 
 def get_definition_by_id(db: Session, definition_id: int):
     """Get a definition by its ID."""

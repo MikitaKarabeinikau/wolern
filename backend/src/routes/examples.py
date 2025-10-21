@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Body
 from sqlalchemy.orm import Session
-from backend.src.database import get_database
+from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Words, Example
-from backend.src.database.examples import add_example, get_all_examples_for_user_from_db, delete_example,update_example_by_id, get_example_by_id, delete_example_by_id
+from backend.src.database.examples import add_example, get_all_examples_for_user_from_db,update_example_by_id, get_example_by_id, delete_example_by_id
 from backend.schemas import ExampleResponse
 import backend.src.database.models as models
 import logging

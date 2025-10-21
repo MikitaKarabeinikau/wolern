@@ -5,7 +5,7 @@ from datetime import datetime
 from svix.webhooks import Webhook
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from backend.src.database import get_database
+from backend.src.database.database import get_database
 from backend.src.database.models import Users
 import logging
 

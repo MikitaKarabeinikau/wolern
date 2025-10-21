@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Body
 from sqlalchemy.orm import Session
-from backend.src.database import get_database
+from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Words, Translation
 from backend.src.database.translations import get_word_translations_from_db, get_all_translations_for_user_from_db, delete_translation_by_id,get_translation_by_id, update_translation_by_id

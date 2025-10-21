@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Body
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from backend.src.database import get_database
+from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Tag, Words
 from backend.src.database.tags import get_all_tags_for_user_from_db, delete_tag_by_id, update_tag_by_id, get_tag_by_id

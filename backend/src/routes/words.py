@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from backend.src.database import get_database
+from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Words
-from backend.src.database.words import get_user_vocabulary, get_word_id_by_word, get_all_words_from_db, delete_word_by_id_from_db, add_word
+from backend.src.database.words import get_word_id_by_word, get_all_words_from_db, delete_word_by_id_from_db, add_word
 from backend.schemas import AddWordRequest
 from backend.src.core.word import Word
 import logging
