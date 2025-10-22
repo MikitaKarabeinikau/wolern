@@ -1,4 +1,3 @@
-import React from 'react'; // Removed unused useState, useEffect
 import Collapsible from './Collapsible';
 import '../../styles/Word.css';
 import UnitCell from './UnitCell';

@@ -21,6 +21,7 @@ const createMapByWordId = (items, key) => {
 
 export function QuizGenerator() {
   const [isAnswered, setIsAnswered] = useState(false);
+  const [result, setResult] = useState(null);
   const [words, setWords] = useState([]);
   const [error, setError] = useState(null); // Add error state
   const { getToken } = useAuth();
@@ -29,6 +30,7 @@ export function QuizGenerator() {
   const [definition, setDefinition] = useState({});
   const [example, setExample] = useState({});
   const [synonym, setSynonym] = useState({});
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
   const fetchQuizWords = async () => {
     // This function now ONLY fetches word details.
@@ -60,27 +62,55 @@ export function QuizGenerator() {
   const handleNextQuestion = () => {
     // Logic to load the next question
     setIsAnswered(false);
+    setResult(null);
+    if (currentWordIndex + 1 >= words.length){
+        // Restart the quiz or handle end of quiz
+        fetchQuizWords();
+        setCurrentWordIndex(0);
+    } else {
+    setCurrentWordIndex((prevIndex) => prevIndex + 1);
+    }
   }
 
-  if (isAnswered) {
-    return (
-      <div>
-        <QuizResult />
-        <button onClick={handleNextQuestion}>Next Question</button>
-      </div>
-    )
+  const handleCheckAnswer = (answer) => {
+    setResult(answer);
+    setIsAnswered(true);
   }
-
-  
-  return (
+return (
     <div>
-      {error && <div style={{ color: "red" }}>Error: {error}</div>} {/* Display error message */}
+      {error && <div style={{ color: "red" }}>Error: {error}</div>}
+      
       {words.length > 0 ? (
-        <QuizWord word={words[0]} wordTranslation={translation[words[0].id]} wordExample={example[words[0].id]} wordDefinition={definition[words[0].id]} wordSynonym={synonym[words[0].id]} />
+        <>
+          {/* This part is correct */}
+          <div style={{ display: isAnswered ? 'none' : 'block' }}>
+            <QuizWord 
+              word={words[currentWordIndex]} 
+              wordTranslation={translation[words[currentWordIndex].id]} 
+              wordExample={example[words[currentWordIndex].id]} 
+              wordDefinition={definition[words[currentWordIndex].id]} 
+              wordSynonym={synonym[words[currentWordIndex].id]} 
+            />
+            <QuizAnswerField onCheckAnswer={handleCheckAnswer} />
+          </div>
+
+          {/* --- Start of Change --- */}
+          <div style={{ display: isAnswered ? 'block' : 'none' }}>
+            {/* The "isAnswered &&" check has been removed */}
+            <>
+              <QuizResult 
+                word_id={words[currentWordIndex].id} 
+                word={words[currentWordIndex]} 
+                userAnswer={result} 
+              />
+              <button onClick={handleNextQuestion}>Next Question</button>
+            </>
+          </div>
+          {/* --- End of Change --- */}
+        </>
       ) : (
         <p>Loading quiz...</p>
       )}
-      <QuizAnswerField />
     </div>
   )
 }

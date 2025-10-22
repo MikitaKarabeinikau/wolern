@@ -11,7 +11,7 @@ function AddWordContainer({onWordAdded}){
     
     const handleAddWord = async (new_word) => {
         try {
-            const token = await getToken(); // Get the token
+            const token = await getToken(); 
             const response = await fetch("http://localhost:8000/user/words", {
                 method: "POST",
                 headers: {

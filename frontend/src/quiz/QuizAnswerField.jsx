@@ -1,10 +1,31 @@
 import React from "react";
+import '../../styles/QuizAnswerUnit.css';
 
+function QuizAnswerField({onCheckAnswer}) {
+  const [inputValue, setInputValue] = React.useState("");
 
-function QuizAnswerField() {
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleAnswer();
+    }
+  };
+
+  const handleAnswer = () => {
+    // Here you can add logic to check the answer if needed
+    onCheckAnswer(inputValue);
+    setInputValue(""); // Clear input after submitting
+  };
+
   return (
-    <div>
-        <input type="text" placeholder="Type your answer here" />
+    <div className="quiz-answer-field">
+        <input 
+        type="text" 
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Type your answer here" 
+        onKeyDown={handleKeyDown}
+        />
+        <button onClick={handleAnswer}>Submit</button>
     </div>
   )
 }

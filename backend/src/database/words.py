@@ -4,7 +4,7 @@ from backend.schemas import AddWordRequest
 import logging
 logger = logging.getLogger(__name__)
 from .warnings import get_number_of_warnings_for_word
-
+import re
 
 
 def add_word(db: Session, word: AddWordRequest, clerk_id: str):
@@ -58,6 +58,11 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
 
         for part_of_speech, example in word.examples.items():
             for ex in example:
+                pattern = r'\b' + re.escape(db_word.word) + r'\b.*'
+                if not re.search(pattern, ex, re.IGNORECASE): 
+                    logger.warning(f"Example '{ex}' does not contain the word '{word.word}'.")
+                    continue
+
                 db_example = models.Example(
                     word_id=db_word.id,
                     part_of_speech=part_of_speech,
@@ -150,6 +155,7 @@ def get_user_vocabularies(db: Session, user_id: str):
         logger.error(f"Error getting vocabularies for user '{user_id}': {e}", exc_info=True)
         raise
 
+
 def delete_word(db: Session, word: str, clerk_id: str):
     """Delete a word."""
     try:
@@ -191,6 +197,57 @@ def delete_word_by_id_from_db(db: Session, word_id: int, clerk_id: str):
             return False
     except Exception as e:
         logger.error(f"Error deleting word with ID {word_id} for user {clerk_id}: {e}", exc_info=True)
+        db.rollback()
+        raise
+
+def increase_correct_count(db: Session, word_id: int,clerk_id: str):
+    """Increase the correct count for a word."""
+    try:
+        word = get_word_by_id(db, word_id, clerk_id)
+        if word:
+            word.correct_answers += 1
+            db.commit()
+            logger.info(f"Correct answers count for word with ID '{word_id}' increased by user '{clerk_id}'.")
+            return True
+        else:
+            logger.warning(f"Word with ID '{word_id}' not found for user '{clerk_id}', or user does not have permission.")
+            return False
+    except Exception as e:
+        logger.error(f"Error increasing correct count for word with ID '{word_id}' for user '{clerk_id}': {e}", exc_info=True)
+        db.rollback()
+        raise
+
+def increase_wrong_count(db: Session, word_id: int,clerk_id: str):
+    """Increase the wrong count for a word."""
+    try:
+        word = get_word_by_id(db, word_id, clerk_id)
+        if word:
+            word.wrong_answers += 1
+            db.commit()
+            logger.info(f"Wrong count for word with ID '{word_id}' increased by user '{clerk_id}'.")
+            return True
+        else:
+            logger.warning(f"Word with ID '{word_id}' not found for user '{clerk_id}', or user does not have permission.")
+            return False
+    except Exception as e:
+        logger.error(f"Error increasing wrong count for word with ID '{word_id}' for user '{clerk_id}': {e}", exc_info=True)
+        db.rollback()
+        raise
+
+def change_word_vocabulary(db: Session, word_id: int, new_vocabulary: str, clerk_id: str):
+    """Change the vocabulary of a word."""
+    try:
+        word = get_word_by_id(db, word_id, clerk_id)
+        if word:
+            word.vocabulary = new_vocabulary
+            db.commit()
+            logger.info(f"Vocabulary for word with ID '{word_id}' changed to '{new_vocabulary}' by user '{clerk_id}'.")
+            return True
+        else:
+            logger.warning(f"Word with ID '{word_id}' not found for user '{clerk_id}', or user does not have permission.")
+            return False
+    except Exception as e:
+        logger.error(f"Error changing vocabulary for word with ID '{word_id}' for user '{clerk_id}': {e}", exc_info=True)
         db.rollback()
         raise
 

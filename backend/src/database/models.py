@@ -30,6 +30,8 @@ class Words(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     vocabulary = Column(String, nullable=False, default="unknown")
+    correct_answers = Column(Integer, nullable=False, default=0)
+    wrong_answers = Column(Integer, nullable=False, default=0)
 
     user = relationship("Users", back_populates="vocabulary")
     translations = relationship("Translation", back_populates="word")

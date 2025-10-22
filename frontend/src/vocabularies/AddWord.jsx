@@ -5,10 +5,15 @@ function AddWord({ onAdd }) {
 
   const handleClick = () => {
     if (inputValue.trim()) {
-      // FIX: Pass only the string value from the input field.
-      // Do NOT pass an object like { word: inputValue }.
       onAdd(inputValue);
       setInputValue(''); // Clear the input after adding
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      console.log("Enter key pressed");
+      handleClick();
     }
   };
 
@@ -20,6 +25,7 @@ function AddWord({ onAdd }) {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Enter a word"
+        onKeyDown={handleKeyPress}
       />
       <button onClick={handleClick}>Add Word</button>
     </div>

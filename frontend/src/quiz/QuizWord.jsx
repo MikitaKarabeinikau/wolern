@@ -1,6 +1,42 @@
 import React,{useState} from "react";
 import QuizAnswerUnit from "./QuizAnswerUnit";
+import Row from "./Row";
+
+
 function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynonym}) {
+
+  const findSeparatePart = (mainWord, wordToCompare) => {
+    let longestCommonSubstring = "";
+    for (let i = 0; i < mainWord.length; i++) {
+      for (let j = i; j < mainWord.length; j++) {
+        const substring = mainWord.substring(i, j + 1);
+        if (wordToCompare.includes(substring) && substring.length > longestCommonSubstring.length) {
+          longestCommonSubstring = substring;
+        }
+      }
+    }
+    return longestCommonSubstring;
+  };
+     
+  const changeSeparatePart = (text, wordToCompare) => {
+    const commonPart = findSeparatePart(text, wordToCompare);
+    if (commonPart.length >= 3) {
+      return text.replace(commonPart, "...");
+    }
+    return text;
+  };
+  
+    const changeSeparatePartInText = (textArray, wordToCompare, property) => {
+    return textArray.map(item => {
+      if (item[property]) {
+        return {
+          ...item,
+          [property]: changeSeparatePart(item[property], wordToCompare)
+        };
+      }
+      return item;
+    });
+  }
 
   const translationsByLanguage = (wordTranslation || []).reduce((acc, trans) => {
     const lang = trans.language || 'Unknown';
@@ -16,7 +52,8 @@ function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynon
     if (!acc[pos]) {
       acc[pos] = [];
     }
-    acc[pos].push(def);
+    const modifiedDef = changeSeparatePartInText([def], word.word, 'definition')[0];
+    acc[pos].push(modifiedDef);
     return acc;
   }, {});
 
@@ -25,7 +62,8 @@ function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynon
     if (!acc[pos]) {
       acc[pos] = [];
     }
-    acc[pos].push(ex);
+    const modifiedEx = changeSeparatePartInText([ex], word.word, 'example_sentence')[0];
+    acc[pos].push(modifiedEx);
     return acc;
   }, {});
   return (
@@ -37,7 +75,7 @@ function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynon
               <h4>{partOfSpeech}</h4>
             <ul>
               {definitionsByPartOfLanguage[partOfSpeech].map((definition, index) => (
-                <li key={index}>{definition.definition}</li>
+                <Row key={index} data={definition.definition} />
               ))}
             </ul>
           </div>
@@ -54,7 +92,7 @@ function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynon
               <h4>{language}</h4>
               <ul>
               {translationsByLanguage[language].map((translation, index) => (
-                <li key={index}>{translation.translation}</li>
+                <Row key={index} data={translation.translation} />
               ))}
             </ul>
           </div>
@@ -72,7 +110,7 @@ function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynon
               <h4>{partOfSpeech}</h4>
               <ul>
               {examplesByPartOfLanguage[partOfSpeech].map((example, index) => (
-                <li key={index}>{example.example}</li>
+                <Row key={index} data={example.example_sentence} />
               ))}
             </ul>
           </div>
@@ -84,7 +122,7 @@ function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynon
       {wordSynonym && wordSynonym.length > 0 ? (
         <ul>
           {wordSynonym.map((synonym, index) => (
-            <li key={index}>{synonym.synonym}</li>
+            <Row key={index} data={synonym.synonym} />
           ))}
         </ul>
       ) : (
