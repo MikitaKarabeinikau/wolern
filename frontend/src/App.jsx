@@ -24,6 +24,7 @@ function App() {
           <Route path="/statistics" element={<StatisticPanel />} />
           <Route path="/quiz" element={<QuizGenerator />} />
           <Route path="/exercises" element={<ExercisesPanel />} />
+          {/* <Route path="/scanner" element={<ScannerPanel />} /> */}
         </Route>
       </Routes>
   </ClerkProviderWithRoutes>

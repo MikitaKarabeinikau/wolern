@@ -4,6 +4,7 @@ from backend.schemas import AddWordRequest
 import logging
 logger = logging.getLogger(__name__)
 from .warnings import get_number_of_warnings_for_word
+from .base import get_last_word_base_id,get_translations_from_base, is_word_in_base, get_word_base_id, get_definitions_from_base, get_synonyms_from_base, get_examples_from_base
 import re
 
 
@@ -27,6 +28,50 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
         db.refresh(db_word)
         logger.info(f"Word '{word.word}' added to database for user '{clerk_id}'.")
 
+        if is_word_in_base(db, word.word):
+            logger.info(f"Word '{word.word}' found in base words.")
+            word_base_id = get_word_base_id(db, word.word)
+            print("\n\n\n",get_translations_from_base(db, word_base_id),"\n\n\n")
+            for base_translation in get_translations_from_base(db, word_base_id):
+                db_translation = models.Translation(
+                    word_id=db_word.id,
+                    language=base_translation.language,
+                    translation=base_translation.translation
+                )
+                db.add(db_translation)
+                logger.info(f"Base translation '{base_translation.translation}' added for language '{base_translation.language}' for word '{word.word}'.")
+            for base_definition in get_definitions_from_base(db, word_base_id):
+                db_definition = models.Definition(
+                    word_id=db_word.id,
+                    part_of_speech=base_definition.part_of_speech,
+                    definition=base_definition.definition
+                )
+                db.add(db_definition)
+                logger.info(f"Base definition '{base_definition.definition}' added for part of speech '{base_definition.part_of_speech}' for word '{word.word}'.")
+            for base_synonym in get_synonyms_from_base(db, word_base_id):
+                db_synonym = models.Synonym(
+                    word_id=db_word.id,
+                    synonym=base_synonym.synonym
+                )
+                db.add(db_synonym)
+                logger.info(f"Base synonym '{base_synonym.synonym}' added for word '{word.word}'.")
+            for base_example in get_examples_from_base(db, word_base_id):
+                db_example = models.Example(
+                    word_id=db_word.id,
+                    part_of_speech=base_example.part_of_speech,
+                    example_sentence=base_example.example_sentence
+                )
+                db.add(db_example)
+                logger.info(f"Base example '{base_example.example_sentence}' added for part of speech '{base_example.part_of_speech}' for word '{word.word}'.")
+            db.commit()
+            return True
+        
+        db_word_base = models.Word_Base(
+            word=word.word
+        )
+        db.add(db_word_base)
+        db.flush()
+
         for lang, translation in word.translation.items():
             if translation:
                 for t in word.translation[lang]:
@@ -35,7 +80,13 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
                         language=lang,
                         translation=t
                     )
+                    db_translation_base = models.Translation_Base(
+                        base_id=db_word_base.id,
+                        language=lang,
+                        translation=t
+                    )
                     db.add(db_translation)
+                    db.add(db_translation_base)
                     logger.info(f"Translation '{t}' added for language '{lang}' for word '{word.word}'.")
 
         for synonym in word.synonyms:
@@ -43,6 +94,11 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
                 word_id=db_word.id,
                 synonym=synonym
             )
+            db_synonym_base = models.Synonym_Base(
+                base_id=db_word_base.id,
+                synonym=synonym
+            )
+            db.add(db_synonym_base)
             db.add(db_synonym)
             logger.info(f"Synonym '{synonym}' added for word '{word.word}'.")
 
@@ -53,6 +109,12 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
                     part_of_speech=part_of_speech,
                     definition=definition
                 )
+                db_definition_base = models.Definition_Base(
+                    base_id=db_word_base.id,
+                    part_of_speech=part_of_speech,
+                    definition=definition
+                )
+                db.add(db_definition_base)
                 db.add(db_definition)
                 logger.info(f"Definition '{definition}' added for part of speech '{part_of_speech}' for word '{word.word}'.")
 
@@ -68,6 +130,12 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
                     part_of_speech=part_of_speech,
                     example_sentence=ex
                 )
+                db_example_base = models.Example_Base(
+                    base_id=db_word_base.id,
+                    part_of_speech=part_of_speech,
+                    example_sentence=ex
+                )
+                db.add(db_example_base)
                 db.add(db_example)
                 logger.info(f"Example '{ex}' added for part of speech '{part_of_speech}' for word '{word.word}'.")
 
@@ -86,7 +154,12 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
             )
             db.add(db_warning)
             logger.info(f"Warning '{warning}' added for word '{word.word}'.")
-            
+        db_user_progress = models.User_Quiz_Progress(
+            user_id=clerk_id,
+            word_id=db_word.id
+        )
+        db.add(db_user_progress)
+
         db.commit()
         logger.info(f"Word '{word.word}' added successfully for user '{clerk_id}'.")
         if get_number_of_warnings_for_word(db, db_word.id) >= 3:

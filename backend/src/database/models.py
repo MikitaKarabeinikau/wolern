@@ -18,21 +18,15 @@ class Words(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     word = Column(String, unique=True, index=True, nullable=False)
+    base_id = Column(Integer, ForeignKey("word_base.id"))
     added_by_user_id = Column(String,ForeignKey("users.clerk_id", ondelete="CASCADE"), nullable=False)
-    last_reviewed = Column(DateTime, default=datetime.utcnow)
-    learning_stage = Column(Integer, nullable=False, default=0)
-    repeats_number = Column(Integer, default=0)
-    time_to_reapet = Column(DateTime, default=datetime.utcnow)
-    notes = Column(String, nullable=True)
     audio_url = Column(String, nullable=True,default=None)
     frequency = Column(Float, default=0)
     difficulty = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     vocabulary = Column(String, nullable=False, default="unknown")
-    correct_answers = Column(Integer, nullable=False, default=0)
-    wrong_answers = Column(Integer, nullable=False, default=0)
-
+    
     user = relationship("Users", back_populates="vocabulary")
     translations = relationship("Translation", back_populates="word")
     synonyms = relationship("Synonym", back_populates="word")
@@ -40,8 +34,74 @@ class Words(Base):
     examples = relationship("Example", back_populates="word")
     tags = relationship("Tag", back_populates="word")
     warnings = relationship("Warning", back_populates="word")
+    word_base = relationship("Word_Base", back_populates="words")
 
+class Word_Base(Base):
+    __tablename__ = "word_base"
 
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    word = Column(String, nullable=False, unique=True)
+    added_at = Column(DateTime, default=datetime.utcnow)
+
+    words = relationship("Words", back_populates="word_base")
+
+class Definition_Base(Base):
+    __tablename__ = "definition_base"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    base_id = Column(Integer, ForeignKey("word_base.id", ondelete="CASCADE"), nullable=False)
+    part_of_speech = Column(String, nullable=False)
+    definition = Column(String, nullable=False)
+    added_at = Column(DateTime, default=datetime.utcnow)
+
+    word_base = relationship("Word_Base")
+
+class Translation_Base(Base):
+    __tablename__ = "translation_base"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    base_id = Column(Integer, ForeignKey("word_base.id", ondelete="CASCADE"), nullable=False)
+    translation = Column(String, nullable=False)
+    language = Column(String, nullable=False, default="russian")
+    added_at = Column(DateTime, default=datetime.utcnow)
+
+    word_base = relationship("Word_Base")
+
+class Synonym_Base(Base):
+    __tablename__ = "synonym_base"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    base_id = Column(Integer, ForeignKey("word_base.id", ondelete="CASCADE"), nullable=False)
+    synonym = Column(String, nullable=False)
+    added_at = Column(DateTime, default=datetime.utcnow)
+  
+    word_base = relationship("Word_Base")
+
+class Example_Base(Base):
+    __tablename__ = "example_base"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    base_id = Column(Integer, ForeignKey("word_base.id", ondelete="CASCADE"), nullable=False)
+    example_sentence = Column(String, nullable=False)
+    part_of_speech = Column(String, nullable=True)
+    added_at = Column(DateTime, default=datetime.utcnow)
+
+    word_base = relationship("Word_Base")
+
+class User_Quiz_Progress(Base):
+    __tablename__ = "user_quiz_progress"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(String, ForeignKey("users.clerk_id", ondelete="CASCADE"), nullable=False)
+    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False)
+    correct_answers = Column(Integer, nullable=False, default=0)
+    wrong_answers = Column(Integer, nullable=False, default=0)
+    learning_stage = Column(Integer, nullable=False, default=0)
+    time_to_repeat = Column(DateTime, default=datetime.utcnow)
+    last_quiz_date = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("Users")
+    word = relationship("Words")
 
 class Translation(Base):
     __tablename__ = "translations"
