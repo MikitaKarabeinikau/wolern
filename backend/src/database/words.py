@@ -260,6 +260,7 @@ def delete_word_by_id_from_db(db: Session, word_id: int, clerk_id: str):
             db.query(models.Example).filter(models.Example.word_id == word_id).delete(synchronize_session=False)
             db.query(models.Tag).filter(models.Tag.word_id == word_id).delete(synchronize_session=False)
             db.query(models.Warning).filter(models.Warning.word_id == word_id).delete(synchronize_session=False)
+            db.query(models.User_Quiz_Progress).filter(models.User_Quiz_Progress.word_id == word_id, models.User_Quiz_Progress.user_id == clerk_id).delete(synchronize_session=False)
 
             db.delete(word_to_delete)
             db.commit()
@@ -273,39 +274,7 @@ def delete_word_by_id_from_db(db: Session, word_id: int, clerk_id: str):
         db.rollback()
         raise
 
-def increase_correct_count(db: Session, word_id: int,clerk_id: str):
-    """Increase the correct count for a word."""
-    try:
-        word = get_word_by_id(db, word_id, clerk_id)
-        if word:
-            word.correct_answers += 1
-            db.commit()
-            logger.info(f"Correct answers count for word with ID '{word_id}' increased by user '{clerk_id}'.")
-            return True
-        else:
-            logger.warning(f"Word with ID '{word_id}' not found for user '{clerk_id}', or user does not have permission.")
-            return False
-    except Exception as e:
-        logger.error(f"Error increasing correct count for word with ID '{word_id}' for user '{clerk_id}': {e}", exc_info=True)
-        db.rollback()
-        raise
 
-def increase_wrong_count(db: Session, word_id: int,clerk_id: str):
-    """Increase the wrong count for a word."""
-    try:
-        word = get_word_by_id(db, word_id, clerk_id)
-        if word:
-            word.wrong_answers += 1
-            db.commit()
-            logger.info(f"Wrong count for word with ID '{word_id}' increased by user '{clerk_id}'.")
-            return True
-        else:
-            logger.warning(f"Word with ID '{word_id}' not found for user '{clerk_id}', or user does not have permission.")
-            return False
-    except Exception as e:
-        logger.error(f"Error increasing wrong count for word with ID '{word_id}' for user '{clerk_id}': {e}", exc_info=True)
-        db.rollback()
-        raise
 
 def change_word_vocabulary(db: Session, word_id: int, new_vocabulary: str, clerk_id: str):
     """Change the vocabulary of a word."""

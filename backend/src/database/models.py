@@ -35,6 +35,7 @@ class Words(Base):
     tags = relationship("Tag", back_populates="word")
     warnings = relationship("Warning", back_populates="word")
     word_base = relationship("Word_Base", back_populates="words")
+    quiz_progress = relationship("User_Quiz_Progress", back_populates="word")
 
 class Word_Base(Base):
     __tablename__ = "word_base"
@@ -49,7 +50,7 @@ class Definition_Base(Base):
     __tablename__ = "definition_base"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    base_id = Column(Integer, ForeignKey("word_base.id", ondelete="CASCADE"), nullable=False)
+    base_id = Column(Integer, ForeignKey("word_base.id"), nullable=False)
     part_of_speech = Column(String, nullable=False)
     definition = Column(String, nullable=False)
     added_at = Column(DateTime, default=datetime.utcnow)
@@ -60,7 +61,7 @@ class Translation_Base(Base):
     __tablename__ = "translation_base"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    base_id = Column(Integer, ForeignKey("word_base.id", ondelete="CASCADE"), nullable=False)
+    base_id = Column(Integer, ForeignKey("word_base.id"), nullable=False)
     translation = Column(String, nullable=False)
     language = Column(String, nullable=False, default="russian")
     added_at = Column(DateTime, default=datetime.utcnow)
@@ -71,7 +72,7 @@ class Synonym_Base(Base):
     __tablename__ = "synonym_base"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    base_id = Column(Integer, ForeignKey("word_base.id", ondelete="CASCADE"), nullable=False)
+    base_id = Column(Integer, ForeignKey("word_base.id"), nullable=False)
     synonym = Column(String, nullable=False)
     added_at = Column(DateTime, default=datetime.utcnow)
   
@@ -81,7 +82,7 @@ class Example_Base(Base):
     __tablename__ = "example_base"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    base_id = Column(Integer, ForeignKey("word_base.id", ondelete="CASCADE"), nullable=False)
+    base_id = Column(Integer, ForeignKey("word_base.id"), nullable=False)
     example_sentence = Column(String, nullable=False)
     part_of_speech = Column(String, nullable=True)
     added_at = Column(DateTime, default=datetime.utcnow)
@@ -96,12 +97,14 @@ class User_Quiz_Progress(Base):
     word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False)
     correct_answers = Column(Integer, nullable=False, default=0)
     wrong_answers = Column(Integer, nullable=False, default=0)
+    correct_answers_in_a_row = Column(Integer, nullable=False, default=0)
+    wrong_answers_in_a_row = Column(Integer, nullable=False, default=0)
     learning_stage = Column(Integer, nullable=False, default=0)
     time_to_repeat = Column(DateTime, default=datetime.utcnow)
     last_quiz_date = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("Users")
-    word = relationship("Words")
+    word = relationship("Words", back_populates="quiz_progress")
 
 class Translation(Base):
     __tablename__ = "translations"

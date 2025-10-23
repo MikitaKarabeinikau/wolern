@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import '../../styles/QuizAnswerUnit.css';
 import { useAuth } from "@clerk/clerk-react";
 
-function QuizResult({word_id, word, userAnswer }) {
+function QuizResult({word_id, word, userAnswer ,progress}) {
   const [correctIndexes, setCorrectIndexes] = useState([]);
   const [incorrectIndexes, setIncorrectIndexes] = useState([]);
   const [extraCorrectIndexes, setExtraCorrectIndexes] = useState([]);
@@ -15,7 +15,7 @@ function QuizResult({word_id, word, userAnswer }) {
   const increaseCorrectCount = async () => {
     try{
       const token = await getToken();
-      const response = await fetch(`http://localhost:8000/words/${word_id}/correct-answers`, {
+      const response = await fetch(`http://localhost:8000/quiz/words/${word_id}/correct-answers`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -34,7 +34,7 @@ function QuizResult({word_id, word, userAnswer }) {
   const increaseWrongCount = async () => {
     try{
       const token = await getToken();
-      const response = await fetch(`http://localhost:8000/words/${word_id}/wrong-answers`, {
+      const response = await fetch(`http://localhost:8000/quiz/words/${word_id}/wrong-answers`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -47,6 +47,119 @@ function QuizResult({word_id, word, userAnswer }) {
 
     } catch (error) {
         console.error("Failed to increase wrong count:", error);
+    }
+  };
+
+  const increaseLearningStage = async () => {
+    try{
+      const token = await getToken();
+      const response = await fetch(`http://localhost:8000/quiz/words/${word_id}/learning-stage/increase`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);  
+      }
+
+    } catch (error) {
+        console.error("Failed to increase learning stage:", error);
+    }
+  };
+
+  const decreaseLearningStage = async () => {
+    try{
+      const token = await getToken();
+      const response = await fetch(`http://localhost:8000/quiz/words/${word_id}/learning-stage/decrease`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);  
+      }
+
+    } catch (error) {
+        console.error("Failed to decrease learning stage:", error);
+    }
+  };
+
+  const increaseCorrectInRowCount = async () => {
+    try{
+      const token = await getToken();
+      const response = await fetch(`http://localhost:8000/quiz/words/${word_id}/correct-answers-row/increase`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);  
+      }
+
+    } catch (error) {
+        console.error("Failed to increase correct in row count:", error);
+    }
+  };
+  const resetCorrectInRowCount = async () => {
+    try{
+      const token = await getToken();
+      const response = await fetch(`http://localhost:8000/quiz/words/${word_id}/correct-answers-row/reset`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);  
+      }
+
+    } catch (error) {
+        console.error("Failed to reset correct in row count:", error);
+    }
+  };
+
+  const increaseWrongInRowCount = async () => {
+    try{
+      const token = await getToken();
+      const response = await fetch(`http://localhost:8000/quiz/words/${word_id}/wrong-answers-row/increase`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);  
+      }
+
+    } catch (error) {
+        console.error("Failed to increase wrong in row count:", error);
+    }
+  }
+
+  const resetWrongInRowCount = async () => {
+    try{
+      const token = await getToken();
+      const response = await fetch(`http://localhost:8000/quiz/words/${word_id}/wrong-answers-row/reset`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);  
+      }
+
+    } catch (error) {
+        console.error("Failed to reset wrong in row count:", error);
     }
   };
 
@@ -116,6 +229,9 @@ function QuizResult({word_id, word, userAnswer }) {
     return { correct, incorrect, extraCorrect, extraIncorrect };
   };
 
+  const set_next_review_date = (progress) => {
+  }
+
   useEffect(() => {
     if (word.vocabulary === 'unknown') {
       changeVocabularyToLearn();
@@ -123,28 +239,37 @@ function QuizResult({word_id, word, userAnswer }) {
     if (!userAnswer) {
       return;
     }
-
-    const { correct, incorrect, extraCorrect, extraIncorrect } = calculateIndexes(word, userAnswer);
-
-
-    if (correct.length === word.word.length && extraCorrect.length === 0 && extraIncorrect.length === 0 && incorrect.length === 0) {
-      const nextReviewDate = new Date();
-      nextReviewDate.setMinutes(nextReviewDate.getMinutes() + 15);
-     
-      setNewDateToRepeat(nextReviewDate);
-      increaseCorrectCount();
-    } else if (correct.length === 0) {
-      const nextReviewDate = new Date();
-      nextReviewDate.setMinutes(nextReviewDate.getMinutes() + 5);
-      setNewDateToRepeat(nextReviewDate);
-      increaseWrongCount();
-    } else if (correct.length > 0) {
-      const nextReviewDate = new Date();
-      nextReviewDate.setMinutes(nextReviewDate.getMinutes() + 10);
-      setNewDateToRepeat(nextReviewDate);
-      increaseWrongCount();
-    }
     
+    const { correct, incorrect, extraCorrect, extraIncorrect } = calculateIndexes(word, userAnswer);
+    
+// 
+    if (correct.length === word.word.length && extraCorrect.length === 0 && extraIncorrect.length === 0 && incorrect.length === 0) {
+      if (progress.correct_answers_in_a_row + 1 === 5) {
+        increaseCorrectCount();
+        increaseLearningStage();
+        resetCorrectInRowCount();
+        resetWrongInRowCount();
+        set_next_review_date(progress);
+      }else {
+        increaseCorrectCount();
+        increaseCorrectInRowCount();
+        resetWrongInRowCount();
+        set_next_review_date(progress);
+      }
+    } else if (correct.length === 0) {
+      if (progress.wrong_answers_in_a_row + 1 === 5) {
+        increaseWrongCount();
+        decreaseLearningStage();
+        resetWrongInRowCount();
+        resetCorrectInRowCount
+        set_next_review_date(progress);
+      } else {
+        increaseWrongCount();
+        increaseWrongInRowCount();
+        resetCorrectInRowCount();
+        set_next_review_date(progress);
+      }
+    }
     
     setCorrectIndexes(correct);
     setIncorrectIndexes(incorrect);
