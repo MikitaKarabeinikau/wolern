@@ -5,6 +5,24 @@ from sqlalchemy.orm.exc import NoResultFound
 
 logger = logging.getLogger(__name__)
 
+def add_definition(db: Session, word_id: int, part_of_speech: str, definition: str):
+    """Add a new definition to the database."""
+    try:
+        new_definition = models.Definition(
+            word_id=word_id,
+            part_of_speech=part_of_speech,
+            definition=definition,
+        )
+        db.add(new_definition)
+        db.commit()
+        db.refresh(new_definition)
+        logger.info(f"Added new definition for word ID '{word_id}'.")
+        return new_definition
+    except Exception as e:
+        logger.error(f"Error adding definition for word ID '{word_id}': {e}", exc_info=True)
+        db.rollback()
+        raise
+
 def get_all_definitions_for_user_from_db(db: Session, clerk_id: str):
     """Get all definitions for a specific user."""
     try:

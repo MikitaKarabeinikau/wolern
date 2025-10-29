@@ -5,7 +5,8 @@ from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Synonym, Words
 from backend.src.database.synonyms import add_synonym, get_all_synonyms_for_user_from_db, delete_synonym_by_id, update_synonym_by_id, get_synonym_by_id
-from backend.schemas import SynonymResponse  
+from backend.schemas import SynonymResponse
+from backend.schemas import Synonym as SynonymSchema
 
 import logging
 

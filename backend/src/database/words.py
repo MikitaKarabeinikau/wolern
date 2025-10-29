@@ -221,7 +221,7 @@ def get_user_vocabularies(db: Session, user_id: str):
     """Get all vocabularies for a specific user."""
     try:
         vocabularies = db.query(models.Words.vocabulary).filter(models.Words.added_by_user_id == user_id).group_by(models.Words.vocabulary).all()
-        result = [v[0] for v in vocabularies]
+        result = set([v[0] for v in vocabularies])
         logger.info(f"Found {len(result)} vocabularies for user '{user_id}'.")
         return result
     except Exception as e:

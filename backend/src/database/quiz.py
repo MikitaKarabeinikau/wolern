@@ -6,6 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 logger = logging.getLogger(__name__)
 
+
 def get_quiz_words(db: Session, clerk_id: str):
     """Get quiz words for a specific user."""
     try:
@@ -78,24 +79,20 @@ def increase_learning_stage(db: Session, clerk_id: str, word_id: int):
         raise
 
 def decrease_learning_stage(db: Session, clerk_id: str, word_id: int):
-    """Decrease learning stage for a specific user and word."""
-    try:
-        progress = db.query(models.User_Quiz_Progress).filter(models.User_Quiz_Progress.user_id == clerk_id, models.User_Quiz_Progress.word_id == word_id).one()
-        if progress.learning_stage > 0:
-            progress.learning_stage -= 1
-            db.commit()
-            db.refresh(progress)
-            logger.info(f"Decreased learning stage for user '{clerk_id}' and word_id '{word_id}'.")
-        else:
-            logger.info(f"Learning stage is already at minimum for user '{clerk_id}' and word_id '{word_id}'.")
-        return progress
-    except NoResultFound:
-        logger.warning(f"No quiz progress found for user '{clerk_id}' and word_id '{word_id}'.")
+    progress = db.query(models.User_Quiz_Progress).filter(
+        models.User_Quiz_Progress.user_id == clerk_id,
+        models.User_Quiz_Progress.word_id == word_id
+    ).first()
+
+    if not progress:
         return None
-    except Exception as e:
-        logger.error(f"Error decreasing learning stage for user '{clerk_id}' and word_id '{word_id}': {e}", exc_info=True)
-        db.rollback()
-        raise
+
+    if progress.learning_stage > 0:
+        progress.learning_stage -= 1
+        db.commit()
+        db.refresh(progress)
+    return progress
+
 
 def increase_correct_answers_in_a_row(db: Session, clerk_id: str, word_id: int):
     """Increase correct answers in a row for a specific user and word."""

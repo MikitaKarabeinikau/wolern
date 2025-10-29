@@ -1,5 +1,6 @@
 import React from "react";
 import '../../styles/QuizAnswerUnit.css';
+import '../../styles/Word.css';
 
 function QuizAnswerField({onCheckAnswer}) {
   const [inputValue, setInputValue] = React.useState("");
@@ -17,15 +18,20 @@ function QuizAnswerField({onCheckAnswer}) {
   };
 
   return (
-    <div className="quiz-answer-field">
+    <div className="add-container">
+      <div className="input">
         <input 
         type="text" 
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Type your answer here" 
         onKeyDown={handleKeyDown}
+          className="field"
         />
-        <button onClick={handleAnswer}>Submit</button>
+        <button onClick={handleAnswer}
+        className="btn">Submit</button>
+      </div>
+        
     </div>
   )
 }

@@ -5,6 +5,18 @@ from sqlalchemy.orm.exc import NoResultFound
 
 logger = logging.getLogger(__name__)
 
+def add_tag(db: Session, tag: str, word_id: int):
+    """Add a new tag to a word."""
+    if not isinstance(word_id, int):
+        raise ValueError(f"Invalid word_id: {word_id}. Must be an integer.")
+
+    new_tag = models.Tag(tag=tag, word_id=word_id)
+    db.add(new_tag)
+    db.commit()
+    db.refresh(new_tag)
+    logger.info(f"Tag '{tag}' added successfully to word ID '{word_id}'.")
+    return new_tag
+
 def get_word_tags_from_db(db: Session, word: str, clerk_id: str):
     """Get all tags associated with a word for a specific user."""
     try:

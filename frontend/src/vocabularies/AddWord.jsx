@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../../styles/Word.css';
 
 function AddWord({ onAdd }) {
   const [inputValue, setInputValue] = useState('');
@@ -18,16 +19,27 @@ function AddWord({ onAdd }) {
   };
 
   return (
-    <div>
-      <h3>Add New Word</h3>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Enter a word"
-        onKeyDown={handleKeyPress}
-      />
-      <button onClick={handleClick}>Add Word</button>
+    <div className="add-container">
+      <div className='input-section'>
+        <h3>Add New Word</h3>
+        <div>
+          <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="Enter a word"
+                  onKeyDown={handleKeyPress}
+                  className="field"
+                />
+                <button onClick={handleClick}
+                className='btn'
+
+                >Add Word</button>
+        </div>
+
+      
+      </div>
+      
     </div>
   );
 }

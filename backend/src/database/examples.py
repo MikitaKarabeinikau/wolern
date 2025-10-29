@@ -5,6 +5,24 @@ from sqlalchemy.orm.exc import NoResultFound
 
 logger = logging.getLogger(__name__)
 
+def add_example_with_part_of_speech(db: Session, word_id: int, example_sentence: str, part_of_speech: str):
+    """Add a new example with part of speech."""
+    try:
+        new_example = models.Example(
+            word_id=word_id,
+            example_sentence=example_sentence,
+            part_of_speech=part_of_speech,
+        )
+        db.add(new_example)
+        db.commit()
+        db.refresh(new_example)
+        logger.info(f"Added new example for word ID '{word_id}' with part of speech '{part_of_speech}'.")
+        return new_example
+    except Exception as e:
+        logger.error(f"Error adding example for word ID '{word_id}': {e}", exc_info=True)
+        db.rollback()
+        raise
+
 def add_example(db: Session, example_sentence: str, word_id: int):
     """Add a new example."""
     try:

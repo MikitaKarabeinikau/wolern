@@ -3,13 +3,40 @@ from sqlalchemy.orm import Session
 from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Words, Translation
-from backend.src.database.translations import get_word_translations_from_db, get_all_translations_for_user_from_db, delete_translation_by_id,get_translation_by_id, update_translation_by_id
+from backend.src.database.translations import get_word_translations_from_db, get_all_translations_for_user_from_db, delete_translation_by_id,get_translation_by_id, update_translation_by_id,add_translation
 from backend.schemas import TranslationResponse
 import logging
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+@router.post("/user/words/{word_id}/{language}/translations/{new_translation}")
+async def create_translation(
+    request: Request,
+    word_id: int,
+    language: str,
+    translation: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        word = db.query(Words).filter(Words.id == word_id, Words.added_by_user_id == clerk_id).first()
+        if not word:
+            raise HTTPException(status_code=404, detail="Word not found or access denied.")
+        
+        add_translation(db, word_id, language, translation)
+
+        logger.info(f"New translation created for word '{word.id}' by user '{clerk_id}'.")
+        return {"message": "Translation created successfully."}
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to create translation: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to create translation: " + str(e))
 
 @router.get("/user/{word}/translations")
 async def get_word_translations(request: Request, word: str, db: Session = Depends(get_database)):

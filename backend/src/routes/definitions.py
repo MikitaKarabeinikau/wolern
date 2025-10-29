@@ -3,13 +3,40 @@ from sqlalchemy.orm import Session
 from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Definition, Words
-from backend.src.database.definitions import get_all_definitions_for_user_from_db, delete_definition_by_id, update_definition_by_id, get_definition_by_id
+from backend.src.database.definitions import add_definition, get_all_definitions_for_user_from_db, delete_definition_by_id, update_definition_by_id, get_definition_by_id
 from backend.schemas import DefinitionResponse
 import logging
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+@router.post("/user/words/{word_id}/{part_of_speech}/definitions/", status_code=201)
+async def create_definitions(
+    request: Request,
+    word_id: int,
+    part_of_speech: str,
+    definition: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        word = db.query(Words).filter(Words.id == word_id).first()
+        if not word or word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission.")
+
+        add_definition(db, word_id, part_of_speech, definition)
+        logger.info(f"Definitions added for word ID '{word_id}' by user '{clerk_id}'.")
+        return {"message": "Definitions created successfully."}
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to create definitions: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to create definitions: " + str(e))
 
 @router.get("/user/words/definitions/all", response_model=DefinitionResponse)
 async def get_all_definitions_for_user(request: Request, db: Session = Depends(get_database)):

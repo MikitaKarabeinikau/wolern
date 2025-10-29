@@ -10,6 +10,35 @@ import logging
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+@router.post("/user/words/warnings", status_code=201)
+async def create_word_warning(
+    request: Request,
+    word_id: int = Body(..., embed=True),
+    warning: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        word = db.query(Words).filter(Words.id == word_id).first()
+        if not word:
+            raise HTTPException(status_code=404, detail="Word not found")
+        if word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission to add a warning to this word.")
+
+        create_warning(db, word_id, warning)
+        logger.info(f"Warning created for word ID '{word_id}' by user '{clerk_id}'.")
+        return {"message": "Warning created successfully."}
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to create warning: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to create warning: " + str(e))
+
 @router.get("/user/words/warnings/all", response_model=WarningResponse)
 async def get_all_warnings_for_user(request: Request, db: Session = Depends(get_database)):
     try:

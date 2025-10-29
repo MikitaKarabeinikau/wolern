@@ -3,13 +3,41 @@ from sqlalchemy.orm import Session
 from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Words, Example
-from backend.src.database.examples import add_example, get_all_examples_for_user_from_db,update_example_by_id, get_example_by_id, delete_example_by_id
-from backend.schemas import ExampleResponse
+from backend.src.database.examples import add_example_with_part_of_speech, get_all_examples_for_user_from_db,update_example_by_id, get_example_by_id, delete_example_by_id
+from backend.schemas import ExampleResponse, Example
 import backend.src.database.models as models
 import logging
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+
+@router.post("/user/words/{word_id}/{part_of_speech}/examples/", response_model=Example)
+async def create_example(
+    request: Request,
+    word_id: int,
+    part_of_speech: str,
+    example_sentence: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        # Verify that the word exists and belongs to the user
+        word = db.query(Words).filter(Words.id == word_id, Words.added_by_user_id == clerk_id).first()
+        if not word:
+            raise HTTPException(status_code=404, detail="Word not found or does not belong to the user.")
+
+        example = add_example_with_part_of_speech(db, example_sentence=example_sentence, word_id=word_id, part_of_speech=part_of_speech)
+        logger.info(f"Example created for word_id '{word_id}' by user '{clerk_id}'.")
+        return example 
+
+    except HTTPException as http_exc:
+        raise http_exc  # Re-raise HTTP exceptions to be handled by FastAPI
+    except Exception as e:
+        logger.error(f"Failed to create example: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to create example: {e}")
 
 @router.get("/user/words/examples/all", response_model=ExampleResponse)
 async def get_all_examples_for_user(request: Request, db: Session = Depends(get_database)):

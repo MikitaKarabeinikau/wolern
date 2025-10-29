@@ -4,10 +4,35 @@ from sqlalchemy.orm import Session
 from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Tag, Words
-from backend.src.database.tags import get_all_tags_for_user_from_db, delete_tag_by_id, update_tag_by_id, get_tag_by_id
+from backend.src.database.tags import add_tag, get_all_tags_for_user_from_db, delete_tag_by_id, update_tag_by_id, get_tag_by_id
 from backend.schemas import TagResponse  
 
 router = APIRouter()
+
+@router.post("/user/words/tags", status_code=201)
+async def create_tag(
+    request: Request,
+    word_id: int = Body(..., embed=True),
+    tag: str = Body(..., embed=True),
+    db: Session = Depends(get_database),
+):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+
+        word = db.query(Words).filter(Words.id == word_id).first()
+        if not word or word.added_by_user_id != clerk_id:
+            raise HTTPException(status_code=403, detail="User does not have permission to tag this word.")
+
+        new_tag = add_tag(db, word_id=word_id, tag=tag)
+        return {"id": new_tag.id, "word_id": new_tag.word_id, "tag": new_tag.tag}
+
+    except HTTPException as http_exc:
+        db.rollback()
+        raise http_exc  
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to create tag: " + str(e))
 
 @router.get("/user/words/tags/all", response_model=TagResponse)
 async def get_all_tags_for_user(request: Request, db: Session = Depends(get_database)):

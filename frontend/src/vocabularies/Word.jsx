@@ -2,14 +2,19 @@ import Collapsible from './Collapsible';
 import '../../styles/Word.css';
 import UnitCell from './UnitCell';
 import CollapsibleInfo from './CollapsibleInfo';
+import AddInfo from './AddInfo';
 
 const defaultVocabularies = ['known', 'unknown', 'learning', 'strange']; // Define default vocabularies
 
 
-function Word({ wordData, translations, definitions, examples, synonyms, warnings, tags, onDataChange, getToken }) {
+
+
+function Word({ wordData, translations, definitions, examples, synonyms, warnings, tags, onDataChange, getToken, vocabularies }) {
   const { word } = wordData;
-
-
+  const vocabulary_set =  new Set(Array.from(new Set(vocabularies.concat(defaultVocabularies))));
+  const languages = new Set(translations.map(t => t.language));
+  const parts_of_speech = new Set(definitions.map(d => d.part_of_speech)).add('None');
+  const example_parts_of_speech = new Set(examples.map(e => e.part_of_speech)).add('None');
   const translationsByLanguage = (translations || []).reduce((acc, trans) => {
     const lang = trans.language || 'Unknown';
     if (!acc[lang]) {
@@ -81,7 +86,9 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
           console.error('Error changing vocabulary:', error);
         }
       }}
-      vocabularies = {defaultVocabularies}
+      vocabularies={vocabulary_set}
+      currentSelectedVocabulary={wordData.vocabulary}
+
 
       >
       
@@ -150,6 +157,34 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
 
           <p>No translations available.</p>
         )}
+        <AddInfo
+          withCategory={true}
+        category_name="Language"
+          categories={Array.from(languages)}
+          onAddInfo={async (language, new_translation) => {
+            const word_id = wordData.id;
+            try {
+              const token = await getToken();
+            const response = await fetch(`http://localhost:8000/user/words/${word_id}/${language}/translations/${new_translation}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({word_id: word_id, language: language, translation: new_translation }), // Adjust payload as needed
+            });
+            if (response.ok) {
+              console.log(`Translation added successfully`);
+              onDataChange(); 
+            } else {
+              console.error('Failed to add translation');
+            }
+          } catch (error) {
+            console.error('Error adding translation:', error);
+          }
+        }} 
+        />
+
       </CollapsibleInfo>
       <CollapsibleInfo title="Definitions">
         {Object.keys(definitionsByPartOfLanguage).length > 0 ? (
@@ -211,6 +246,34 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
         ) : (
           <p>No definitions available.</p>
         )}
+        <AddInfo
+          withCategory={true}
+        category_name={'Definition'}
+        categories={parts_of_speech}
+        onAddInfo = {async (part_of_speech, new_definition) => {
+          const word_id = wordData.id;
+          try {
+            const token = await getToken();
+            const response = await fetch(`http://localhost:8000/user/words/${word_id}/${part_of_speech}/definitions/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ definition: new_definition }),
+            });
+            if (response.ok) {
+              console.log(`Definition added successfully`);
+              onDataChange(); // Notify parent to refresh data
+            } else {
+              console.error('Failed to add definition');
+            }
+          } catch (error) {
+            console.error('Error adding definition:', error);
+          }
+        }}
+      />
+
       </CollapsibleInfo>
         <CollapsibleInfo title="Examples">
          {Object.keys(examplesByPartOfLanguage).length > 0 ? (
@@ -275,6 +338,33 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
         ) : (
           <p>No definitions available.</p>
         )}
+        <AddInfo
+          withCategory={true}
+        category_name={'Example'}
+        categories={example_parts_of_speech}
+        onAddInfo = {async (part_of_speech, new_example) => {
+          const word_id = wordData.id;
+          try {
+            const token = await getToken();
+            const response = await fetch(`http://localhost:8000/user/words/${word_id}/${part_of_speech}/examples/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ example_sentence: new_example }),
+            });
+            if (response.ok) {
+              console.log(`Example added successfully`);
+              onDataChange(); // Notify parent to refresh data
+            } else {
+              console.error('Failed to add example');
+            }
+          } catch (error) {
+            console.error('Error adding example:', error);
+          }
+        }}
+      />
       </CollapsibleInfo>
       <CollapsibleInfo title="Synonyms">
         {synonyms && synonyms.length > 0 ? (
@@ -331,6 +421,33 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
         ) : (
           <p>No synonyms available.</p>
         )}
+        <AddInfo
+          withCategory={false}
+        category_name={'Synonym'}
+        onAddInfo = {async (_, new_synonym) => {
+          const word_id = wordData.id;
+          try {
+            const token = await getToken();
+            const response = await fetch(`http://localhost:8000/user/words/synonyms/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ word_id: word_id, synonym: new_synonym }),
+            });
+            if (response.ok) {
+              console.log(`Synonym added successfully`);
+              onDataChange(); // Notify parent to refresh data
+            } else {
+              console.error('Failed to add synonym');
+            }
+          } catch (error) {
+            console.error('Error adding synonym:', error);
+          }
+        }}
+
+      />
       </CollapsibleInfo>
       <CollapsibleInfo title="Tags">
 
@@ -388,6 +505,32 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
         ) : (
           <p>No tags available.</p>
         )}  
+        <AddInfo
+          withCategory={false}
+        category_name={'Tag'}
+        onAddInfo = {async (_, new_tag) => {
+          const word_id = wordData.id;
+          try {
+            const token = await getToken();
+            const response = await fetch(`http://localhost:8000/user/words/tags/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ word_id: word_id, tag: new_tag }),
+            });
+            if (response.ok) {
+              console.log(`Tag added successfully`);
+              onDataChange(); // Notify parent to refresh data
+            } else {
+              console.error('Failed to add tag');
+            }
+          } catch (error) {
+            console.error('Error adding tag:', error);
+          }
+        }}
+      />
       </CollapsibleInfo>
       <CollapsibleInfo title="Warnings">
         {warnings && warnings.length > 0 ? (
@@ -443,6 +586,32 @@ function Word({ wordData, translations, definitions, examples, synonyms, warning
         ) : (
           <p>No warnings available.</p>
         )}
+        <AddInfo
+          withCategory={false}
+        category_name={'Warning'}
+        onAddInfo = {async (_, new_warning) => {
+          const word_id = wordData.id;
+          try {
+            const token = await getToken();
+            const response = await fetch(`http://localhost:8000/user/words/warnings/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ word_id: word_id, warning: new_warning }),
+            });
+            if (response.ok) {
+              console.log(`Warning added successfully`);
+              onDataChange(); // Notify parent to refresh data
+            } else {
+              console.error('Failed to add warning');
+            }
+          } catch (error) {
+            console.error('Error adding warning:', error);
+          }
+        }}
+      />
       </CollapsibleInfo>
     </Collapsible>
   );

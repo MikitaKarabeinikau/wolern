@@ -5,6 +5,23 @@ from sqlalchemy.orm.exc import NoResultFound
 
 logger = logging.getLogger(__name__)
 
+def add_synonym(db: Session, word_id: int, synonym: str):
+    """Add a synonym for a given word."""
+    try:
+        if synonym_exists(db, word_id, synonym):
+            logger.info(f"Synonym '{synonym}' already exists for word_id '{word_id}'.")
+            return None
+        db_synonym = models.Synonym(word_id=word_id, synonym=synonym)
+        db.add(db_synonym)
+        db.commit()
+        db.refresh(db_synonym)
+        logger.info(f"Synonym '{synonym}' added successfully for word_id '{word_id}'.")
+        return db_synonym
+    except Exception as e:
+        logger.error(f"Error adding synonym '{synonym}' for word_id '{word_id}': {e}", exc_info=True)
+        db.rollback()
+        raise
+
 def get_word_synonyms_from_db(db: Session, word: str, clerk_id: str):
     """Get all synonyms associated with a word for a specific user."""
     try:
@@ -136,21 +153,4 @@ def synonym_exists(db: Session, word_id: int, synonym: str):
         return exists is not None
     except Exception as e:
         logger.error(f"Error checking if synonym exists for word_id '{word_id}' and synonym '{synonym}': {e}", exc_info=True)
-        raise
-
-def add_synonym(db: Session, word_id: int, synonym: str):
-    """Add a synonym for a given word."""
-    try:
-        if synonym_exists(db, word_id, synonym):
-            logger.info(f"Synonym '{synonym}' already exists for word_id '{word_id}'.")
-            return None
-        db_synonym = models.Synonym(word_id=word_id, synonym=synonym)
-        db.add(db_synonym)
-        db.commit()
-        db.refresh(db_synonym)
-        logger.info(f"Synonym '{synonym}' added successfully for word_id '{word_id}'.")
-        return db_synonym
-    except Exception as e:
-        logger.error(f"Error adding synonym '{synonym}' for word_id '{word_id}': {e}", exc_info=True)
-        db.rollback()
         raise

@@ -13,8 +13,6 @@ import datetime
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-class SetNextReviewDateRequest(BaseModel):
-    new_date: str
 
 @router.post("/user/words")
 async def add_new_word(request: Request, word_request: AddWordRequest, db: Session = Depends(get_database)):
@@ -90,35 +88,7 @@ async def get_all_words(request: Request, db: Session = Depends(get_database)):
         logger.error(f"Failed to retrieve words: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to retrieve words: " + str(e))
 
-@router.put("/quiz/word/{word_id}/set_next_review_date")
-async def set_next_review_date(request: Request, word_id: int, body: SetNextReviewDateRequest, db: Session = Depends(get_database)):
-    try:
-        user_details = authenticate_and_get_user_details(request=request)
-        clerk_id = user_details["user_id"]
 
-        # Parse the ISO 8601 date string into a Python datetime object
-        try:
-            new_date = datetime.datetime.fromisoformat(body.new_date)
-        except ValueError:
-            raise HTTPException(status_code=400, detail="Invalid date format. Use ISO format.")
-
-        word = db.query(Words).filter(Words.id == word_id, Words.added_by_user_id == clerk_id).first()
-
-        if not word:
-            raise HTTPException(status_code=404, detail="Word not found")
-
-        # Update the database with the parsed datetime object
-        word.time_to_reapet = new_date
-        db.commit()
-        logger.info(f"Next review date for word with ID '{word_id}' set to '{new_date}' by user '{clerk_id}'.")
-        return {"success": True, "message": f"Next review date set to {new_date}"}
-    except HTTPException as http_exc:
-        db.rollback()
-        raise http_exc
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Failed to set next review date for word with ID '{word_id}': {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to set next review date: " + str(e))
     
 @router.put("/words/{word_id}/wrong-answers")
 async def change_wrong_answers_count(request: Request, word_id: int, db: Session = Depends(get_database)):
