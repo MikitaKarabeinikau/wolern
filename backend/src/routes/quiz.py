@@ -111,19 +111,15 @@ async def get_word_synonyms(request: Request, db: Session = Depends(get_database
     return {"synonyms": synonyms}   
 
 @router.get("/quiz/data")
-async def get_quiz_data(request: Request, db: Session = Depends(get_database)):
+async def get_quiz_data(request: Request,db: Session = Depends(get_database)):
     user_details = authenticate_and_get_user_details(request=request)
     clerk_id = user_details["user_id"]
 
-    if not clerk_id:
-        raise HTTPException(status_code=401, detail="Unauthorized: Missing clerk_id")
-
-    data = get_quiz_progress(db, clerk_id)
-
-    if not data:
-        raise HTTPException(status_code=404, detail="No quiz progress found for the user")
-
-    return {"progress": data}
+    progress = get_quiz_progress(db, clerk_id)
+    if not progress:
+        logger.info(f"No quiz progress found for user '{clerk_id}'")
+        return {"progress": []}  # Return an empty list instead of raising 404
+    return {"progress": progress}
 
 @router.put("/quiz/words/{word_id}/correct-answers")
 async def update_correct_answers(word_id: int, request: Request, db: Session = Depends(get_database)):
