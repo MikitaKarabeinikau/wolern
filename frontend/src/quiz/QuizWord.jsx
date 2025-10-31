@@ -57,6 +57,14 @@ function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynon
     return acc;
   }, {});
 
+  const filteredSynonyms = (wordSynonym || []).reduce((acc, syn) => {
+    if (word.word.toLowerCase() !== syn.synonym.toLowerCase()) {
+      const modifiedSyn = changeSeparatePartInText([syn], word.word, 'synonym')[0];
+      acc.push(modifiedSyn);
+    }
+    return acc;
+  }, []);
+
   const examplesByPartOfLanguage = (wordExample || []).reduce((acc, ex) => {
     const pos = ex.part_of_speech || 'Unknown';
     if (!acc[pos]) {
@@ -119,9 +127,9 @@ function QuizWord({word, wordTranslation, wordDefinition, wordExample, wordSynon
         <p>No examples available.</p>
       )}  />
       <QuizAnswerUnit hintType={'Synonyms'} hintInfo=
-      {wordSynonym && wordSynonym.length > 0 ? (
+      {filteredSynonyms && filteredSynonyms.length > 0 ? (
         <ul>
-          {wordSynonym.map((synonym, index) => (
+          {filteredSynonyms.map((synonym, index) => (
             <Row key={index} data={synonym.synonym} />
           ))}
         </ul>
