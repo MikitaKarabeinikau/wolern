@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, Column, DateTime, create_engine,text,ForeignKey,Float
+from sqlalchemy import JSON, Integer, String, Column, DateTime, create_engine,text,ForeignKey,Float
 from sqlalchemy.orm import relationship
 # Importing declarative_base to define the base class for our models
 from sqlalchemy.ext.declarative import declarative_base
@@ -8,11 +8,10 @@ from .database import engine
 
 Base = declarative_base()
 
+Base.metadata.create_all(bind=engine)
 
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-#TODO: Add more fields as necessary
-#Create schema for words table
-# Define the Words model
 class Words(Base):
     __tablename__ = "words"
 
@@ -179,6 +178,103 @@ class Users(Base):
         return f"<User(id={self.id}, clerk_id={self.clerk_id}, username={self.username}, email={self.email})>"
 
 
-Base.metadata.create_all(bind=engine)
+class Exercise(Base):
+    """
+    The core exercise model, used for both 'Fill Word' and 'Multiple Answer' types.
+    This model holds all shared information.
+    """
+    __tablename__ = 'exercises'
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    id = Column(Integer, primary_key=True, index=True)
+    word_id = Column(Integer, nullable=False, comment="ID of the target word being tested.")
+    difficulty = Column(String, nullable=False) # e.g., 'A1', 'B2', 'Advanced'
+    part_of_speech = Column(String, nullable=False) # e.g., 'Noun', 'Verb', 'Adverb'
+    question = Column(String, nullable=False, comment="The sentence with the missing word/phrase (the prompt).")
+    explanation = Column(String, nullable=False, comment="Explanation shown after the user answers.")
+    
+    # User and Timestamp details
+    created_by = Column(String, ForeignKey("users.clerk_id"), nullable=False, comment="Foreign key to the user who created this exercise.")
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Store hints as a JSON array of 3 sentences (list of strings)
+    hints = Column(JSON, nullable=False) 
+
+    # Relationship to MultipleAnswer: one-to-one (uselist=False)
+    multiple_answer = relationship(
+        "MultipleAnswer", 
+        back_populates="exercise", 
+        uselist=False, 
+        cascade="all, delete"
+    )
+
+    def __repr__(self):
+        return f"<Exercise(id={self.id}, word_id={self.word_id}, difficulty='{self.difficulty}')>"
+
+class MultipleChoiceExercise(Base):
+    """
+    Details specific to a multiple-choice exercise type.
+    This model has a one-to-one relationship with Exercise.
+    """
+    __tablename__ = 'multiple_choice_exercises'
+
+
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Store options as a JSON array of 4 strings
+    options = Column(JSON, nullable=False, comment="List of 4 answer options (strings).")
+    
+    # Stores the correct answer string value.
+    correct_answer = Column(String, nullable=False, comment="The value of the correct answer.") 
+
+    # Foreign key link back to the Exercise
+    exercise_id = Column(Integer, ForeignKey('exercises.id'), unique=True, nullable=False)
+
+    # Relationship back to Exercise
+    exercise = relationship("Exercise", back_populates="multiple_answer")
+    
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    def __repr__(self):
+        return f"<MultipleChoiceExercise(id={self.id}, exercise_id={self.exercise_id})>"
+
+class ExerciseBase(Base):
+    __tablename__ = "exercise_base"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    base_id = Column(Integer, ForeignKey("word_base.id"), nullable=False)
+    difficulty = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    hints = Column(String, nullable=True)  # Optional hints
+    question = Column(String, nullable=False)
+    options = Column(String, nullable=True)  # For multiple choice options
+    explanation = Column(String, nullable=False)
+    part_of_speech = Column(String, nullable=False)
+    added_at = Column(DateTime, default=datetime.utcnow)
+    
+    word_base = relationship("Word_Base")
+    
+class MultipleChoiceExerciseBase(Base):
+    __tablename__ = "multiple_choice_exercise_base"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    exercise_id = Column(Integer, ForeignKey("exercise_base.id"), unique=True, nullable=False)
+    options = Column(String, nullable=False, comment="JSON string representing a list of 4 answer options (strings).")
+    correct_answer = Column(String, nullable=False, comment="The value of the correct answer.")
+
+    exercise = relationship("ExerciseBase", back_populates="multiple_choice_exercise")
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+# How many exercises a user can generate per day
+class ExerciseQuota(Base):
+    __tablename__ = "exercise_quotas"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(String, ForeignKey("users.clerk_id", ondelete="CASCADE"), nullable=False, unique=True)
+    last_reset_date = Column(DateTime, default=datetime.utcnow)
+    exercises_remaining = Column(Integer, default=10)
+
+    user = relationship("Users")
