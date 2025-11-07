@@ -19,3 +19,4 @@ data/vocabularies/scoobykot
 
 .env
 alembic.ini
+wolern.egg-info/
