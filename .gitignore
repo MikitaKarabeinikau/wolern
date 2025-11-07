@@ -16,6 +16,12 @@ doc/
 tests/data
 logs/
 data/vocabularies/scoobykot
+.pytest_cache/
+.idea/
+build/
+dist/
+*.egg-info/
+node_modules/
 
 .env
 alembic.ini

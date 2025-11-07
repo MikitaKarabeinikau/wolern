@@ -1,0 +1,15 @@
+[flake8]
+exclude = 
+    .git,
+    __pycache__,
+    .pytest_cache,
+    wolern.egg-info,
+    alembic,
+    venv,
+    env,
+    .venv,
+    build,
+    dist,
+    .idea
+max-line-length = 127
+max-complexity = 10
