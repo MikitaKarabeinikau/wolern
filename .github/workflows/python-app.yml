@@ -15,40 +15,74 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
       with:
-          # submodules: true
-          # fetch-depth: 0 
           token: ${{ secrets.DEPLOYMENT_TOKEN }}
     - name: Set up Python 3.12
       uses: actions/setup-python@v3
       with:
         python-version: '3.12'
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
-        pip install -e .
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install flake8
     - name: Lint with flake8
       run: |
-        # stop the build if there are Python syntax errors or undefined names
+        # Report syntax errors and undefined names (will not fail the build)
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
-        # exit-zero treats all errors as warnings
+        # Report all errors as warnings
         flake8 . --count --exit-zero --statistics
+        
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+          token: ${{ secrets.DEPLOYMENT_TOKEN }}
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-cov
+        pip install -e .
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       run: |
-        pytest -v || echo "No tests found or tests failed"
+        pytest -v --cov=backend --cov=tests --cov-report=term-missing
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      continue-on-error: true
+      
+  stale:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
     - uses: actions/stale@v5
       with:
         repo-token: ${{ secrets.DEPLOYMENT_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
+        stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs.'
+        stale-pr-message: 'This pull request has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs.'
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
-        
-        
-      
+        days-before-stale: 60
+        days-before-close: 7
