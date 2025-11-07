@@ -9,6 +9,13 @@ text_for_scanner_test
 *.mp3
 *.json
 
+# Coverage reports
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+
 #dirs
 venv
 __pycache__/
