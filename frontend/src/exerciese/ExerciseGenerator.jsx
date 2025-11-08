@@ -66,7 +66,7 @@ function ExerciseGenerator() {
     }
   };
 
-  const generateExercise = async () => {
+  const handleGenerate = async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -100,6 +100,12 @@ function ExerciseGenerator() {
     }
   };
 
+  const handleGenerateAnother = () => {
+    setIsGenerated(false);
+    setExercises("");
+    getWordForExercise();
+  };
+
   const getNextResetTime = () => {
     if (!quota?.reset_time) return null;
     const resetDate = new Date(quota.reset_time);
@@ -108,41 +114,58 @@ function ExerciseGenerator() {
   };
 
   return (
-    <>
-      <div>
-        <h1>Exercise Generator</h1>
-        <div>
-          <h2>Quota number: {quota?.exercises_remaining || 0}</h2>
-          {quota?.quota_remaining === 0 && (
-            <p>Quota exhausted. Next reset at: {getNextResetTime()}</p>
-          )}
-        </div>
-        <div>
-          <h1>Word for Exercise: {word}</h1>
-        </div>
-        <div>
-          <label htmlFor="difficulty-select">Select Difficulty:</label>
-          <select
-            id="difficulty-select"
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
-        </div>
-
-        <button onClick={generateExercise} disabled={false}>
-          {isLoading ? "Loading..." : "Generate Exercise"}
-        </button>
-        {error && (
-          <div className="error-message">
-            <p>Error: {error}</p>
-          </div>
+    <div className="generator-card">
+      <div className="quota-display">
+        <p>Quota: {quota?.exercises_remaining ?? "..."}</p>
+        {quota?.exercises_remaining === 0 && (
+          <span>Next reset: {getNextResetTime()}</span>
         )}
-        {exercises && <Exercise data={exercises["exercise"]} />}
       </div>
-    </>
+
+      {isGenerated && exercises ? (
+        // --- DISPLAY VIEW ---
+        <div>
+          <h2>Current Generated Exercise</h2>
+          <Exercise exercise={exercises.exercise} />
+          <button className="generate-button" onClick={handleGenerateAnother}>
+            {isLoading ? "Loading..." : "Generate Another Exercise"}
+          </button>
+        </div>
+      ) : (
+        // --- GENERATE VIEW ---
+        <div>
+          <h2>Create a New Exercise</h2>
+          <p>
+            Generate a new vocabulary exercise for the word:{" "}
+            <strong>{word || "..."}</strong>
+          </p>
+
+          <div className="form-group">
+            <label htmlFor="difficulty-select">Difficulty</label>
+            <select
+              id="difficulty-select"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+              disabled={isLoading}
+            >
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <button
+            className="generate-button"
+            onClick={handleGenerate}
+            disabled={isLoading || quota?.exercises_remaining === 0}
+          >
+            {isLoading ? "Generating..." : "Generate Exercise"}
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 

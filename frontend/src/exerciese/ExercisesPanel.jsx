@@ -27,4 +27,4 @@ export function ExercisesPanel() {
     </>
   );
 }
-s;
+export default ExercisesPanel;

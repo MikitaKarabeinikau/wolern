@@ -1,3 +1,104 @@
+.exercise-container {
+  display: flex;
+  gap: 2rem; /* Space between content and hints */
+  padding: 1rem 0;
+}
+
+.exercise-content {
+  flex: 3; /* Takes up 3/4 of the space */
+}
+.exercise-hints {
+  flex: 1;
+  
+}
+
+
+.exercise-header .part-of-speech {
+  display: inline-block;
+  background-color: #e7f5ff;
+  color: #1c7ed6;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.exercise-header .question {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.mc-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.option-button {
+  width: 100%;
+  padding: 0.8rem;
+  text-align: left;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-button:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.option-button.correct {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #075b1b;
+  font-weight: 600;
+}
+
+.option-button.incorrect {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #bb1122;
+  font-weight: 600;
+}
+
+.explanation-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.explanation-section h4 {
+  margin-top: 0;
+}
+
+.toggle-hints-button {
+  width: 100%;
+  padding: 0.6rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.toggle-hints-button:hover {
+  background-color: #5a6268;
+}
+
+.hints-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .exercise-panel-container {
 display: flex;
   padding: 20px;
@@ -31,4 +132,112 @@ display: flex;
     padding: 1rem;
     width: 80%
 
+}
+
+.generator-card {
+  position: relative; /* This is crucial */
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.quota-display {
+  position: flex;
+  text-align: right;
+  color: #6c757d; /* A muted grey color */
+}
+
+.quota-display p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.quota-display span {
+  font-size: 0.8rem;
+}
+
+
+.generator-card h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: #343a40;
+}
+
+.generator-card p {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #fff;
+}
+
+.generate-button {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.generate-button:hover {
+  background-color: #0056b3;
+}
+
+
+.hints-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #343a40;
+}
+
+.hints-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Increased gap for better separation */
+}
+
+.hints-list-header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background-color: #f1f3f5;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+.hint-content {
+  padding: 1rem 1.2rem; /* Added slightly more horizontal padding */
+  font-size: 1rem; /* Increased font size for better readability */
+  line-height: 1; /* Added line spacing, crucial for readability */
+  color: #495057; /* A slightly softer, highly readable dark grey */
+  border-top: 1px solid #e9ecef;
 }

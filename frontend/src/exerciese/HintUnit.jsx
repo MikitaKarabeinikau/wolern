@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 
-const HintUnit = ({ hint }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+const HintUnit = ({ index, hint }) => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
   return (
-    <div className={`hint-unit ${isCollapsed ? "collapsed" : ""}`}>
-      <h4 onClick={toggleCollapse}>{hint}</h4>
-      <p>{isCollapsed ? null : hint}</p>
+    <div className="hint-unit">
+      <div className="hints-list-header" onClick={toggleCollapse}>
+        <span>Hint {index + 1}</span>
+        <span className="collapse-icon">{isCollapsed}</span>
+      </div>
+      {!isCollapsed && <div className="hint-content">{hint}</div>}
     </div>
   );
 };

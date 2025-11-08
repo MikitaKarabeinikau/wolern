@@ -194,6 +194,19 @@ class Exercise(Base):
         return f"<Exercise(id={self.id}, word_id={self.word_id}, difficulty='{self.difficulty}')>"
 
 
+# class User_Exercise_Progress(Base):
+#     __tablename__ = "user_exercise_progress"
+
+#     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+#     user_id = Column(String, ForeignKey("users.clerk_id", ondelete="CASCADE"), nullable=False)
+#     exercise_id = Column(Integer, ForeignKey("exercises.id", ondelete="CASCADE"), nullable=False)
+#     attempts = Column(Integer, nullable=False, default=0)
+#     correct_attempts = Column(Integer, nullable=False, default=0)
+#     last_attempt_date = Column(DateTime, default=datetime.utcnow)
+
+#     user = relationship("Users")
+#     exercise = relationship("Exercise")
+
 class Word_Base(Base):
     __tablename__ = "word_base"
 
