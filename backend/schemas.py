@@ -104,6 +104,7 @@ class Exercise(BaseModel):
     question: str = Field(description="The sentence with a blank where the target word should go.")
     explanation: str = Field(description="A brief explanation of the correct answer.")
     hints: Optional[List[str]] = Field(default=None, description="Optional hints to help the user answer the question.")
+    created_by: str = Field(description="The clerk user ID of the user who created the exercise.")
     
 class MultipleChoiceExercise(BaseModel):
     """A data model for a multiple-choice vocabulary exercise."""

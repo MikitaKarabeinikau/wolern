@@ -1,14 +1,17 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from backend.src.routes import exercise
 from backend.src.routes.app_routes import router as clerk_webhook_router
 from backend.src.routes.app_routes import router as api_router
+from backend.src.routes import exercise
 
 app = FastAPI()
 
 app.include_router(api_router)
 
 app.include_router(clerk_webhook_router , prefix="/webhooks")
+
 
 
 origins = [
@@ -24,7 +27,12 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins = origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
+app.include_router(exercise.router, prefix="/exercise", tags=["exercise"])
+
+@app.get("/")
+async def root():
+    return {"message": "Wolern API is running"}

@@ -1,26 +1,26 @@
-from sqlalchemy import Session
+from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from . import models
 import logging
-
+from backend.src.database.words import get_word_by_id
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def get_exercise_quota(db: Session, user_clerk_id: str) -> int:
+def get_exercise_quota(db: Session, clerk_id: str) -> int:
     """
     Returns the number of exercises a user can generate per day.
     This is a placeholder function and should be replaced with actual logic.
     """
     return (db.query(models.ExerciseQuota)
-            .filter(models.ExerciseQuota.clerk_id == user_clerk_id)
+            .filter(models.ExerciseQuota.user_id == clerk_id)
             .first())
 
-def create_exercise_quota(db: Session, user_clerk_id: str):
+def create_exercise_quota(db: Session, clerk_id: str):
     """
     Creates a new exercise quota for a user.
     """
     quota = models.ExerciseQuota(
-        clerk_id=user_clerk_id
+        user_id=clerk_id
     )
     db.add(quota)
     db.commit()
@@ -42,7 +42,7 @@ def reset_quota_if_needed(db: Session, quota: models.ExerciseQuota):
 
 def create_exercise(
     db: Session,
-    user_clerk_id: str,
+    created_by: str,
     word_id: int,
     difficulty: str,
     question: str,
@@ -60,31 +60,17 @@ def create_exercise(
         hints=hints,
         explanation=explanation,
         part_of_speech=part_of_speech,
-        created_by=user_clerk_id
+        created_by=created_by
     )
     db.add(exercise)
     db.commit()
     db.refresh(exercise)
-    logger.info(f"Created new exercise with ID {exercise.exercise_id} for user {user_clerk_id}")
-    
-    # Also create an entry in ExerciseBase 
-    create_exercise_base(
-        db,
-        base_id=word_id,
-        difficulty=difficulty,
-        exercise_type=exercise_type,
-        question=question,
-        options=options,
-        hints=hints,
-        correct_answer=correct_answer,
-        explanation=explanation,
-        part_of_speech=part_of_speech,
-    )
+    logger.info(f"Created new exercise with ID {exercise.id} for user {created_by}")
     return exercise
 
 def create_exercise_base(
     db: Session,
-    base_id: int,
+    word: str,
     difficulty: str,
     question: str,
     hints: str,
@@ -95,7 +81,7 @@ def create_exercise_base(
     Creates a new exercise base in the database.
     """
     exercise_base = models.ExerciseBase(
-        base_id=base_id,
+        word=word,
         difficulty=difficulty,       
         question=question,
         hints=hints,
@@ -108,8 +94,18 @@ def create_exercise_base(
     logger.info(f"Created new exercise base with ID {exercise_base.id}")
     return exercise_base
 
+
+def get_exercise_by_id(db: Session, exercise_id: int):
+    """
+    Retrieves an exercise by its ID.
+    """
+    exercise = db.query(models.Exercise).filter(models.Exercise.exercise_id == exercise_id).first()
+    logger.info(f"Retrieved exercise with ID {exercise_id}")
+    return exercise
+
 def create_multiple_choice_exercise(
     db: Session,
+    word_id: int,
     exercise_id: int,
     options: str,
     correct_answer: str,
@@ -125,34 +121,30 @@ def create_multiple_choice_exercise(
     db.add(mc_exercise)
     db.commit()
     db.refresh(mc_exercise)
-    create_multiple_choice_exercise_base(
-        db,
-        exercise_id=exercise_id,
-        options=options,
-        correct_answer=correct_answer
-    )
+    
     logger.info(f"Created new multiple-choice exercise with ID {mc_exercise.id}")
     return mc_exercise
 
-def create_multiple_choice_exercise_base(
+def create_multiple_choice_exercise(
     db: Session,
     exercise_id: int,
     options: str,
     correct_answer: str,
 ):
     """
-    Creates a new multiple-choice exercise base in the database.
+    Creates a new multiple-choice exercise in the database.
     """
-    mc_exercise_base = models.MultipleChoiceExerciseBase(
+    mc_exercise = models.MultipleChoiceExercise(
         exercise_id=exercise_id,
         options=options,
         correct_answer=correct_answer
     )
-    db.add(mc_exercise_base)
+    db.add(mc_exercise)
     db.commit()
-    db.refresh(mc_exercise_base)
-    logger.info(f"Created new multiple-choice exercise base with ID {mc_exercise_base.id}")
-    return mc_exercise_base
+    db.refresh(mc_exercise)
+    
+    logger.info(f"Created new multiple-choice exercise with ID {mc_exercise.id}")
+    return mc_exercise
 
 def get_user_exercises(db: Session, user_clerk_id: str):
     """
@@ -175,3 +167,20 @@ def get_user_exercise_from_base(db: Session, user_clerk_id: str, base_id: int):
                  .all())
     logger.info(f"Retrieved {len(exercises)} exercises from base ID {base_id} for user {user_clerk_id}")
     return exercises
+
+def get_random_word_for_exercise(db: Session, clerk_id: str):
+    """
+    Get a word for exercise with the following priority:
+    1. Learning stage (lowest first, starting from 1)
+    2. Number of existing exercises for that word (lowest first)
+    3. Wrong answers in a row (highest first)
+    4. Total wrong answers (highest first)
+    """
+    result = (db.query(models.Words).join(models.User_Quiz_Progress, models.Words.id == models.User_Quiz_Progress.word_id).filter(
+        models.Words.added_by_user_id == clerk_id
+    ).order_by(
+        models.User_Quiz_Progress.learning_stage.desc(),
+        models.User_Quiz_Progress.wrong_answers_in_a_row.desc(),
+        models.User_Quiz_Progress.wrong_answers.desc()
+    ).first())
+    return result

@@ -12,7 +12,7 @@ export const useApi = () => {
             }
         }
 
-        const response = await fetch(`https://localhost:8000/api/${endpoint}`,
+        const response = await fetch(`https://localhost:8000/${endpoint}`,
             {
                 ...defaultOptions,
                 ...options,

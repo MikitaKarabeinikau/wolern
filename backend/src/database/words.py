@@ -159,6 +159,8 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
             word_id=db_word.id
         )
         db.add(db_user_progress)
+        
+        
 
         db.commit()
         logger.info(f"Word '{word.word}' added successfully for user '{clerk_id}'.")
