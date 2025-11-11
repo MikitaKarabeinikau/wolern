@@ -263,7 +263,7 @@ def delete_word_by_id_from_db(db: Session, word_id: int, clerk_id: str):
             db.query(models.Tag).filter(models.Tag.word_id == word_id).delete(synchronize_session=False)
             db.query(models.Warning).filter(models.Warning.word_id == word_id).delete(synchronize_session=False)
             db.query(models.User_Quiz_Progress).filter(models.User_Quiz_Progress.word_id == word_id, models.User_Quiz_Progress.user_id == clerk_id).delete(synchronize_session=False)
-
+            db.query(models.Exercise).filter(models.Exercise.word_id == word_id, models.Exercise.created_by == clerk_id).delete(synchronize_session=False)
             db.delete(word_to_delete)
             db.commit()
             logger.info(f"Word with ID {word_id} deleted successfully for user {clerk_id}.")

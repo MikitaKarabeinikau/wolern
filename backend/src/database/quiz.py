@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def get_quiz_words(db: Session, clerk_id: str):
     """Get quiz words for a specific user."""
     try:
-        words = db.query(models.Words).join(models.User_Quiz_Progress).filter(models.Words.added_by_user_id == clerk_id, (models.Words.vocabulary == "learning") | (models.Words.vocabulary == "unknown")).order_by(models.User_Quiz_Progress.time_to_repeat).limit(10).all()
+        words = db.query(models.Words).join(models.User_Quiz_Progress).filter(models.Words.added_by_user_id == clerk_id, (models.Words.vocabulary == "learning") | (models.Words.vocabulary == "new")).order_by(models.User_Quiz_Progress.time_to_repeat).limit(10).all()
         logger.info(f"Fetched {len(words)} quiz words for user with clerk_id '{clerk_id}'.")
         return words
     except Exception as e:

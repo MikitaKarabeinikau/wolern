@@ -287,7 +287,7 @@ def get_cefr_level(word):
 
     
     if not level:
-        return "UNKNOWN"
+        return "NEW"
 
 def get_definitions_by_pos(word):
 

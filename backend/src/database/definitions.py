@@ -74,7 +74,7 @@ def get_definitions_for_quiz(db: Session, clerk_id: str):
             .join(models.Words)
             .filter(
                 models.Words.added_by_user_id == clerk_id,
-                (models.Words.vocabulary == "learning") | (models.Words.vocabulary == "unknown")
+                (models.Words.vocabulary == "learning") | (models.Words.vocabulary == "new")
             )
             .all()
         )

@@ -69,10 +69,10 @@ async def update_synonym(
         if not word or word.added_by_user_id != clerk_id:
             raise HTTPException(status_code=403, detail="User does not have permission.")
 
-        update_synonym_by_id(db, id, synonym, word.id)
+        updated_synonym = update_synonym_by_id(db, id, synonym, word.id)
         db.commit()
         logger.info(f"Synonym with ID '{id}' updated by user '{clerk_id}'.")
-        return None  
+        return updated_synonym
 
     except HTTPException as http_exc:
         db.rollback()
@@ -102,7 +102,7 @@ async def delete_synonym(request: Request, id: int, db: Session = Depends(get_da
         if not was_deleted:
             raise HTTPException(status_code=404, detail="Synonym not found or user does not have permission.")
         logger.info(f"Synonym with ID '{id}' deleted by user '{clerk_id}'.")
-        return None
+        return was_deleted
 
     except HTTPException as http_exc:
         raise http_exc

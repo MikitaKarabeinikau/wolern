@@ -89,10 +89,10 @@ async def update_translation(
         if not word or word.added_by_user_id != clerk_id:
             raise HTTPException(status_code=403, detail="User does not have permission.")
 
-        update_translation_by_id(db, id, translation, word.id)
+        updated_translation = update_translation_by_id(db, id, translation, word.id)
         db.commit()
         logger.info(f"Translation with ID '{id}' updated by user '{clerk_id}'.")
-        return None
+        return updated_translation
 
     except HTTPException as http_exc:
         db.rollback()
@@ -122,7 +122,7 @@ async def delete_translation(request: Request, id: int, db: Session = Depends(ge
         if not was_deleted:
             raise HTTPException(status_code=404, detail="Translation not found or user does not have permission.")
         logger.info(f"Translation with ID '{id}' deleted by user '{clerk_id}'.")
-        return None
+        return was_deleted
 
     except HTTPException as http_exc:
         raise http_exc

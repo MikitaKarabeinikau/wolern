@@ -67,9 +67,9 @@ async def update_tag(
         if not word or word.added_by_user_id != clerk_id:
             raise HTTPException(status_code=403, detail="User does not have permission.")
 
-        update_tag_by_id(db, id, tag, word.id)
+        updated_tag = update_tag_by_id(db, id, tag, word.id)
         db.commit()
-        return None  
+        return updated_tag
 
     except HTTPException as http_exc:
         db.rollback()
@@ -97,7 +97,7 @@ async def delete_tag(request: Request, id: int, db: Session = Depends(get_databa
 
         if not was_deleted:
             raise HTTPException(status_code=404, detail="Tag not found or user does not have permission.")
-        return None
+        return was_deleted
 
     except HTTPException as http_exc:
         raise http_exc

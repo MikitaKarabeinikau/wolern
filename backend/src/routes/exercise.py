@@ -2,7 +2,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Depends, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from backend.ai_generator import generate_vocabulary_exercise
+from backend.prompts.exercise_prompt import generate_vocabulary_exercise
 from backend.src.database.exercise import (
     get_exercise_quota,
     create_exercise_quota,

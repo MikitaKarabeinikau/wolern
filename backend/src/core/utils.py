@@ -51,7 +51,7 @@ VOCABULARY_DIR_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / '
 from datetime import datetime, timedelta
 
 DEFUALT_USER = 'scoobykot'
-STANDART_VOCABULARIES_SET = ['known', 'unknown', 'weird','learning']
+STANDART_VOCABULARIES_SET = ['known', 'new', 'weird','learning']
 
 if not PATH_TO_LOG_FILE.parent.exists():
     PATH_TO_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -135,4 +135,4 @@ def parse_str_to_time(time_str: str) -> datetime:
 
 
 def convert_pos(tag):
-    return POS_TAG_MAP.get(tag, "unknown")
+    return POS_TAG_MAP.get(tag, "new")

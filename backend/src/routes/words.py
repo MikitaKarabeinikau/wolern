@@ -88,42 +88,6 @@ async def get_all_words(request: Request, db: Session = Depends(get_database)):
         logger.error(f"Failed to retrieve words: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to retrieve words: " + str(e))
 
-
-    
-@router.put("/words/{word_id}/wrong-answers")
-async def change_wrong_answers_count(request: Request, word_id: int, db: Session = Depends(get_database)):
-    try:
-        user_details = authenticate_and_get_user_details(request=request)
-        clerk_id = user_details["user_id"]
-        increase_wrong_count(db, word_id, clerk_id)
-        logger.info(f"Wrong answers count for word with ID '{word_id}' incremented by user '{clerk_id}'.")
-        
-        return True
-    except HTTPException as http_exc:
-        db.rollback()
-        raise http_exc
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Failed to increment wrong answers count for word with ID '{word_id}': {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to increment wrong answers count: " + str(e))
-
-@router.put("/words/{word_id}/correct-answers")
-async def change_correct_answers_count(request: Request, word_id: int, db: Session = Depends(get_database)):
-    try:
-        user_details = authenticate_and_get_user_details(request=request)
-        clerk_id = user_details["user_id"]
-        increase_correct_count(db, word_id, clerk_id)
-        logger.info(f"Correct answers count for word with ID '{word_id}' incremented by user '{clerk_id}'.")
-        
-        return True
-    except HTTPException as http_exc:
-        db.rollback()
-        raise http_exc
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Failed to increment correct answers count for word with ID '{word_id}': {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to increment correct answers count: " + str(e))
-
 @router.put("/words/{word_id}/vocabulary/to_learn")
 async def change_word_vocabulary(request: Request, word_id: int, db: Session = Depends(get_database)):
     try:

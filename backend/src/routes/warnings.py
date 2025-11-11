@@ -10,7 +10,7 @@ import logging
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-@router.post("/user/words/warnings", status_code=201)
+@router.post("/user/words/warnings/", status_code=201)
 async def create_word_warning(
     request: Request,
     word_id: int = Body(..., embed=True),
@@ -73,9 +73,9 @@ async def update_warning(
         if not word or word.added_by_user_id != clerk_id:
             raise HTTPException(status_code=403, detail="User does not have permission.")
 
-        update_warning_by_id(db, id, warning, word.id)
+        updated_warning = update_warning_by_id(db, id, warning, word.id)
         logger.info(f"Warning with ID '{id}' updated by user '{clerk_id}'.")
-        return None  
+        return updated_warning
 
     except HTTPException as http_exc:
         db.rollback()
@@ -106,7 +106,7 @@ async def delete_warning(request: Request, id: int, db: Session = Depends(get_da
         if not was_deleted:
             raise HTTPException(status_code=404, detail="Warning not found or user does not have permission.")
         logger.info(f"Warning with ID '{id}' deleted by user '{clerk_id}'.")
-        return None
+        return was_deleted
 
     except HTTPException as http_exc:
         raise http_exc

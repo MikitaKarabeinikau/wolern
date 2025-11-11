@@ -184,3 +184,4 @@ def get_random_word_for_exercise(db: Session, clerk_id: str):
         models.User_Quiz_Progress.wrong_answers.desc()
     ).first())
     return result
+

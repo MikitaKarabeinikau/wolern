@@ -10,12 +10,12 @@ import logging
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-@router.post("/user/words/{word_id}/{part_of_speech}/definitions/", status_code=201)
+@router.post("/user/words/definitions/{word_id}", status_code=201)
 async def create_definitions(
     request: Request,
     word_id: int,
-    part_of_speech: str,
     definition: str = Body(..., embed=True),
+    part_of_speech: str = Body(..., embed=True),
     db: Session = Depends(get_database),
 ):
     try:
@@ -74,9 +74,9 @@ async def update_definition(
         if not word or word.added_by_user_id != clerk_id:
             raise HTTPException(status_code=403, detail="User does not have permission.")
 
-        update_definition_by_id(db, id, definition)
+        updated_definition = update_definition_by_id(db, id, definition)
         logger.info(f"Definition with ID '{id}' updated by user '{clerk_id}'.")
-        return None  
+        return  updated_definition
 
     except HTTPException as http_exc:
         db.rollback()
@@ -107,7 +107,7 @@ async def delete_definition(request: Request, id: int, db: Session = Depends(get
         if not was_deleted:
             raise HTTPException(status_code=404, detail="Definition not found or user does not have permission.")
         logger.info(f"Definition with ID '{id}' deleted by user '{clerk_id}'.")
-        return None
+        return was_deleted
 
     except HTTPException as http_exc:
         raise http_exc

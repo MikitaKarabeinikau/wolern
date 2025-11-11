@@ -13,6 +13,9 @@ def create_user(db: Session, clerk_id: str, username: str = None, email: str = N
         db.commit()
         db.refresh(db_user)
         logger.info(f"User created with clerk_id '{clerk_id}'.")
+        
+        # TODO: Create quota entry for the new user
+        
         return db_user
     except Exception as e:
         logger.error(f"Error creating user with clerk_id '{clerk_id}': {e}", exc_info=True)

@@ -1,0 +1,51 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: sans-serif;
+  background-color: #f9fafb;
+}
+
+.app-header {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; 
+}
+
+.header-content h1 {
+  color: #4f46e5; /* indigo-600 */
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex; 
+  align-items: center;
+}
+
+
+.app-main {
+  flex: 1;
+  padding: 1rem 2rem;
+  background-color: #f3f4f6; /* gray-50 */
+}
+
+.nav-links a {
+  
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #1f2937; /* gray-800 */
+}
+
+.nav-links a:hover {
+  color: #4f46e5; /* indigo-600 */
+}

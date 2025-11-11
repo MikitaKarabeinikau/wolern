@@ -20,7 +20,7 @@ class Words(Base):
     difficulty = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    vocabulary = Column(String, nullable=False, default="unknown")
+    vocabulary = Column(String, nullable=False, default="new")
     
     user = relationship("Users", back_populates="vocabulary")
     translations = relationship("Translation", back_populates="word")
@@ -175,7 +175,7 @@ class Exercise(Base):
     __tablename__ = 'exercises'
 
     id = Column(Integer, primary_key=True, index=True)
-    word_id = Column(Integer, ForeignKey("words.id"), nullable=False, comment="ID of the target word being tested.")
+    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False, comment="ID of the target word being tested.")
     difficulty = Column(String, nullable=False) 
     part_of_speech = Column(String, nullable=False) # e.g., 'Noun', 'Verb', 'Adverb'
     question = Column(String, nullable=False, comment="The sentence with the missing word/phrase (the prompt).")

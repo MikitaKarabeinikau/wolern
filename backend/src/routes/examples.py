@@ -12,11 +12,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/user/words/{word_id}/{part_of_speech}/examples/", response_model=Example)
+@router.post("/user/words/examples/{id}", response_model=Example)
 async def create_example(
     request: Request,
-    word_id: int,
-    part_of_speech: str,
+    word_id: int = Body(..., embed=True),
+    part_of_speech: str = Body(..., embed=True),
     example_sentence: str = Body(..., embed=True),
     db: Session = Depends(get_database),
 ):
@@ -77,9 +77,9 @@ async def update_example(
         if not word or word.added_by_user_id != clerk_id:
             raise HTTPException(status_code=403, detail="User does not have permission.")
 
-        update_example_by_id(db, example_id=id, new_example=example_sentence, word_id=existing_example.word_id)
+        updated_example = update_example_by_id(db, example_id=id, new_example=example_sentence, word_id=existing_example.word_id)
         logger.info(f"Example with ID '{id}' updated by user '{clerk_id}'.")
-        return None  # 204 No Content should not return a body
+        return updated_example
 
     except HTTPException as http_exc:
         db.rollback()
@@ -109,7 +109,8 @@ async def delete_example(request: Request, id: int, db: Session = Depends(get_da
         if not was_deleted:
             raise HTTPException(status_code=404, detail="Example not found or user does not have permission.")
         logger.info(f"Example with ID '{id}' deleted by user '{clerk_id}'.")
-        return None
+        return was_deleted 
+    
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:
