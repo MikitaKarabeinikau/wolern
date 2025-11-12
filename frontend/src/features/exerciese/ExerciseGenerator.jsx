@@ -10,34 +10,54 @@ function ExerciseGenerator() {
   const [error, setError] = useState(null);
   const [difficulty, setDifficulty] = useState("Beginner"); // 'Beginner', 'Intermediate', 'Advanced'
   const [quota, setQuota] = useState(null); // number of exercises to generate
+  const [wordList, setWordList] = useState([]);
   const [word, setWord] = useState("");
   const { makeRequest } = useApi();
   const [isGenerated, setIsGenerated] = useState(false);
   const [wordId, setWordId] = useState(null);
   const { getToken } = useAuth();
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const getWordForExercise = async () => {
     try {
       const token = await getToken();
-      const response = await fetch(
-        `http://localhost:8000/exercise/word/random`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:8000/exercise/words/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch random word");
       }
       const data = await response.json();
-      setWord(data.word);
-      setWordId(data.id);
+      console.log("Fetched words for exercise:", data);
+      setWordList(data.words);
+      if (data.words.length > 0) {
+        setWord(data.words[0].word);
+        setWordId(data.words[0].id);
+        setCurrentIndex(0);
+      }
     } catch (err) {
       console.log("Error fetching word:", err);
       setError(err.message);
+    }
+  };
+
+  const nextWord = () => {
+    if (wordList.length === 0 || currentIndex >= wordList.length) {
+      getWordForExercise();
+    } else {
+      if (currentIndex + 1 >= wordList.length) {
+        getWordForExercise();
+        return;
+      } else {
+        const newIndex = currentIndex + 1;
+        setCurrentIndex(newIndex);
+        setWord(wordList[newIndex].word);
+        setWordId(wordList[newIndex].id);
+      }
     }
   };
 
@@ -105,7 +125,7 @@ function ExerciseGenerator() {
   const handleGenerateAnother = () => {
     setIsGenerated(false);
     setExercises("");
-    getWordForExercise();
+    nextWord();
   };
 
   const getNextResetTime = () => {

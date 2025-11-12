@@ -9,7 +9,7 @@ from backend.src.database.exercise import (
     get_user_exercises,
     get_user_exercise_from_base,
     create_multiple_choice_exercise,
-    get_random_word_for_exercise
+    get_words_for_exercise,
 )
 from backend.src.database.quota import (
     get_exercise_quota,
@@ -142,8 +142,8 @@ async def get_exercises_history(
 
 
 
-@router.get("/word/random")
-async def get_random_word(
+@router.get("/words/")
+async def get_words(
     request: Request,
     db: Session = Depends(get_database)
 ):
@@ -154,15 +154,14 @@ async def get_random_word(
 
         clerk_id = user_details['user_id']
         
-        # Fetch a random word for the user
-        word = get_random_word_for_exercise(db, clerk_id)
-        
-        if not word:
+        # Fetch a words for exercise
+        words = get_words_for_exercise(db, clerk_id)
+
+        if not words:
             raise HTTPException(status_code=404, detail="No words found for the user")
 
         return {
-            "id": word.id,
-            "word": word.word
+            "words": words
         }
 
     except Exception as e:

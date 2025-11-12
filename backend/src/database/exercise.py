@@ -136,20 +136,14 @@ def get_user_exercise_from_base(db: Session, user_clerk_id: str, base_id: int):
     logger.info(f"Retrieved {len(exercises)} exercises from base ID {base_id} for user {user_clerk_id}")
     return exercises
 
-def get_random_word_for_exercise(db: Session, clerk_id: str):
-    """
-    Get a word for exercise with the following priority:
-    1. Learning stage (lowest first, starting from 1)
-    2. Number of existing exercises for that word (lowest first)
-    3. Wrong answers in a row (highest first)
-    4. Total wrong answers (highest first)
-    """
+def get_words_for_exercise(db: Session, clerk_id: str):
     result = (db.query(models.Words).join(models.User_Quiz_Progress, models.Words.id == models.User_Quiz_Progress.word_id).filter(
         models.Words.added_by_user_id == clerk_id
     ).order_by(
-        models.User_Quiz_Progress.learning_stage.desc(),
+        models.User_Quiz_Progress.learning_stage.asc(),
         models.User_Quiz_Progress.wrong_answers_in_a_row.desc(),
         models.User_Quiz_Progress.wrong_answers.desc()
-    ).first())
+    ).all())
+    logger.info(f"Retrieved {len(result)} words for exercise for user {clerk_id}")  
     return result
 
