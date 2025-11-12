@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Exercise from "./Exercise";
 import "../../../styles/Exercise.css";
 import ExerciseGenerator from "./ExerciseGenerator";
 

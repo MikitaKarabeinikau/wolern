@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Exercise from "./Exercise";
 import { useApi } from "../../utils/utils";
 import { useAuth } from "@clerk/clerk-react";
+import ExerciseField from "./ExerciseField";
 
 function ExerciseGenerator() {
   const [exercises, setExercises] = useState("");
@@ -147,8 +147,7 @@ function ExerciseGenerator() {
       {isGenerated && exercises ? (
         // --- DISPLAY VIEW ---
         <div>
-          <h2>Current Generated Exercise</h2>
-          <Exercise exercise={exercises.exercise} />
+          <ExerciseField exercise={exercises.exercise} />
           <button className="generate-button" onClick={handleGenerateAnother}>
             {isLoading ? "Loading..." : "Generate Another Exercise"}
           </button>
