@@ -15,6 +15,7 @@ function ExerciseGenerator() {
   const [isGenerated, setIsGenerated] = useState(false);
   const [wordId, setWordId] = useState(null);
   const { getToken } = useAuth();
+
   const getWordForExercise = async () => {
     try {
       const token = await getToken();
@@ -48,7 +49,7 @@ function ExerciseGenerator() {
   const fetchQuota = async () => {
     try {
       const token = await getToken();
-      const response = await fetch(`http://localhost:8000/exercise/quota`, {
+      const response = await fetch(`http://localhost:8000/quota/`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,6 +60,7 @@ function ExerciseGenerator() {
         throw new Error("Failed to fetch quota");
       }
       const data = await response.json();
+      console.log("Quota data:", data);
       setQuota(data);
     } catch (err) {
       console.log("Error fetching quota:", err);

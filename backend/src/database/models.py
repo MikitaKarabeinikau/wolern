@@ -33,7 +33,6 @@ class Words(Base):
     quiz_progress = relationship("User_Quiz_Progress", back_populates="word")
     exercises = relationship("Exercise", back_populates="word")
 
-
 class Definition_Base(Base):
     __tablename__ = "definition_base"
 
@@ -162,14 +161,12 @@ class Users(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     vocabulary = relationship("Words", back_populates="user")
-    quota = relationship("ExerciseQuota", back_populates="user")
+    exercise_quota = relationship("ExerciseQuota", back_populates="user", uselist=False, cascade="all, delete-orphan")
     exercises = relationship("Exercise", back_populates="user")
 
 
     def __repr__(self):
         return f"<User(id={self.id}, clerk_id={self.clerk_id}, username={self.username}, email={self.email})>"
-
-
 class Exercise(Base):
 
     __tablename__ = 'exercises'
@@ -266,7 +263,6 @@ class MultipleChoiceExerciseBase(Base):
     exercise_base = relationship("ExerciseBase", back_populates="multiple_choice_exercise_base")
 
 
-
 # How many exercises a user can generate per day
 class ExerciseQuota(Base):
     __tablename__ = "exercise_quotas"
@@ -276,7 +272,8 @@ class ExerciseQuota(Base):
     last_reset_date = Column(DateTime, default=datetime.utcnow)
     exercises_remaining = Column(Integer, default=10)
 
-    user = relationship("Users")
+    user = relationship("Users", back_populates="exercise_quota")
+    
     
 
 Base.metadata.create_all(bind=engine)

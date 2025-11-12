@@ -9,6 +9,8 @@ from backend.src.database.database import get_database
 from backend.src.database.models import Users
 import logging
 
+from backend.src.database.users import create_user
+
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
@@ -38,15 +40,16 @@ async def handle_user_created(request: Request, db: Session = Depends(get_databa
                     logger.info(f"User with clerk_id '{clerk_user_id}' already exists")
                     return {"success": True, "message": "User already exists"}
 
-                new_user = Users(
-                    clerk_id=clerk_user_id,
-                    username = None,
-                    email=email,
-                    created_at=datetime.utcnow()
-                )
-                db.add(new_user)
-                db.commit()
-                db.refresh(new_user)
+                # new_user = Users(
+                #     clerk_id=clerk_user_id,
+                #     username = None,
+                #     email=email,
+                #     created_at=datetime.utcnow()
+                # )
+                # db.add(new_user)
+                # db.commit()
+                # db.refresh(new_user)
+                create_user(db, clerk_user_id, username=None, email=email)
                 logger.info(f"User with clerk_id '{clerk_user_id}' created successfully")
                 return {"success": True, "message": "User created successfully"}
             except IntegrityError:

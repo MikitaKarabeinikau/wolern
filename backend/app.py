@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from backend.src.routes import exercise
+from backend.src.routes import exercise, quota
 from backend.src.routes.app_routes import router as clerk_webhook_router
 from backend.src.routes.app_routes import router as api_router
 from backend.src.routes import exercise
@@ -32,6 +32,7 @@ app.add_middleware(
 )
 
 app.include_router(exercise.router, prefix="/exercise", tags=["exercise"])
+app.include_router(quota.router, prefix="/quota", tags=["quota"])
 
 @app.get("/")
 async def root():

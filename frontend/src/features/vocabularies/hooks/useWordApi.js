@@ -50,8 +50,6 @@ const deleteItem = async (url) => {
 
   const updateItem = async (url, body) => {
     try {
-      console.log("Update request URL:", url);
-      console.log("Payload:", body);
 
       const response = await fetchWithToken(url, {
         method: "PUT",
