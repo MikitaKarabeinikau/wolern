@@ -254,6 +254,11 @@ def delete_word_by_id_from_db(db: Session, word_id: int, clerk_id: str):
         logger.info(f"Attempting to delete word with ID {word_id} for user {clerk_id}")
         word_to_delete = db.query(models.Words).filter(models.Words.id == word_id, models.Words.added_by_user_id == clerk_id).first()
 
+
+        if word_to_delete:
+                    # Find all exercise IDs related to the word first
+                    exercise_ids_to_delete = [e.id for e in db.query(models.Exercise.id).filter(models.Exercise.word_id == word_id).all()]
+
         if word_to_delete:
             # Delete dependent rows explicitly to avoid nulling non-null FK columns
             db.query(models.Translation).filter(models.Translation.word_id == word_id).delete(synchronize_session=False)
@@ -263,7 +268,8 @@ def delete_word_by_id_from_db(db: Session, word_id: int, clerk_id: str):
             db.query(models.Tag).filter(models.Tag.word_id == word_id).delete(synchronize_session=False)
             db.query(models.Warning).filter(models.Warning.word_id == word_id).delete(synchronize_session=False)
             db.query(models.User_Quiz_Progress).filter(models.User_Quiz_Progress.word_id == word_id, models.User_Quiz_Progress.user_id == clerk_id).delete(synchronize_session=False)
-            db.query(models.Exercise).filter(models.Exercise.word_id == word_id, models.Exercise.created_by == clerk_id).delete(synchronize_session=False)
+            db.query(models.Exercise).filter(models.Exercise.id.in_(exercise_ids_to_delete)).delete(synchronize_session=False)
+            db.query(models.MultipleChoiceExercise).filter(models.MultipleChoiceExercise.exercise_id.in_(exercise_ids_to_delete)).delete(synchronize_session=False)
             db.delete(word_to_delete)
             db.commit()
             logger.info(f"Word with ID {word_id} deleted successfully for user {clerk_id}.")

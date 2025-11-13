@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../../../styles/QuizAnswerUnit.css";
 import { useAuth } from "@clerk/clerk-react";
+import { calculateIndexes } from "../../../utils/wordProcessing";
 
 function QuizResult({ word_id, word, userAnswer, progress }) {
   const [correctIndexes, setCorrectIndexes] = useState([]);
@@ -244,36 +245,6 @@ function QuizResult({ word_id, word, userAnswer, progress }) {
     }
   };
   const [isEmpty, setIsEmpty] = useState(false);
-  const calculateIndexes = (word, userAnswer) => {
-    const correct = [];
-    const incorrect = [];
-    const extraCorrect = [];
-    const extraIncorrect = [];
-    const safeUserAnswer = userAnswer || "";
-    const maxLength = Math.max(word.word.length, safeUserAnswer.length);
-
-    if (word.word.length === 0 && safeUserAnswer.length === 0) {
-      setIsEmpty(true);
-    }
-    for (let i = 0; i < maxLength; i++) {
-      const wordLetter = word.word[i] || null;
-      const userAnswerLetter = safeUserAnswer[i] || null;
-
-      if (wordLetter && userAnswerLetter) {
-        if (wordLetter === userAnswerLetter) {
-          correct.push(i);
-        } else {
-          incorrect.push(i);
-        }
-      } else if (wordLetter) {
-        extraCorrect.push(i);
-      } else if (userAnswerLetter) {
-        extraIncorrect.push(i);
-      }
-    }
-
-    return { correct, incorrect, extraCorrect, extraIncorrect, isEmpty };
-  };
 
   useEffect(() => {
     if (word.vocabulary === "new") {
@@ -518,8 +489,15 @@ function QuizResult({ word_id, word, userAnswer, progress }) {
       }
     };
 
-    const { correct, incorrect, extraCorrect, extraIncorrect } =
-      calculateIndexes(word, userAnswer);
+    const {
+      correct,
+      incorrect,
+      extraCorrect,
+      extraIncorrect,
+      isEmpty: resultIsEmpty,
+    } = calculateIndexes(word.word, userAnswer);
+
+    setIsEmpty(resultIsEmpty);
 
     if (
       correct.length === word.word.length &&

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../../styles/Exercise.css";
+import "../../../../styles/Exercise.css";
 import HintUnit from "./HintUnit";
 
 function Exercise({ exercise }) {
@@ -26,6 +26,8 @@ function Exercise({ exercise }) {
       <div className="exercise-content">
         <div className="exercise-header">
           <span className="part-of-speech">{part_of_speech}</span>
+        </div>
+        <div className="middle-section">
           <p className="question">{question}</p>
         </div>
 

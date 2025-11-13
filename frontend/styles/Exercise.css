@@ -11,7 +11,84 @@
   flex: 1;
   
 }
+.exercise-container.two-column {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: flex-start;
+}
 
+.left-panel {
+  flex: 2; /* Takes up 2/3 of the space */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px; /* Ensures consistent height */
+}
+
+.right-panel {
+  flex: 1; /* Takes up 1/3 of the space */
+  background-color: #f7f7f7;
+  padding: 1rem;
+  border-radius: 8px;
+  height: 100%;
+}
+
+/* --- Left Panel Sections --- */
+.top-section .part-of-speech {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.middle-section .question {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+.bottom-section {
+  margin-top: auto; /* Pushes this section to the bottom */
+}
+
+/* --- Styled Input and Button --- */
+.answer-input-wrapper {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden; /* Keeps children within the rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.answer-input-wrapper input {
+  flex-grow: 1;
+  border: none;
+  padding: 12px 15px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.answer-input-wrapper button {
+  border: none;
+  background-color: #007bff;
+  color: white;
+  padding: 0 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.answer-input-wrapper button:hover {
+  background-color: #0056b3;
+}
+
+/* --- Hints Styling --- */
+.exercise-hints h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
 
 .exercise-header .part-of-speech {
   display: inline-block;
@@ -101,6 +178,7 @@
 
 .exercise-panel-container {
 display: flex;
+  width: 100%;
   padding: 20px;
   background-color: #f9f9f9; /* A light background color for the panel */
 }
@@ -141,7 +219,7 @@ display: flex;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border: 1px solid #e9ecef;
-  max-width: 600px;
+  max-width: 900px; /* Increased from 600px */
   margin: 0 auto;
 }
 

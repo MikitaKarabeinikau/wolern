@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import QuizWord from "./QuizWord";
 import QuizAnswerField from "./components/QuizAnswerField";
 import QuizResult from "./components/QuizResult";
 import { useAuth } from "@clerk/clerk-react";
 import { createMapByWordId } from "../../utils/wordProcessing";
+import DebugQuizTable from "./components/DebugQuizTable";
 
 export function QuizGenerator() {
   const [isAnswered, setIsAnswered] = useState(false);
@@ -72,6 +73,21 @@ export function QuizGenerator() {
     fetchQuizWords();
   }, []);
 
+  const debugData = useMemo(() => {
+    if (!words.length || !progress.length) {
+      return [];
+    }
+
+    // Create a map of progress data for quick lookups
+    const progressMap = new Map(progress.map((p) => [p.word_id, p]));
+
+    // Map over the words and merge with their corresponding progress
+    return words.map((word) => ({
+      ...word, // Includes word.id, word.word, etc.
+      progress: progressMap.get(word.id) || {}, // Find the matching progress, or use an empty object
+    }));
+  }, [words, progress]);
+
   const handleNextQuestion = () => {
     setIsAnswered(false);
     setResult(null);
@@ -114,6 +130,7 @@ export function QuizGenerator() {
               />
               <QuizAnswerField onCheckAnswer={handleCheckAnswer} />
             </div>
+            <DebugQuizTable data={debugData} />
 
             <div style={{ display: isAnswered ? "block" : "none" }}>
               <>

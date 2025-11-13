@@ -107,3 +107,33 @@ export const changeSeparatePart = (text, wordToCompare) => {
       return acc;
     }, []);
   };
+
+  export const calculateIndexes = (correctWord, userAnswer) => {
+  const correct = [];
+  const incorrect = [];
+  const extraCorrect = [];
+  const extraIncorrect = [];
+  const safeUserAnswer = userAnswer || "";
+  const maxLength = Math.max(correctWord.length, safeUserAnswer.length);
+
+  const isEmpty = correctWord.length === 0 && safeUserAnswer.length === 0;
+
+  for (let i = 0; i < maxLength; i++) {
+    const wordLetter = correctWord[i] || null;
+    const userAnswerLetter = safeUserAnswer[i] || null;
+
+    if (wordLetter && userAnswerLetter) {
+      if (wordLetter === userAnswerLetter) {
+        correct.push(i);
+      } else {
+        incorrect.push(i);
+      }
+    } else if (wordLetter) {
+      extraCorrect.push(i);
+    } else if (userAnswerLetter) {
+      extraIncorrect.push(i);
+    }
+  }
+
+  return { correct, incorrect, extraCorrect, extraIncorrect, isEmpty };
+};

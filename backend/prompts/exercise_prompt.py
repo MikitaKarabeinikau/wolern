@@ -43,6 +43,7 @@ def generate_vocabulary_exercise(
     You are an expert vocabulary exercise generator. 
     Your only job is to create a single, valid vocabulary exercise 
     based on the user's request and strictly adhere to the provided JSON schema.
+    Question is a sentence with a blank where the target word should go.
     
     Return the exercise in the following JSON structure:
     {json.dumps(json_schema, indent=4)}

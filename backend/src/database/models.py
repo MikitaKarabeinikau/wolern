@@ -31,7 +31,7 @@ class Words(Base):
     warnings = relationship("Warning", back_populates="word")
     word_base = relationship("Word_Base", back_populates="words")
     quiz_progress = relationship("User_Quiz_Progress", back_populates="word")
-    exercises = relationship("Exercise", back_populates="word")
+    exercises = relationship("Exercise", back_populates="word", cascade="all, delete-orphan")
 
 class Definition_Base(Base):
     __tablename__ = "definition_base"
@@ -185,7 +185,7 @@ class Exercise(Base):
 
     word = relationship("Words", back_populates="exercises")
     user = relationship("Users", back_populates="exercises")
-    multiple_choice_exercises = relationship("MultipleChoiceExercise", back_populates="exercise_base")
+    multiple_choice_exercises = relationship("MultipleChoiceExercise", back_populates="exercise_base", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<Exercise(id={self.id}, word_id={self.word_id}, difficulty='{self.difficulty}')>"
@@ -239,7 +239,7 @@ class MultipleChoiceExercise(Base):
     id = Column(Integer, primary_key=True, index=True)
     options = Column(String, nullable=False, comment="List of 4 answer options (strings).")
     correct_answer = Column(String, nullable=False, comment="The value of the correct answer.") 
-    exercise_id = Column(Integer, ForeignKey('exercises.id'), unique=True, nullable=False)
+    exercise_id = Column(Integer, ForeignKey('exercises.id', ondelete="CASCADE"), unique=True, nullable=False)
     
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)

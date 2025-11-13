@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import "../../../styles/Exercise.css";
+import "../../../../styles/Exercise.css";
 import MultiAnswerExercise from "./MultiAnswerExercise";
+import AnswerInputExercise from "./AnswerInuptExercise";
 
-const ExerciseField = ({ exercise }) => {
+const ExerciseField = ({ word, exercise }) => {
   // Use a single state to manage the exercise type
   const [exerciseType, setExerciseType] = useState("input");
-
+  console.log("Rendering AnswerInputExercise with word:", word);
   return (
     <div className="exercise-field-container">
       <div className="exercise-type-selector">
@@ -26,7 +27,7 @@ const ExerciseField = ({ exercise }) => {
       <div className="exercise-content">
         {exerciseType === "input" && (
           <div>
-            <p>This is the Answer Input exercise area.</p>
+            <AnswerInputExercise word={word} exercise={exercise} />
           </div>
         )}
         {exerciseType === "multiple" && (
