@@ -186,21 +186,6 @@ The frontend will be available at `http://localhost:5173`
 4. **Practice**: Use exercises and quizzes to learn
 5. **Track Progress**: Monitor your learning statistics
 
-### CLI Interface
-
-For development and testing, a CLI is available:
-
-```bash
-python main.py
-```
-
-Available commands:
-- `def`: Get word definition
-- `word`: Look up word information
-- `quiz`: Start quiz mode
-- `vocabulary`: Manage vocabularies
-- `test`: Generate test data
-
 ## 🔌 API Documentation
 
 Once the backend is running, interactive API documentation is available at:
@@ -284,12 +269,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Octanove Labs for vocabulary profiles
 - Brysbaert & New for SUBTLEX-US corpus
 - The open-source community
-
-## 📮 Support
-
-For questions, issues, or suggestions:
-- Open an issue on GitHub
-- Contact the maintainer through GitHub
 
 ---
 
