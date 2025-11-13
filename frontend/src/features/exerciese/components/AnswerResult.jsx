@@ -3,9 +3,6 @@ import { calculateIndexes } from "../../../utils/wordProcessing";
 import "../../../../styles/QuizAnswerUnit.css";
 
 const AnswerResult = ({ word, userAnswer }) => {
-  if (word === undefined || word === null) {
-    return null;
-  }
   const [correctIndexes, setCorrectIndexes] = React.useState([]);
   const [incorrectIndexes, setIncorrectIndexes] = React.useState([]);
   const [extraCorrectIndexes, setExtraCorrectIndexes] = React.useState([]);
@@ -28,7 +25,7 @@ const AnswerResult = ({ word, userAnswer }) => {
       <div className="quiz-answers-container">
         <div className="quiz-correct-answer">
           {/* 6. Use the correct variable for the answer */}
-          {(userAnswer || "").split("").map((l, index) => (
+          {(word || "").split("").map((l, index) => (
             <span
               key={index}
               className={`quiz-letter ${
@@ -44,6 +41,15 @@ const AnswerResult = ({ word, userAnswer }) => {
               {l}
             </span>
           ))}
+          {extraIncorrectIndexes.length > 0 &&
+            extraIncorrectIndexes.map((index) => (
+              <span
+                key={`extra-correct-${index}`}
+                className="quiz-letter extra-letter"
+              >
+                .
+              </span>
+            ))}
         </div>
         <div className="quiz-user-answer">
           {(userAnswer || "").split("").map((l, index) => (
@@ -62,6 +68,15 @@ const AnswerResult = ({ word, userAnswer }) => {
               {l}
             </span>
           ))}
+          {extraCorrectIndexes.length > 0 &&
+            extraCorrectIndexes.map((index) => (
+              <span
+                key={`extra-incorrect-${index}`}
+                className="quiz-letter extra-letter"
+              >
+                .
+              </span>
+            ))}
         </div>
       </div>
     </div>

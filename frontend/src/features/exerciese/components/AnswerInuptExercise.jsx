@@ -39,7 +39,7 @@ const AnswerInputExercise = ({ word, exercise }) => {
           {/* --- Left Panel --- */}
           <div className="left-panel">
             <div className="top-section">
-              <div className="exercise-header">
+              <div className="exercise-header" s>
                 {" "}
                 <span className="part-of-speech">{part_of_speech}</span>{" "}
               </div>
@@ -83,7 +83,7 @@ const AnswerInputExercise = ({ word, exercise }) => {
               <p className="question">{question}</p>
             </div>
             {/* Pass the correct answer to the AnswerResult component */}
-            <AnswerResult word={correctAnswer} userAnswer={userAnswer} />
+            <AnswerResult word={word} userAnswer={userAnswer} />
             <div className="exercise-body">
               <p className="explanation">{explanation}</p>
             </div>
