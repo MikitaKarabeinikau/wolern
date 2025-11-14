@@ -1,3 +1,4 @@
+import json
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from . import models
@@ -147,3 +148,33 @@ def get_words_for_exercise(db: Session, clerk_id: str):
     logger.info(f"Retrieved {len(result)} words for exercise for user {clerk_id}")  
     return result
 
+def get_user_generated_exercises(db: Session, clerk_id: str):
+
+    # Query to join Exercise and MultipleChoiceExercise tables
+    exercises = (
+        db.query(models.Words, models.Exercise, models.MultipleChoiceExercise).join(models.Exercise, models.Words.id == models.Exercise.word_id)
+        .join(models.MultipleChoiceExercise, models.Exercise.id == models.MultipleChoiceExercise.exercise_id)
+        .filter(models.Exercise.created_by == clerk_id)
+        .all()
+    )
+
+    # Combine the data into a single JSON structure
+    combined_exercises = []
+    for word, exercise, multiple_choice in exercises:
+        combined_exercises.append({
+            "word": word.word,
+            "id": exercise.id,
+            "word_id": exercise.word_id,
+            "difficulty": exercise.difficulty,
+            "question": exercise.question,
+            "hints": json.loads(exercise.hints),
+            "explanation": exercise.explanation,
+            "part_of_speech": exercise.part_of_speech,
+            "timestamp": exercise.timestamp.isoformat(),
+            "multiple_choice": {
+                "options": json.loads(multiple_choice.options),
+                "correct_answer": multiple_choice.correct_answer
+            }
+        })
+
+    return {"exercises": combined_exercises}

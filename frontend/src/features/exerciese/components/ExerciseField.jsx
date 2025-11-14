@@ -1,39 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../../styles/Exercise.css";
-import MultiAnswerExercise from "./MultiAnswerExercise";
+import MultiAnswerExercise from "./MultipleChooseExercise";
 import AnswerInputExercise from "./AnswerInuptExercise";
 
-const ExerciseField = ({ word, exercise }) => {
-  // Use a single state to manage the exercise type
+const ExerciseField = ({ word, exercise, resetTrigger }) => {
   const [exerciseType, setExerciseType] = useState("input");
-  console.log("Rendering AnswerInputExercise with word:", word);
+  const [userAnswer, setUserAnswer] = useState(""); // State for user's answer
+  const [selectedOption, setSelectedOption] = useState(null); // For multiple choice
+
+  useEffect(() => {
+    console.log("Reset triggered"); // Debug log to ensure resetTrigger changes
+    setUserAnswer("");
+    setSelectedOption(null);
+  }, [resetTrigger]);
+
   return (
-    <div className="exercise-field-container">
-      <div className="exercise-type-selector">
+    <div className="exercise-container">
+      {/* Menu for selecting exercise type */}
+      <div className="exercise-type-menu">
         <button
-          className={exerciseType === "input" ? "active" : ""}
+          className={`exercise-type-button ${
+            exerciseType === "input" ? "active" : ""
+          }`}
           onClick={() => setExerciseType("input")}
         >
-          <strong>Answer Input</strong>
+          Answer Input
         </button>
         <button
-          className={exerciseType === "multiple" ? "active" : ""}
+          className={`exercise-type-button ${
+            exerciseType === "multiple" ? "active" : ""
+          }`}
           onClick={() => setExerciseType("multiple")}
         >
-          <strong>Multiple Choice</strong>
+          Multiple Choice
         </button>
       </div>
 
+      {/* Render the selected exercise type */}
       <div className="exercise-content">
         {exerciseType === "input" && (
-          <div>
-            <AnswerInputExercise word={word} exercise={exercise} />
-          </div>
+          <AnswerInputExercise
+            word={word}
+            exercise={exercise}
+            userAnswer={userAnswer}
+            setUserAnswer={setUserAnswer} // Pass state for user's answer
+          />
         )}
         {exerciseType === "multiple" && (
-          <div>
-            <MultiAnswerExercise exercise={exercise} />
-          </div>
+          <MultiAnswerExercise
+            exercise={exercise}
+            selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
+          />
         )}
       </div>
     </div>

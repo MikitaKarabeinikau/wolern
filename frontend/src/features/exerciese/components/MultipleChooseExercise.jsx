@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../../styles/Exercise.css";
 import HintUnit from "./HintUnit";
 
-function Exercise({ exercise }) {
-  const [selectedOption, setSelectedOption] = useState(null);
+function MultipleChooseExercise({
+  exercise,
+  selectedOption,
+  setSelectedOption,
+}) {
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
   const { question, part_of_speech, explanation, hints, multiple_choice } =
     exercise;
   const { options, correct_answer } = multiple_choice;
+
+  // Reset states whenever a new exercise is loaded
+  useEffect(() => {
+    setIsAnswered(false); // Reset to "input view"
+    setSelectedOption(null); // Clear selected option
+    setIsCorrect(false); // Reset correctness state
+  }, [exercise]);
 
   const handleAnswerSelect = (option, index) => {
     if (isAnswered) return; // Prevent re-answering
@@ -77,4 +87,4 @@ function Exercise({ exercise }) {
   );
 }
 
-export default Exercise;
+export default MultipleChooseExercise;

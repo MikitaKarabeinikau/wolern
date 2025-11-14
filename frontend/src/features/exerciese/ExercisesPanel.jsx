@@ -1,37 +1,37 @@
 import React, { useState } from "react";
 import "../../../styles/Exercise.css";
+import "../../../styles/Buttons.css";
+
 import ExerciseGenerator from "./components/ExerciseGenerator";
 import GeneratedBase from "./components/GeneratedBase";
 
 export function ExercisesPanel() {
-  const [isGenerating, setIsGenerating] = useState(true);
-  const [isGeneratedBase, setIsGeneratedBase] = useState(false);
+  const [chosenPanel, setChosenPanel] = useState("generator");
 
   return (
     <>
       <div className="exercise-panel-container">
-        <div className="exercise-menu">
-          <div
-            className="menu-item"
-            onClick={() => {
-              setIsGenerating(!isGenerating);
-            }}
-          >
-            Generate Exercise
-          </div>
-          <div
-            className="menu-item"
-            onClick={() => {
-              setIsGeneratedBase(!isGeneratedBase);
-              if (isGenerating) setIsGenerating(false);
-            }}
-          >
-            Base of Exercises
+        <div>
+          <div className="menu-container">
+            <div className="menu-type-selector">
+              <button
+                className={chosenPanel === "generator" ? "active" : ""}
+                onClick={() => setChosenPanel("generator")}
+              >
+                <strong>Exercise Generator</strong>
+              </button>
+              <button
+                className={chosenPanel === "generatedBase" ? "active" : ""}
+                onClick={() => setChosenPanel("generatedBase")}
+              >
+                <strong>Generated Exercises Base</strong>
+              </button>
+            </div>
           </div>
         </div>
         <div className="exercise-display">
-          {isGenerating && <ExerciseGenerator />}
-          {isGeneratedBase && <GeneratedBase />}
+          {chosenPanel === "generator" && <ExerciseGenerator />}
+          {chosenPanel === "generatedBase" && <GeneratedBase />}
         </div>
       </div>
     </>

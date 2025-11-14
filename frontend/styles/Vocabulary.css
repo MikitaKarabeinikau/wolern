@@ -574,21 +574,21 @@
   box-sizing: border-box; /* Include padding and border in width calculation */
 }
 .left-panel {
-  flex: 0 0 auto; /* Adjust as needed */
+  flex: 1; /* Adjust as needed */
   width: auto;
   padding: 1rem;
   border-right: 1px solid #ccc; /* Adds a visual separator */
 } 
 
 .middle-panel {
-  flex: 0 0 auto; /* Adjust as needed */
+  flex: 1; /* Adjust as needed */
   width: auto;
   padding: 1rem;
   border-right: 1px solid #ccc; /* Adds a visual separator */
 }
 
 .right-panel {
-  flex: 1; /* Right panel takes up remaining space */
+  flex: 2; /* Right panel takes up remaining space */
   padding: 1rem;
   width: auto;
 }

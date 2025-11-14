@@ -10,6 +10,7 @@ from backend.src.database.exercise import (
     get_user_exercise_from_base,
     create_multiple_choice_exercise,
     get_words_for_exercise,
+    get_user_generated_exercises
 )
 from backend.src.database.quota import (
     get_exercise_quota,
@@ -167,3 +168,18 @@ async def get_words(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch random word: {str(e)}")
 
+@router.get("/generated/")
+def get_generated_exercises(
+    request: Request,
+    db: Session = Depends(get_database)
+):
+    user_details = authenticate_and_get_user_details(request=request)
+    if not user_details:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    clerk_id = user_details['user_id']
+    if not user_details:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    exercises = get_user_generated_exercises(db, clerk_id)
+    return exercises

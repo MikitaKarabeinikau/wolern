@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from "react"; // 1. Import useEffect
+import React, { useState, useEffect } from "react";
 import "../../../../styles/Exercise.css";
 import HintUnit from "./HintUnit";
-// 2. Correct the import name if it's plural
 import { calculateIndexes } from "../../../utils/wordProcessing";
 import "../../../../styles/QuizAnswerUnit.css";
 import AnswerResult from "./AnswerResult";
 
-const AnswerInputExercise = ({ word, exercise }) => {
-  // 3. Destructure the correct answer from the exercise prop (assuming it's named 'answer')
+const AnswerInputExercise = ({ word, exercise, userAnswer, setUserAnswer }) => {
   const { question, part_of_speech, explanation, hints, correctAnswer } =
     exercise;
-  console.log("Correct Answer", correctAnswer);
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [userAnswer, setUserAnswer] = useState("");
 
-  // 4. Add state to hold the calculated indexes
-  const [correctIndexes, setCorrectIndexes] = useState([]);
-  const [incorrectIndexes, setIncorrectIndexes] = useState([]);
-  const [extraCorrectIndexes, setExtraCorrectIndexes] = useState([]);
-  const [extraIncorrectIndexes, setExtraIncorrectIndexes] = useState([]);
+  const [isAnswered, setIsAnswered] = useState(false);
+
+  // Reset `isAnswered` whenever a new exercise is loaded
+  useEffect(() => {
+    setIsAnswered(false); // Reset to "input view"
+    setUserAnswer(""); // Clear the user's answer
+  }, [exercise]);
 
   const handleAnswer = () => {
     // Only mark as answered if the user has typed something
@@ -37,11 +34,10 @@ const AnswerInputExercise = ({ word, exercise }) => {
       {!isAnswered && (
         <div className="exercise-container two-column">
           {/* --- Left Panel --- */}
-          <div className="left-panel">
+          <div className="left-panelexercise">
             <div className="top-section">
-              <div className="exercise-header" s>
-                {" "}
-                <span className="part-of-speech">{part_of_speech}</span>{" "}
+              <div className="exercise-header">
+                <span className="part-of-speech">{part_of_speech}</span>
               </div>
             </div>
             <div className="middle-section">
@@ -62,7 +58,7 @@ const AnswerInputExercise = ({ word, exercise }) => {
           </div>
 
           {/* --- Right Panel --- */}
-          <div className="right-panel">
+          <div className="right-panel-exercise">
             <div className="exercise-hints">
               <div className="hints-list">
                 {hints.map((hint, index) => (
