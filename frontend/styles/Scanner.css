@@ -179,3 +179,8 @@
   text-align: center;
   margin-bottom: 1rem;
 }
+
+.annotation-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}

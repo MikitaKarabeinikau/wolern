@@ -30,3 +30,5 @@ export  function useScanner() {
 
   return {fetchWordData,words,isLoading,error};
   }
+
+  

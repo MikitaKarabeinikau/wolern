@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Word from "./Word.jsx";
 import { useAuth } from "@clerk/clerk-react";
 import "../../../../styles/Exercise.css";
@@ -9,19 +9,31 @@ import ReadMode from "../modes/reading/ReadMode.jsx";
 import AnnotationMode from "../modes/annotation/AnnotationMode.jsx";
 
 function ScannerResult({ text }) {
-  const { getToken } = useAuth();
   const { fetchWordData, words, isLoading, error } = useScanner();
-  const mapByWord = new Map(words.map((item) => [item.word, item.vocabulary]));
+  const mapByWord = new Map(
+    words.map((item) => [item.word.toLowerCase(), item.vocabulary])
+  );
   const [mod, setMod] = useState("read");
+
   const preparedWords = prepareWords(text).map((item) => [
     item,
-    mapByWord.get(item) || "unknown",
+    mapByWord.get(item.toLowerCase()) || "unknown",
   ]);
+
+  const handleModeChange = useCallback(
+    (newMode) => {
+      setMod(newMode);
+      // Refresh word data when switching to read mode
+      if (newMode === "read") {
+        fetchWordData();
+      }
+    },
+    [fetchWordData]
+  );
 
   useEffect(() => {
     fetchWordData();
-    console.log("Fetched words:", words);
-  }, [fetchWordData]);
+  }, [mod, fetchWordData]);
 
   return (
     <>

@@ -10,7 +10,9 @@ export default function ReadMode({ userWords, text }) {
           key={index}
           word={word}
           vocabulary={
-            userWords.get(word) === undefined ? "unknown" : userWords.get(word)
+            userWords.get(word.toLowerCase()) === undefined
+              ? "unknown"
+              : userWords.get(word.toLowerCase())
           }
         />
       ))}

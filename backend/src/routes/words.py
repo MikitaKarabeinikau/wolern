@@ -33,6 +33,21 @@ async def add_new_word(request: Request, word_request: AddWordRequest, db: Sessi
         logger.error(f"Failed to add word: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to add word: " + str(e))
 
+@router.post("/user/{word}/vocabulary/{vocabulary}")
+async def add_words_by_vocabulary(request: Request,word_request:AddWordRequest, word: str, vocabulary: str, db: Session =Depends(get_database)):
+    try:
+        user_details = authenticate_and_get_user_details(request=request)
+        clerk_id = user_details["user_id"]
+        new_word = Word(word=word_request.word)
+        word = add_word(db,new_word,clerk_id,vocabulary)
+        logger.info(f"Added word '{new_word.word}' with vocabulary '{vocabulary}' for user '{clerk_id}'.")
+        return {"words": word}
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        logger.error(f"Failed to retrieve words by vocabulary: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to retrieve words by vocabulary: " + str(e))
+
 @router.put("/words/vocabulary/{new_vocabulary}/{id}")
 async def change_word_vocabulary(id: int, new_vocabulary: str, request: Request, db: Session = Depends(get_database)):
     try:

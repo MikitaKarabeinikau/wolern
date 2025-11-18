@@ -14,6 +14,7 @@ class UserCreateRequest(BaseModel):
 
 class AddWordRequest(BaseModel):
     word: str
+    vocabulary: Optional[str] = None
     
 
 class Translation(BaseModel):

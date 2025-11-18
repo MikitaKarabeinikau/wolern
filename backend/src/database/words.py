@@ -8,7 +8,7 @@ from .base import get_last_word_base_id,get_translations_from_base, is_word_in_b
 import re
 
 
-def add_word(db: Session, word: AddWordRequest, clerk_id: str):
+def add_word(db: Session, word: AddWordRequest, clerk_id: str, vocabulary: str = "new"):
     """Add a new word."""
     if word is None:
         raise ValueError("Word is required")
@@ -20,7 +20,8 @@ def add_word(db: Session, word: AddWordRequest, clerk_id: str):
             word=word.word,
             added_by_user_id=clerk_id,
             frequency=word.frequency,
-            difficulty=word.difficulty
+            difficulty=word.difficulty,
+            vocabulary=vocabulary
         )
 
         db.add(db_word)
