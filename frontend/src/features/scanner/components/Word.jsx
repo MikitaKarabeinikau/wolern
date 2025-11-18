@@ -21,7 +21,7 @@ function Word({ word, vocabulary }) {
         {word}
       </div>
       <div className={`word-info ${isHovering ? "visible" : "hidden"}`}>
-        INFO
+        INFO BLOCK afadsfasdf
       </div>
     </div>
   );

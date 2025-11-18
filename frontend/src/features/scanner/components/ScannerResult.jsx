@@ -4,41 +4,43 @@ import { useAuth } from "@clerk/clerk-react";
 import "../../../../styles/Exercise.css";
 import { prepareWords } from "../../../utils/wordProcessing.js";
 import { useScanner } from "../hooks/useScanner.js";
-// TODO: 1. Symbols should be shown without changes.
+import EditWordVocabulary from "../modes/annotation/AnnotationMode.jsx";
+import ReadMode from "../modes/reading/ReadMode.jsx";
+import AnnotationMode from "../modes/annotation/AnnotationMode.jsx";
 
 function ScannerResult({ text }) {
   const { getToken } = useAuth();
   const { fetchWordData, words, isLoading, error } = useScanner();
-  console.log("ScannerResult words:", words);
+  const mapByWord = new Map(words.map((item) => [item.word, item.vocabulary]));
+  const [mod, setMod] = useState("read");
+  const preparedWords = prepareWords(text).map((item) => [
+    item,
+    mapByWord.get(item) || "unknown",
+  ]);
+
   useEffect(() => {
     fetchWordData();
     console.log("Fetched words:", words);
   }, [fetchWordData]);
-  const mapByWord = new Map(words.map((item) => [item.word, item.vocabulary]));
-  console.log("Map by word:", mapByWord.get("example") === undefined); // Example usage
+
   return (
     <>
       <div className="scanner-results-container">
         <div className="scanner-output">
+          {mod === "edit" && (
+            <AnnotationMode userWords={words} words={preparedWords} />
+          )}
+          {mod === "read" && <ReadMode userWords={mapByWord} text={text} />}
           {isLoading && <p>Loading scanned words...</p>}
-          {prepareWords(text).map((word, index) => (
-            <Word
-              key={index}
-              word={word}
-              vocabulary={
-                mapByWord.get(word) === undefined ? "new" : mapByWord.get(word)
-              }
-            />
-          ))}
         </div>
         <div className="modes-panel">
           <div className="menu-container">
             <div className="menu-type-selector">
-              <button class className>
+              <button onClick={() => setMod("read")}>
                 <strong>Read Mode</strong>
               </button>
-              <button>
-                <strong>Edit Mode</strong>
+              <button onClick={() => setMod("edit")}>
+                <strong>Annotation Mode</strong>
               </button>
             </div>
           </div>
