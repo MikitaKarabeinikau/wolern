@@ -9,7 +9,8 @@ export default function NavLinks() {
         <Link to="/quiz">Quiz</Link>
         <Link to="/vocabularies">Vocabularies</Link>
         <Link to="/exercises">Exercises</Link>
-        <Link to="/statistics">Statistics</Link>
+        <Link to="/scanner">Scanner</Link>
+        {/* <Link to="/statistics">Statistics</Link> */}
       </div>
     </div>
   );

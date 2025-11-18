@@ -137,3 +137,12 @@ export const changeSeparatePart = (text, wordToCompare) => {
 
   return { correct, incorrect, extraCorrect, extraIncorrect, isEmpty };
 };
+
+export const prepareWords = (text) => {
+    const separatedWords = text.split(" ");
+    const cleanedWords = separatedWords.map((word) =>
+      word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+    );
+    const filteredWords = cleanedWords.filter((word) => word.trim() !== "");
+    return filteredWords;
+  };

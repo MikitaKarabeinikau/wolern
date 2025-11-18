@@ -94,7 +94,11 @@ const GeneratedBase = () => {
           <p>Loading exercise...</p>
         )}
       </div>
-      <button onClick={() => getNextExercise()} disabled={!isLoaded}>
+      <button
+        className="btn"
+        onClick={() => getNextExercise()}
+        disabled={!isLoaded}
+      >
         Next Exercise
       </button>
     </>

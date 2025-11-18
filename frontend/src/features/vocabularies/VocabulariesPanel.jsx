@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import { useVocabularies } from "./hooks/useVocabularies";
 import AddWordContainer from "./components/AddWordForm";
 import WordList from "./components/WordList";
 import Vocabularies from "./components/Vocabularies";
 import "../../../styles/Vocabulary.css";
-import { useState, useEffect } from "react";
 
 export function VocabulariesPanel() {
   const {
@@ -18,7 +17,9 @@ export function VocabulariesPanel() {
     handleWordAdded,
     getToken,
   } = useVocabularies();
+
   const [panelError, setPanelError] = useState(null);
+  const [isPending, startTransition] = useTransition(); // Add useTransition hook
 
   useEffect(() => {
     if (error) {
@@ -26,6 +27,13 @@ export function VocabulariesPanel() {
       setTimeout(() => setPanelError(null), 5000);
     }
   }, [error]);
+
+  const handleAddWord = (newWord) => {
+    startTransition(() => {
+      handleWordAdded(newWord); // Defer rendering updates
+    });
+  };
+
   return (
     <div>
       <div className="notification-container">
@@ -49,17 +57,17 @@ export function VocabulariesPanel() {
           />
         </div>
         <div className="middle-panel">
-          <AddWordContainer onWordAdded={handleWordAdded} />
+          <AddWordContainer onWordAdded={handleAddWord} />
         </div>
         <div className="right-panel">
-          {isLoading ? (
+          {isLoading || isPending ? ( // Show loading state during transition
             <p>Loading...</p>
           ) : (
             <WordList
               selectedVocabulary={selectedVocabulary}
-              words={words} // Pass the already filtered words
-              {...infoMaps} // Spread all the map props
-              onDataChange={handleWordAdded}
+              words={words}
+              {...infoMaps}
+              onDataChange={handleAddWord}
               getToken={getToken}
               vocabularies={vocabularies}
             />

@@ -31,5 +31,4 @@ export const useApi = () => {
     return { makeRequest };
 }
 
-
-
+export default useApi;

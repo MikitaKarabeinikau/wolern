@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Words
-from backend.src.database.words import get_word_id_by_word, get_all_words_from_db, delete_word_by_id_from_db, add_word
+from backend.src.database.words import get_word_id_by_word, get_all_words_from_db, delete_word_by_id_from_db, add_word, get_words_and_vocabularies
 from backend.schemas import AddWordRequest
 from backend.src.core.word import Word
 import logging
@@ -62,7 +62,7 @@ async def get_word_id(request: Request, word: str, db: Session = Depends(get_dat
     try:
         user_details = authenticate_and_get_user_details(request = request)
         clerk_id = user_details["user_id"]
-        word_id = await get_word_id_by_word(db, word)
+        word_id = get_word_id_by_word(db, word)
         if word_id is None:
             raise HTTPException(status_code=404, detail="Word not found")
         logger.info(f"Retrieved word ID '{word_id}' for word '{word}' by user '{clerk_id}'.")

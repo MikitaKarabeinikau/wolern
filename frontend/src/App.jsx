@@ -7,10 +7,10 @@ import { StatisticPanel } from "./features/statistics/StatisticPanel.jsx";
 import { QuizGenerator } from "./features/quiz/QuizGenerator.jsx";
 import { HomePanel } from "./features/home/HomePanel.jsx";
 import { ExercisesPanel } from "./features/exerciese/ExercisesPanel.jsx";
+import { ScannerPanel } from "./features/scanner/ScannerPanel.jsx";
 import "./App.css";
 
 function App() {
-  // Wrap your app with ClerkProviderWithRouters. All your routes should be inside this.
   return (
     <ClerkProviderWithRoutes>
       <Routes>
@@ -23,7 +23,7 @@ function App() {
           <Route path="/statistics" element={<StatisticPanel />} />
           <Route path="/quiz" element={<QuizGenerator />} />
           <Route path="/exercises" element={<ExercisesPanel />} />
-          {/* <Route path="/scanner" element={<ScannerPanel />} /> */}
+          <Route path="/scanner" element={<ScannerPanel />} />
         </Route>
       </Routes>
     </ClerkProviderWithRoutes>

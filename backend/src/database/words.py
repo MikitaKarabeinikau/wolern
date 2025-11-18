@@ -230,7 +230,24 @@ def get_user_vocabularies(db: Session, user_id: str):
         logger.error(f"Error getting vocabularies for user '{user_id}': {e}", exc_info=True)
         raise
 
-
+def get_words_and_vocabularies(db: Session, clerk_id: str):
+    """Get all words and their vocabularies for a specific user."""
+    try:
+        words = db.query(models.Words.id, models.Words.word, models.Words.vocabulary).filter(
+            models.Words.added_by_user_id == clerk_id
+        ).order_by(models.Words.vocabulary).all()
+        
+        # Convert to list of dictionaries
+        result = [
+            {"id": word.id, "word": word.word, "vocabulary": word.vocabulary} 
+            for word in words
+        ]
+        
+        logger.info(f"Found {len(result)} words and vocabularies for user '{clerk_id}'.")
+        return result
+    except Exception as e:
+        logger.error(f"Error getting words and vocabularies for user '{clerk_id}': {e}", exc_info=True)
+        raise
 def delete_word(db: Session, word: str, clerk_id: str):
     """Delete a word."""
     try:
