@@ -1,48 +1,42 @@
 import React, { useState } from "react";
 import "../../../../styles/Scanner.css";
-
 import ScannerResults from "./ScannerResult.jsx";
+
+const TITLE = "Write a text to check new words";
+const PLACEHOLDER = "Paste or type your text here...";
 
 function ScannerInput() {
   const [text, setText] = useState("");
   const [isInputed, setIsInputed] = useState(false);
+
+  const handleScan = () => setIsInputed(true);
+  const handleNewScan = () => {
+    setIsInputed(false);
+    setText("");
+  };
+
   return (
     <>
-      {!isInputed && (
+      {!isInputed ? (
         <div className="scanner-container">
-          <p className="scanner-title">Writte a text to check new words</p>
+          <p className="scanner-title">{TITLE}</p>
           <textarea
             className="scanner-textarea"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Paste or type your text here..."
+            placeholder={PLACEHOLDER}
           ></textarea>
-          <button
-            className="btn"
-            onClick={() => {
-              setText(text);
-              setIsInputed(true);
-            }}
-          >
+          <button className="btn" onClick={handleScan}>
             Scan
           </button>
         </div>
-      )}
-      {isInputed && (
-        <>
-          <div>
-            <ScannerResults text={text} />
-            <button
-              className="scan-btn"
-              onClick={() => {
-                setIsInputed(false);
-                setText("");
-              }}
-            >
-              New Scan
-            </button>
-          </div>
-        </>
+      ) : (
+        <div>
+          <ScannerResults text={text} />
+          <button className="scan-btn" onClick={handleNewScan}>
+            New Scan
+          </button>
+        </div>
       )}
     </>
   );

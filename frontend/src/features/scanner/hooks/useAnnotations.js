@@ -9,7 +9,7 @@ export function useAddWord(onWordAdded) {
 
   const addWord = useCallback(
     async (word, vocabulary, onSuccess) => {
-      if (!word.trim()) return; // Prevent empty submissions
+      if (!word.trim()) return;
       setIsLoading(true);
       setError(null);
 

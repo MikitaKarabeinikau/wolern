@@ -1,19 +1,21 @@
 import React from "react";
-import { prepareWords } from "../../../../utils/wordProcessing";
+import { prepareWords } from "../../../../utils/wordProcessing.js";
 import Word from "../../components/Word.jsx";
-
-export default function ReadMode({ userWords, text, vocabularies }) {
+import "../../../../../styles/Scanner.css";
+function FullTextAnnotation({ text, userWords, vocabularies }) {
   return (
-    <>
+    <div className="fulltext-annotation">
       {prepareWords(text).map((word, index) => (
         <Word
           key={index}
           word={word}
           vocabulary={userWords.get(word.toLowerCase()) ?? "unknown"}
-          mod={"read"}
+          mod={"edit"}
           vocabularies={vocabularies}
         />
       ))}
-    </>
+    </div>
   );
 }
+
+export default FullTextAnnotation;
