@@ -1,6 +1,8 @@
-import { apiClient } from "../../../api/apiClient";
+import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 import { useCallback, useState } from "react";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export function useVocabularies() {
   const [error, setError] = useState(null);
@@ -13,26 +15,70 @@ export function useVocabularies() {
     setError(null);
 
     try {
-            const token = await getToken(); 
-
-      // Retrieve the token before making the API call
-      const vocabulariesData = await apiClient("/user/vocabularies", {
-        method: "GET",
+      // Get the authentication token
+      const token = await getToken();
+      
+      // Make the API request using axios
+      const response = await axios.get(`${API_BASE_URL}/user/vocabularies`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        timeout: 10000, // 10 second timeout
       });
 
-      console.log("Fetched vocabularies data from useVocabularies:", vocabulariesData);
+      console.log("Fetched vocabularies data from useVocabularies:", response.data);
 
-      setVocabularies(vocabulariesData.vocabularies );
+      // Extract vocabularies from response
+      const fetchedVocabularies = response.data.vocabularies || [];
+      setVocabularies(fetchedVocabularies);
+      
+      return fetchedVocabularies;
     } catch (err) {
-      setError(err.message || "Failed to fetch vocabularies.");
+      let errorMessage = "Failed to fetch vocabularies.";
+      
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          // Server responded with error status
+          errorMessage = `Server error: ${err.response.status} - ${err.response.data?.message || err.response.statusText}`;
+          console.error("API Error Response:", err.response.data);
+        } else if (err.request) {
+          // Request was made but no response received
+          errorMessage = "Network error: Unable to reach server.";
+          console.error("Network Error:", err.request);
+        } else {
+          // Something else happened
+          errorMessage = `Request error: ${err.message}`;
+          console.error("Request Error:", err.message);
+        }
+      } else {
+        // Non-axios error (e.g., getToken failure)
+        errorMessage = err.message || errorMessage;
+        console.error("General Error:", err);
+      }
+
+      setError(errorMessage);
+      setVocabularies([]);
+      return [];
     } finally {
       setIsLoading(false);
     }
   }, [getToken]);
 
-  return { getVocabularies, vocabularies, error, isLoading };
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  const refetch = useCallback(() => {
+    return getVocabularies();
+  }, [getVocabularies]);
+
+  return { 
+    getVocabularies, 
+    vocabularies, 
+    error, 
+    isLoading,
+    clearError,
+    refetch
+  };
 }

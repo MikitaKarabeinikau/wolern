@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useVocabularies } from "../hooks/useVocabularies.js";
+import { useAddWord } from "../hooks/useAnnotations.js";
 
 function Word({ word, vocabulary, mod, vocabularies }) {
   const [isHovering, setIsHovering] = useState(false);
@@ -7,8 +8,14 @@ function Word({ word, vocabulary, mod, vocabularies }) {
   const [selectedVocabulary, setSelectedVocabulary] = useState(vocabulary);
   const defaultVocabularies = ["new", "learning", "known", "strange"];
 
+  const { addWord, error, isLoading } = useAddWord();
+
   const handleMouseEnter = () => {
     setIsHovering(true);
+  };
+
+  const onWordSelect = (word, selectedVocabulary) => {
+    addWord(word, selectedVocabulary);
   };
 
   const handleMouseLeave = () => {

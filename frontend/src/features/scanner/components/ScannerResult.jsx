@@ -33,16 +33,17 @@ function ScannerResult({ text }) {
       // Refresh word data when switching to read mode
       if (newMode === "read") {
         fetchWordData();
-        getVocabularies();
       }
     },
-    [fetchWordData, getVocabularies]
+    [fetchWordData]
   );
-
   useEffect(() => {
     fetchWordData();
+  }, [fetchWordData]);
+
+  useEffect(() => {
     getVocabularies();
-  }, [getVocabularies, fetchWordData]);
+  }, []);
 
   return (
     <>
