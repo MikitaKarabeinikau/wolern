@@ -12,14 +12,10 @@ function ScannerResult({ text }) {
   const { fetchWordData, words, isLoading, error } = useScanner();
   const {
     getVocabularies,
+    vocabularies,
     error: vocabError,
     isLoading: vocabLoading,
   } = useVocabularies();
-  const [vocabularies, setVocabularies] = useState([]);
-
-  useEffect(() => {
-    setVocabularies(getVocabularies());
-  }, [getVocabularies]);
 
   const mapByWord = new Map(
     words.map((item) => [item.word.toLowerCase(), item.vocabulary])
@@ -37,14 +33,16 @@ function ScannerResult({ text }) {
       // Refresh word data when switching to read mode
       if (newMode === "read") {
         fetchWordData();
+        getVocabularies();
       }
     },
-    [fetchWordData]
+    [fetchWordData, getVocabularies]
   );
 
   useEffect(() => {
     fetchWordData();
-  }, [mod, fetchWordData]);
+    getVocabularies();
+  }, [getVocabularies, fetchWordData]);
 
   return (
     <>
@@ -55,6 +53,7 @@ function ScannerResult({ text }) {
               userWords={mapByWord}
               words={preparedWords}
               text={text}
+              vocabularies={vocabularies}
             />
           )}
           {mod === "read" && <ReadMode userWords={mapByWord} text={text} />}

@@ -16,7 +16,7 @@ async def get_vocabularies(request: Request, db: Session = Depends(get_database)
         user_id = user_details["user_id"]
 
         vocabularies = get_user_vocabularies(db, user_id=user_id)
-        logger.info(f"Vocabularies fetched for user {user_id}: {vocabularies}")
+        logger.info(f"\nVocabularies fetched for user {user_id}: {vocabularies}\n")
         return {"vocabularies": vocabularies}
     except Exception as e:
         logger.error(f"Error fetching vocabularies: {e}", exc_info=True)

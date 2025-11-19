@@ -11,6 +11,7 @@ export default function AnnotationMode({
   text,
   vocabularies,
 }) {
+  console.log("Vocabularies in AnnotationMode:", vocabularies);
   const [annotationMode, setAnnotationMode] = useState("fulltext");
   const { addWord, error, isLoading } = useAddWord();
   const unknownWords = words.filter(
