@@ -1,4 +1,3 @@
-<<<<<<< copilot/update-readme-description
 
 # Wolern
 
