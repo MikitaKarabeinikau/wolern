@@ -30,16 +30,18 @@ function ScannerInput() {
       )}
       {isInputed && (
         <>
-          <ScannerResults text={text} />
-          <button
-            className="btn"
-            onClick={() => {
-              setIsInputed(false);
-              setText("");
-            }}
-          >
-            New Scan
-          </button>
+          <div>
+            <ScannerResults text={text} />
+            <button
+              className="scan-btn"
+              onClick={() => {
+                setIsInputed(false);
+                setText("");
+              }}
+            >
+              New Scan
+            </button>
+          </div>
         </>
       )}
     </>

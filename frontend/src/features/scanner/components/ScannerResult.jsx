@@ -7,9 +7,20 @@ import { useScanner } from "../hooks/useScanner.js";
 import EditWordVocabulary from "../modes/annotation/AnnotationMode.jsx";
 import ReadMode from "../modes/reading/ReadMode.jsx";
 import AnnotationMode from "../modes/annotation/AnnotationMode.jsx";
-
+import { useVocabularies } from "../hooks/useVocabularies.js";
 function ScannerResult({ text }) {
   const { fetchWordData, words, isLoading, error } = useScanner();
+  const {
+    getVocabularies,
+    error: vocabError,
+    isLoading: vocabLoading,
+  } = useVocabularies();
+  const [vocabularies, setVocabularies] = useState([]);
+
+  useEffect(() => {
+    setVocabularies(getVocabularies());
+  }, [getVocabularies]);
+
   const mapByWord = new Map(
     words.map((item) => [item.word.toLowerCase(), item.vocabulary])
   );
@@ -40,7 +51,11 @@ function ScannerResult({ text }) {
       <div className="scanner-results-container">
         <div className="scanner-output">
           {mod === "edit" && (
-            <AnnotationMode userWords={words} words={preparedWords} />
+            <AnnotationMode
+              userWords={mapByWord}
+              words={preparedWords}
+              text={text}
+            />
           )}
           {mod === "read" && <ReadMode userWords={mapByWord} text={text} />}
           {isLoading && <p>Loading scanned words...</p>}

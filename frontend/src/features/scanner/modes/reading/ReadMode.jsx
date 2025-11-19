@@ -1,7 +1,7 @@
 import React from "react";
 import { prepareWords } from "../../../../utils/wordProcessing";
 import Word from "../../components/Word.jsx";
-export default function ReadMode({ userWords, text }) {
+export default function ReadMode({ userWords, text, vocabularies }) {
   console.log("ReadMode:", userWords);
   return (
     <>
@@ -14,6 +14,8 @@ export default function ReadMode({ userWords, text }) {
               ? "unknown"
               : userWords.get(word.toLowerCase())
           }
+          mod={"read"}
+          vocabularies={vocabularies}
         />
       ))}
     </>
