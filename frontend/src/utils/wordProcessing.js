@@ -33,24 +33,52 @@ export const createMapByWordId = (items, key) => {
   return map;
 };
 
-export const groupDataByCategory = (items, key) => {
-  return (items || []).reduce((acc, item) => {
-    const category = item[key] || "unknown";
-    if (!acc[category]) acc[category] = [];
+export const groupDataByCategory = (data, categoryField) => {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return {};
+  }
+
+  return data.reduce((acc, item) => {
+    const category = item[categoryField] || "Other";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
     acc[category].push(item);
     return acc;
   }, {});
 };
 
-export const groupDataByCategoryWithHiddenWord = (items, key, wordToCompare, category) => {
-  return items.reduce((acc, item) => {
-    const modified = changeSeparatePartInText([item], wordToCompare, category)[0];
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(modified);
+
+export const groupDataByCategoryWithHiddenWord = (
+  data,
+  categoryField,
+  wordToHide,
+  contentField
+) => {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return {};
+  }
+
+  const hiddenWord = "_".repeat(wordToHide.length);
+  const regex = new RegExp(`\\b${wordToHide}\\b`, "gi");
+
+  return data.reduce((acc, item) => {
+    const category = item[categoryField] || "Other";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+
+    const hiddenContent = item[contentField]
+      ? item[contentField].replace(regex, hiddenWord)
+      : "";
+
+    acc[category].push({
+      ...item,
+      [contentField]: hiddenContent,
+    });
     return acc;
   }, {});
 };
-
 
 export const findSeparatePart = (mainWord, wordToCompare) => {
   if (typeof mainWord !== "string" || typeof wordToCompare !== "string") {
@@ -146,3 +174,5 @@ export const prepareWords = (text) => {
     const filteredWords = cleanedWords.filter((word) => word.trim() !== "");
     return filteredWords;
   };
+
+  

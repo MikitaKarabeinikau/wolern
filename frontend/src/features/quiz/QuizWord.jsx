@@ -5,15 +5,14 @@ import {
   groupDataByCategoryWithHiddenWord,
   groupDataByCategory,
   filteredSynonyms,
-  changeSeparatePart,
 } from "../../utils/wordProcessing";
 
 function QuizWord({
   word,
-  wordTranslation,
-  wordDefinition,
-  wordExample,
-  wordSynonym,
+  wordTranslation = [],
+  wordDefinition = [],
+  wordExample = [],
+  wordSynonym = [],
 }) {
   const translationsByLanguage = useMemo(
     () => groupDataByCategory(wordTranslation, "language"),
@@ -25,10 +24,10 @@ function QuizWord({
       groupDataByCategoryWithHiddenWord(
         wordDefinition,
         "part_of_speech",
-        word.word,
+        word?.word || "",
         "definition"
       ),
-    [wordDefinition, word.word]
+    [wordDefinition, word?.word]
   );
 
   const examplesByPartOfSpeech = useMemo(
@@ -36,10 +35,10 @@ function QuizWord({
       groupDataByCategoryWithHiddenWord(
         wordExample,
         "part_of_speech",
-        word.word,
+        word?.word || "",
         "example_sentence"
       ),
-    [wordExample, word.word]
+    [wordExample, word?.word]
   );
 
   const synonyms = useMemo(
@@ -47,29 +46,46 @@ function QuizWord({
     [wordSynonym, word]
   );
 
-  const renderHint = (hintType, groupedData, dataKey, emptyMessage) => {
+  const renderGroupedHint = (groupedData, dataKey, emptyMessage) => {
     if (!groupedData || Object.keys(groupedData).length === 0) {
       return <p>{emptyMessage}</p>;
     }
 
-    return Object.keys(groupedData).map((category) => (
+    return Object.entries(groupedData).map(([category, items]) => (
       <div key={category}>
         <h4>{category}</h4>
         <ul>
-          {groupedData[category].map((item, index) => (
-            <Row key={index} data={item[dataKey]} />
+          {items.map((item, index) => (
+            <Row key={`${category}-${index}`} data={item[dataKey]} />
           ))}
         </ul>
       </div>
     ));
   };
 
+  const renderSynonyms = () => {
+    if (!synonyms || synonyms.length === 0) {
+      return <p>No synonyms available.</p>;
+    }
+
+    return (
+      <ul>
+        {synonyms.map((synonym, index) => (
+          <Row key={`synonym-${index}`} data={synonym.synonym} />
+        ))}
+      </ul>
+    );
+  };
+
+  if (!word) {
+    return <p>Loading word...</p>;
+  }
+
   return (
     <div>
       <QuizAnswerUnit
         hintType="Definition"
-        hintInfo={renderHint(
-          "Definition",
+        hintInfo={renderGroupedHint(
           definitionsByPartOfSpeech,
           "definition",
           "No definitions available."
@@ -78,8 +94,7 @@ function QuizWord({
       />
       <QuizAnswerUnit
         hintType="Translation"
-        hintInfo={renderHint(
-          "Translation",
+        hintInfo={renderGroupedHint(
           translationsByLanguage,
           "translation",
           "No translations available."
@@ -87,27 +102,13 @@ function QuizWord({
       />
       <QuizAnswerUnit
         hintType="Examples"
-        hintInfo={renderHint(
-          "Examples",
+        hintInfo={renderGroupedHint(
           examplesByPartOfSpeech,
           "example_sentence",
           "No examples available."
         )}
       />
-      <QuizAnswerUnit
-        hintType="Synonyms"
-        hintInfo={
-          synonyms && synonyms.length > 0 ? (
-            <ul>
-              {synonyms.map((synonym, index) => (
-                <Row key={index} data={synonym.synonym} />
-              ))}
-            </ul>
-          ) : (
-            <p>No synonyms available.</p>
-          )
-        }
-      />
+      <QuizAnswerUnit hintType="Synonyms" hintInfo={renderSynonyms()} />
     </div>
   );
 }

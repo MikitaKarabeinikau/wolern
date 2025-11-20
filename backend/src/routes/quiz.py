@@ -21,7 +21,7 @@ class SetNextReviewDateRequest(BaseModel):
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-@router.put("/quiz/word/{word_id}/set_next_review_date")
+@router.put("/quiz/words/{word_id}/set-next-review-date")
 async def set_next_review_date(request: Request, word_id: int, body: SetNextReviewDateRequest, db: Session = Depends(get_database)):
     try:
         user_details = authenticate_and_get_user_details(request=request)
@@ -204,7 +204,7 @@ async def decrease_learning_stage(word_id: int, request: Request, db: Session = 
     clerk_id = user_details["user_id"]
 
     progress = db.query(models.User_Quiz_Progress).filter(models.User_Quiz_Progress.user_id == clerk_id, models.User_Quiz_Progress.word_id == word_id).first()
-    if progress and progress.learning_stage > 0:
+    if progress and progress.learning_stage > 1:
         progress.learning_stage -= 1
         db.commit()
     else:

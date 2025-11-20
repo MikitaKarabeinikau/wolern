@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from backend.src.database import models
 from backend.src.database.database import get_database
 from backend.utils import authenticate_and_get_user_details
 from backend.src.database.models import Words
@@ -55,7 +56,10 @@ async def change_word_vocabulary(id: int, new_vocabulary: str, request: Request,
         clerk_id = user_details["user_id"]
         
         word = db.query(Words).filter(Words.id == id, Words.added_by_user_id == clerk_id).first()
-
+        if (new_vocabulary in ['learning']):
+            progress = db.query(models.User_Quiz_Progress).filter(models.User_Quiz_Progress.word_id == id, models.User_Quiz_Progress.user_id == clerk_id).first()
+            progress.learning_stage = 1
+            db.commit()
         if not word:
             raise HTTPException(status_code=404, detail="Word not found")
 

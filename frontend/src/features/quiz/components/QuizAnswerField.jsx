@@ -5,34 +5,29 @@ import "../../../../styles/Vocabulary.css";
 function QuizAnswerField({ onCheckAnswer }) {
   const [inputValue, setInputValue] = React.useState("");
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleAnswer();
-    }
-  };
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent the default form submission which reloads the page
+    if (!inputValue.trim()) return; // Do not submit if the input is empty
 
-  const handleAnswer = () => {
-    // Here you can add logic to check the answer if needed
     onCheckAnswer(inputValue);
     setInputValue(""); // Clear input after submitting
   };
 
   return (
-    <div className="add-container">
+    <form className="add-container" onSubmit={handleSubmit}>
       <div className="input">
         <input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Type your answer here"
-          onKeyDown={handleKeyDown}
           className="field"
         />
-        <button onClick={handleAnswer} className="btn">
+        <button type="submit" className="btn" disabled={!inputValue.trim()}>
           Submit
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 

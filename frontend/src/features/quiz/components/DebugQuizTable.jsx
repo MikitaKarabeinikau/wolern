@@ -24,7 +24,9 @@ const DebugQuizTable = ({ data }) => {
           <tr>
             <th>Word</th>
             <th>Stage</th>
+            <th>Correct</th>
             <th>Correct (Row)</th>
+            <th>Wrong</th>
             <th>Wrong (Row)</th>
             <th>Next Review</th>
           </tr>
