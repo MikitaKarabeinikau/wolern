@@ -10,6 +10,7 @@ export default function NavLinks() {
         <Link to="/vocabularies">Vocabularies</Link>
         <Link to="/exercises">Exercises</Link>
         <Link to="/scanner">Scanner</Link>
+        <Link to="/library">Library</Link>
         {/* <Link to="/statistics">Statistics</Link> */}
       </div>
     </div>

@@ -9,6 +9,7 @@ import { HomePanel } from "./features/home/HomePanel.jsx";
 import { ExercisesPanel } from "./features/exerciese/ExercisesPanel.jsx";
 import { ScannerPanel } from "./features/scanner/ScannerPanel.jsx";
 import { VocabularyProvider } from "./contexts/VocabularyContext.jsx";
+import { LibraryPanel } from "./features/library/LibraryPanel.jsx";
 import "./App.css";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Route path="/quiz" element={<QuizGenerator />} />
             <Route path="/exercises" element={<ExercisesPanel />} />
             <Route path="/scanner" element={<ScannerPanel />} />
+            <Route path="/library" element={<LibraryPanel />} />
           </Route>
         </Routes>
       </VocabularyProvider>
