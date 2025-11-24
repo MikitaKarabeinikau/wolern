@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../../../../styles/Scanner.css";
 
-function CarouselAnnotation({ unknownWords, onAnnotate, isLoading }) {
+function Annotation({ unknownWords, onAnnotate, isLoading }) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
   const advanceToNextWord = () => {
@@ -61,4 +61,4 @@ function CarouselAnnotation({ unknownWords, onAnnotate, isLoading }) {
     </div>
   );
 }
-export default CarouselAnnotation;
+export default Annotation;
