@@ -3,57 +3,68 @@ import "../../../../styles/Exercise.css";
 import MultiAnswerExercise from "./MultipleChooseExercise";
 import AnswerInputExercise from "./AnswerInuptExercise";
 
-const ExerciseField = ({ word, exercise, resetTrigger }) => {
-  const [exerciseType, setExerciseType] = useState("input");
-  const [userAnswer, setUserAnswer] = useState(""); // State for user's answer
-  const [selectedOption, setSelectedOption] = useState(null); // For multiple choice
+const EXERCISE_TYPES = {
+  INPUT: "input",
+  MULTIPLE: "multiple",
+};
 
+const ExerciseField = ({ word, exercise, resetTrigger }) => {
+  const [exerciseType, setExerciseType] = useState(EXERCISE_TYPES.INPUT);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  // Reset state when exercise changes
   useEffect(() => {
-    console.log("Reset triggered"); // Debug log to ensure resetTrigger changes
     setUserAnswer("");
     setSelectedOption(null);
   }, [resetTrigger]);
 
-  return (
-    <div className="exercise-container">
-      {/* Menu for selecting exercise type */}
-      <div className="exercise-type-menu">
-        <button
-          className={`exercise-type-button ${
-            exerciseType === "input" ? "active" : ""
-          }`}
-          onClick={() => setExerciseType("input")}
-        >
-          Answer Input
-        </button>
-        <button
-          className={`exercise-type-button ${
-            exerciseType === "multiple" ? "active" : ""
-          }`}
-          onClick={() => setExerciseType("multiple")}
-        >
-          Multiple Choice
-        </button>
-      </div>
-
-      {/* Render the selected exercise type */}
-      <div className="exercise-content">
-        {exerciseType === "input" && (
+  const renderExercise = () => {
+    switch (exerciseType) {
+      case EXERCISE_TYPES.INPUT:
+        return (
           <AnswerInputExercise
             word={word}
             exercise={exercise}
             userAnswer={userAnswer}
-            setUserAnswer={setUserAnswer} // Pass state for user's answer
+            setUserAnswer={setUserAnswer}
           />
-        )}
-        {exerciseType === "multiple" && (
+        );
+      case EXERCISE_TYPES.MULTIPLE:
+        return (
           <MultiAnswerExercise
             exercise={exercise}
             selectedOption={selectedOption}
             setSelectedOption={setSelectedOption}
           />
-        )}
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="exercise-container">
+      <div className="exercise-type-menu">
+        <button
+          className={`exercise-type-button ${
+            exerciseType === EXERCISE_TYPES.INPUT ? "active" : ""
+          }`}
+          onClick={() => setExerciseType(EXERCISE_TYPES.INPUT)}
+        >
+          Answer Input
+        </button>
+        <button
+          className={`exercise-type-button ${
+            exerciseType === EXERCISE_TYPES.MULTIPLE ? "active" : ""
+          }`}
+          onClick={() => setExerciseType(EXERCISE_TYPES.MULTIPLE)}
+        >
+          Multiple Choice
+        </button>
       </div>
+
+      <div className="exercise-content">{renderExercise()}</div>
     </div>
   );
 };

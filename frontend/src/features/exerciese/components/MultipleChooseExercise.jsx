@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "../../../../styles/Exercise.css";
 import HintUnit from "./HintUnit";
 
@@ -11,25 +11,50 @@ function MultipleChooseExercise({
   const [isCorrect, setIsCorrect] = useState(false);
 
   const { question, part_of_speech, explanation, hints, multiple_choice } =
-    exercise;
-  const { options, correct_answer } = multiple_choice;
+    exercise || {};
+  const { options = [], correct_answer } = multiple_choice || {};
+
+  const correctAnswerIndex = useMemo(
+    () => parseInt(correct_answer, 10),
+    [correct_answer]
+  );
 
   // Reset states whenever a new exercise is loaded
   useEffect(() => {
-    setIsAnswered(false); // Reset to "input view"
-    setSelectedOption(null); // Clear selected option
-    setIsCorrect(false); // Reset correctness state
-  }, [exercise]);
+    setIsAnswered(false);
+    setSelectedOption(null);
+    setIsCorrect(false);
+  }, [exercise, setSelectedOption]);
 
-  const handleAnswerSelect = (option, index) => {
-    if (isAnswered) return; // Prevent re-answering
+  const handleAnswerSelect = (index) => {
+    if (isAnswered) return;
 
     setSelectedOption(index);
     setIsAnswered(true);
-
-    const isAnswerCorrect = index === parseInt(correct_answer, 10);
-    setIsCorrect(isAnswerCorrect);
+    setIsCorrect(index === correctAnswerIndex);
   };
+
+  const getOptionClassName = (index) => {
+    let className = "option-button";
+
+    if (isAnswered) {
+      if (index === correctAnswerIndex) {
+        className += " correct";
+      } else if (index === selectedOption) {
+        className += " incorrect";
+      }
+    }
+
+    return className;
+  };
+
+  if (!exercise || !multiple_choice) {
+    return (
+      <div className="exercise-container">
+        <p>No exercise available.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="exercise-container">
@@ -42,30 +67,17 @@ function MultipleChooseExercise({
         </div>
 
         <div className="mc-options">
-          {options.map((option, index) => {
-            const isCorrectAnswer = index === parseInt(correct_answer, 10);
-            const isSelectedAnswer = index === selectedOption;
-            let buttonClass = "option-button";
-
-            if (isAnswered) {
-              if (isCorrectAnswer) {
-                buttonClass += " correct";
-              } else if (isSelectedAnswer) {
-                buttonClass += " incorrect";
-              }
-            }
-
-            return (
-              <button
-                key={index}
-                className={buttonClass}
-                onClick={() => handleAnswerSelect(option, index)}
-                disabled={isAnswered}
-              >
-                {option}
-              </button>
-            );
-          })}
+          {options.map((option, index) => (
+            <button
+              key={index}
+              className={getOptionClassName(index)}
+              onClick={() => handleAnswerSelect(index)}
+              disabled={isAnswered}
+              aria-label={`Option ${index + 1}: ${option}`}
+            >
+              {option}
+            </button>
+          ))}
         </div>
 
         {isAnswered && !isCorrect && (
@@ -78,8 +90,8 @@ function MultipleChooseExercise({
 
       <div className="exercise-hints">
         <div className="hints-list">
-          {hints.map((hint, index) => (
-            <HintUnit key={index} index={index} hint={hint} />
+          {hints?.map((hint, index) => (
+            <HintUnit key={`hint-${index}`} index={index} hint={hint} />
           ))}
         </div>
       </div>
