@@ -175,4 +175,6 @@ export const prepareWords = (text) => {
     return filteredWords;
   };
 
-  
+export const transformToWordData = (arr) => {
+  return Object.fromEntries(arr.map(({word, ...rest}) => [word.toLowerCase(), {...rest}]));
+};

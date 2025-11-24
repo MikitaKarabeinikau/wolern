@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { useAddWord } from "../hooks/useAnnotations.js";
 import VocabularySelectionModal from "./VocabularySelectionModal.jsx";
+import WordInfo from "./WordInfo.jsx";
 
-function Word({ word, vocabulary, mod, vocabularies }) {
+function Word({ word, mod, userWords }) {
   const [isHovering, setIsHovering] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { addWord, error, isLoading } = useAddWord();
+  const vocabulary = userWords[word.toLowerCase()]?.vocabulary || "unknown";
+
+  // Get related info from infoMaps if needed
+  const translations = userWords[word.toLowerCase()]?.translations || [];
+  const definitions = userWords[word.toLowerCase()]?.definitions || [];
+  const examples = userWords[word.toLowerCase()]?.examples || [];
 
   const handleConfirm = (newVocabulary) => {
     addWord(word, newVocabulary);
@@ -45,7 +52,7 @@ function Word({ word, vocabulary, mod, vocabularies }) {
         {word}
       </div>
       <div className={`word-info ${isHovering ? "visible" : "hidden"}`}>
-        INFO BLOCK
+        <WordInfo translations={translations} definitions={definitions} />
       </div>
     </div>
   );

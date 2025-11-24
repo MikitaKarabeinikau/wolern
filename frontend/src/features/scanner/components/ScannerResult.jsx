@@ -1,84 +1,110 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { useAuth } from "@clerk/clerk-react";
 import "../../../../styles/Exercise.css";
 import { prepareWords } from "../../../utils/wordProcessing.js";
-import { useScanner } from "../hooks/useScanner.js";
+import { useVocabularies } from "../../vocabularies/hooks/useVocabularies";
 import AnnotationMode from "../modes/annotation/AnnotationMode.jsx";
 import ReadMode from "../modes/reading/ReadMode.jsx";
-import { useVocabularies } from "../hooks/useVocabularies.js";
+import { useScannerVocabularies } from "../hooks/useScannerVocabularies.js";
+import { useVocabularyContext } from "../../../contexts/VocabularyContext.jsx";
+import { transformToWordData } from "../../../utils/wordProcessing.js";
 
 function ScannerResult({ text }) {
-  const { fetchWordData, words, isLoading, error } = useScanner();
+  const { vocabularyData, mappedVocabulary } = useVocabularyContext();
+  const {
+    isLoading,
+    error,
+    words,
+    infoMaps,
+    selectedVocabulary,
+    handleVocabularySelect,
+    handleWordAdded,
+    fetchAllData,
+  } = vocabularyData;
   const {
     getVocabularies,
     vocabularies,
     error: vocabError,
     isLoading: vocabLoading,
-  } = useVocabularies();
+  } = useScannerVocabularies();
+
   const [mod, setMod] = useState("read");
 
-  const mapByWord = useMemo(
-    () =>
-      new Map(words.map((item) => [item.word.toLowerCase(), item.vocabulary])),
-    [words]
-  );
-
+  // Prepare words with their vocabulary status
   const preparedWords = useMemo(
     () =>
       prepareWords(text).map((item) => [
         item,
-        mapByWord.get(item.toLowerCase()) || "unknown",
+        mappedVocabulary[item.toLowerCase()] === undefined
+          ? "unknown"
+          : mappedVocabulary[item.toLowerCase()].vocabulary,
       ]),
-    [text, mapByWord]
+    [text, mappedVocabulary]
   );
 
   const handleModeChange = useCallback(
     (newMode) => {
       setMod(newMode);
       if (newMode === "read") {
-        fetchWordData();
+        fetchAllData();
       }
     },
-    [fetchWordData]
+    [fetchAllData]
   );
 
+  // Fetch word data on mount
   useEffect(() => {
-    fetchWordData();
-  }, [fetchWordData]);
+    fetchAllData();
+  }, [fetchAllData]);
 
+  // Fetch vocabularies on mount
   useEffect(() => {
     getVocabularies();
   }, [getVocabularies]);
 
+  const isAnyLoading = isLoading || vocabLoading;
+
   return (
-    <>
-      <div className="scanner-results-container">
-        <div className="scanner-output">
-          {mod === "edit" && (
-            <AnnotationMode
-              userWords={mapByWord}
-              words={preparedWords}
-              text={text}
-              vocabularies={vocabularies}
-            />
-          )}
-          {mod === "read" && <ReadMode userWords={mapByWord} text={text} />}
-          {isLoading && <p>Loading scanned words...</p>}
-        </div>
-        <div className="modes-panel">
-          <div className="menu-container">
-            <div className="menu-type-selector">
-              <button onClick={() => handleModeChange("read")}>
-                <strong>Read Mode</strong>
-              </button>
-              <button onClick={() => handleModeChange("edit")}>
-                <strong>Annotation Mode</strong>
-              </button>
-            </div>
+    <div className="scanner-results-container">
+      <div className="scanner-output">
+        {isAnyLoading ? (
+          <p>Loading scanned words...</p>
+        ) : mod === "edit" ? (
+          <AnnotationMode
+            userWords={mappedVocabulary}
+            words={preparedWords}
+            vocabularies={vocabularies}
+          />
+        ) : (
+          <ReadMode
+            userWords={mappedVocabulary}
+            words={preparedWords}
+            text={text}
+          />
+        )}
+
+        {error && <p className="error-message">{error}</p>}
+        {vocabError && <p className="error-message">{vocabError}</p>}
+      </div>
+
+      <div className="modes-panel">
+        <div className="menu-container">
+          <div className="menu-type-selector">
+            <button
+              className={mod === "read" ? "active" : ""}
+              onClick={() => handleModeChange("read")}
+            >
+              <strong>Read Mode</strong>
+            </button>
+            <button
+              className={mod === "edit" ? "active" : ""}
+              onClick={() => handleModeChange("edit")}
+            >
+              <strong>Annotation Mode</strong>
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

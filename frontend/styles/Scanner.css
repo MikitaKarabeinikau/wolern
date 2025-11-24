@@ -70,8 +70,10 @@
     flex:1;
 }
 
-.word-container{
-    display: inline-block;
+.word-container {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
 }
 .word-container {
   display: inline-block; /* Ensure each word is treated as an inline block */
@@ -93,33 +95,36 @@
 }
 
 .word-info {
-  position: absolute; /* Position below the word */
-  top: 100%; /* Place below the word */
-  left: 0; /* Align with the left edge of the word */
-  opacity: 0; /* Hidden by default */
-  max-height: 0; /* Prevent layout issues */
-  overflow: hidden;
-  transition: opacity 0.3s, max-height 0.3s;
-  padding: 0;
-  background-color: #f0f0f0;
-  margin-top: 5px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #ccc;
-  z-index: 10; /* Ensure it appears above other elements */
+  position: absolute;
+  z-index: 10;
+  min-width: 220px;
+  max-width: 350px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  padding: 1rem;
+  color: #334155;
+  font-size: 1rem;
+  transition: opacity 0.15s;
+  opacity: 0;
+  pointer-events: none;
+  left: 0;
+  top: 100%;
+  margin-top: 0.5em;
+  word-break: break-word;
+  white-space: pre-line;
+}
+.word-info.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.word-info.visible {
-  opacity: 1; /* Make visible */
-  max-height: 200px; /* Adjust as needed */
-  padding: 8px;
-  display: block;
-}
 
 .word-info.hidden {
-  opacity: 0; /* Hidden state */
+  opacity: 0;
+  pointer-events: none;
 }
-
 
 .word-new{
     background-color: #fbf300;
@@ -332,4 +337,36 @@
 
 .btn-confirm:active {
   transform: scale(0.98);
+}
+
+.word-info-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.word-info-section h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #2563eb;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.word-info-section strong {
+  color: #0f172a;
+  font-weight: 600;
+  margin-right: 0.5em;
+}
+
+.word-info-section div {
+  margin-bottom: 0.4em;
+  font-size: 1rem;
+  color: #334155;
+}
+
+.word-info-section:last-child {
+  margin-bottom: 0;
 }

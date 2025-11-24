@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useTransition } from "react";
-import { useVocabularies } from "./hooks/useVocabularies";
+import { useVocabularyContext } from "../../contexts/VocabularyContext";
 import AddWordContainer from "./components/AddWordForm";
 import WordList from "./components/WordList";
 import Vocabularies from "./components/Vocabularies";
 import "../../../styles/Vocabulary.css";
 
 export function VocabulariesPanel() {
+  const { vocabularyData } = useVocabularyContext();
   const {
     isLoading,
     error,
@@ -16,10 +17,11 @@ export function VocabulariesPanel() {
     handleVocabularySelect,
     handleWordAdded,
     getToken,
-  } = useVocabularies();
+    fetchAllData,
+  } = vocabularyData;
 
   const [panelError, setPanelError] = useState(null);
-  const [isPending, startTransition] = useTransition(); // Add useTransition hook
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     if (error) {
@@ -28,9 +30,10 @@ export function VocabulariesPanel() {
     }
   }, [error]);
 
-  const handleAddWord = (newWord) => {
-    startTransition(() => {
-      handleWordAdded(newWord); // Defer rendering updates
+  const handleAddWord = async (newWord) => {
+    startTransition(async () => {
+      await handleWordAdded(newWord);
+      await fetchAllData(); // Refresh data after adding
     });
   };
 
@@ -60,7 +63,7 @@ export function VocabulariesPanel() {
           <AddWordContainer onWordAdded={handleAddWord} />
         </div>
         <div className="right-panel">
-          {isLoading || isPending ? ( // Show loading state during transition
+          {isLoading || isPending ? (
             <p>Loading...</p>
           ) : (
             <WordList

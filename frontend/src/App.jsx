@@ -8,24 +8,27 @@ import { QuizGenerator } from "./features/quiz/QuizGenerator.jsx";
 import { HomePanel } from "./features/home/HomePanel.jsx";
 import { ExercisesPanel } from "./features/exerciese/ExercisesPanel.jsx";
 import { ScannerPanel } from "./features/scanner/ScannerPanel.jsx";
+import { VocabularyProvider } from "./contexts/VocabularyContext.jsx";
 import "./App.css";
 
 function App() {
   return (
     <ClerkProviderWithRoutes>
-      <Routes>
-        <Route path="/sign-in/*" element={<AuthenticationPage />} />
-        <Route path="/sign-up" element={<AuthenticationPage />} />
+      <VocabularyProvider>
+        <Routes>
+          <Route path="/sign-in/*" element={<AuthenticationPage />} />
+          <Route path="/sign-up" element={<AuthenticationPage />} />
 
-        <Route element={<Layout />}>
-          <Route path="/" element={<HomePanel />} />
-          <Route path="/vocabularies" element={<VocabulariesPanel />} />
-          <Route path="/statistics" element={<StatisticPanel />} />
-          <Route path="/quiz" element={<QuizGenerator />} />
-          <Route path="/exercises" element={<ExercisesPanel />} />
-          <Route path="/scanner" element={<ScannerPanel />} />
-        </Route>
-      </Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePanel />} />
+            <Route path="/vocabularies" element={<VocabulariesPanel />} />
+            <Route path="/statistics" element={<StatisticPanel />} />
+            <Route path="/quiz" element={<QuizGenerator />} />
+            <Route path="/exercises" element={<ExercisesPanel />} />
+            <Route path="/scanner" element={<ScannerPanel />} />
+          </Route>
+        </Routes>
+      </VocabularyProvider>
     </ClerkProviderWithRoutes>
   );
 }

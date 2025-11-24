@@ -2,18 +2,14 @@ import React from "react";
 import { prepareWords } from "../../../../utils/wordProcessing";
 import Word from "../../components/Word.jsx";
 
-export default function ReadMode({ userWords, text, vocabularies }) {
+export default function ReadMode({ userWords, text }) {
   return (
     <>
-      {prepareWords(text).map((word, index) => (
-        <Word
-          key={index}
-          word={word}
-          vocabulary={userWords.get(word.toLowerCase()) ?? "unknown"}
-          mod={"read"}
-          vocabularies={vocabularies}
-        />
-      ))}
+      {prepareWords(text).map((word, index) => {
+        return (
+          <Word key={index} word={word} mod="read" userWords={userWords} />
+        );
+      })}
     </>
   );
 }

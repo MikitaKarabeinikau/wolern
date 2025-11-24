@@ -2,7 +2,7 @@ import {useAuth} from "@clerk/clerk-react";
 import {useCallback, useState} from "react";
 import {apiClient} from "../../../api/apiClient";
 
-export function useVocabularies() {
+export function useScannerVocabularies() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [vocabularies, setVocabularies] = useState([]);

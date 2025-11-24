@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { useAddWord } from "../../hooks/useAnnotations.js";
-import CarouselAnnotation from "./Annotation.jsx";
+import Annotation from "./Annotation.jsx";
 
-export default function AnnotationMode({
-  userWords,
-  words,
-  text,
-  vocabularies,
-}) {
+export default function AnnotationMode({ userWords, words, vocabularies }) {
   const { addWord, error, isLoading } = useAddWord();
   const unknownWords = words.filter(
     ([, vocabulary]) => vocabulary === "unknown"
