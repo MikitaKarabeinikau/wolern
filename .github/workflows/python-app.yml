@@ -22,7 +22,7 @@ jobs:
       with:
           # submodules: true
           # fetch-depth: 0 
-          token: ${{ secrets.DEPLOYMENT_TOKEN }}
+          token: ${{ secrets.WOLERN_DEPLOYMENT_TOKEN }}
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
     - name: Install dependencies
@@ -42,7 +42,7 @@ jobs:
         pytest --rootdir=src tests
     - uses: actions/stale@v5
       with:
-        repo-token: ${{ secrets.DEPLOYMENT_TOKEN }}
+        repo-token: ${{ secrets.WOLERN_DEPLOYMENT_TOKEN }}
         stale-issue-message: 'Stale issue message'
         stale-pr-message: 'Stale pull request message'
         stale-issue-label: 'no-issue-activity'
