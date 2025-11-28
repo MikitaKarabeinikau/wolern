@@ -16,13 +16,13 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: woler_test_user
+          POSTGRES_PASSWORD: password
           POSTGRES_DB: test_db
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres"
+          --health-cmd "pg_isready -U woler_test_user"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -55,5 +55,5 @@ jobs:
       # Step 5: Run tests
       - name: Run tests
         env:
-          DATABASE_URL: postgresql+psycopg2://postgres:postgres@localhost/test_db
-        run: pytest tests/unit
+          DATABASE_URL: postgresql+psycopg2://woler_test_user:password@localhost/test_db
+        run: pytest backend/tests/unit

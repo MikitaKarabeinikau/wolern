@@ -13,7 +13,6 @@ certifi==2025.7.14
 cffi==1.17.1
 charset-normalizer==3.4.2
 clerk-backend-api==3.3.1
-clerk-sdk-python==0.1.0
 click==8.1.8
 coverage==7.12.0
 cryptography==45.0.7
@@ -52,8 +51,7 @@ psycopg2==2.9.11
 psycopg2-binary==2.9.10
 pycares==4.10.0
 pycparser==2.22
-pydantic==2.12.2
-pydantic_core==2.41.4
+pydantic==2.11.2
 Pygments==2.19.2
 PyJWT==2.10.1
 pytest==8.4.1
