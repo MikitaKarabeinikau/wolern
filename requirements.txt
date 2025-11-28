@@ -39,7 +39,7 @@ mdurl==0.1.2
 mirakuru==3.0.1
 multidict==6.6.4
 nltk==3.9.1
-numpy==2.3.1
+numpy==2.0.0
 openai==1.102.0
 packaging==25.0
 pandas==2.3.1
