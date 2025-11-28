@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.src.database.models import Base, Words, Users, Vocabulary, VocabularyWords, Exercise, UserExercises
 
 # Create a test database URL (PostgreSQL in-memory database)
-TEST_DATABASE_URL = "postgresql+psycopg2://postgres:postgres@localhost/test_db"
+TEST_DATABASE_URL = "postgresql+psycopg2://woler_test_user:password@localhost/test_db"
 
 # Create a test engine and session
 engine = create_engine(TEST_DATABASE_URL)

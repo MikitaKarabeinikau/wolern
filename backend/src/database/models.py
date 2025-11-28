@@ -1,7 +1,6 @@
 from sqlalchemy import JSON, Integer, String, Column, DateTime, UniqueConstraint, create_engine, func,text,ForeignKey,Float,event, Boolean
 from sqlalchemy.orm import relationship
-# Importing declarative_base to define the base class for our models
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 from .database import Base, engine
@@ -30,9 +29,6 @@ class Words(Base):
     vocabulary_words = relationship("VocabularyWords", back_populates="word")
     exercises = relationship("Exercise", back_populates="word")
     
-@event.listens_for(Words, 'before_delete')
-def prevent_word_delete(mapper, connection, target):
-    raise ValueError("Words are immutable and cannot be deleted!")
     
     
 class Definitions(Base):

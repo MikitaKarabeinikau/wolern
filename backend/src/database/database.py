@@ -13,7 +13,6 @@ Base = declarative_base()
 
 engine = create_engine(DATABASE_URL,pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
