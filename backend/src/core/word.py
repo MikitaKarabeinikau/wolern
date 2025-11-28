@@ -27,9 +27,9 @@ logging.basicConfig(filename=(Path(__file__).resolve().parent.parent / 'logs' / 
 
 
 class Word:
-    def __init__(self,word):
+    def __init__(self,word,source_lang: str = "english", target_lang: str = "polish"):
             self.word = word.lower()
-            self.translation = get_translation(word)
+            self.translation = get_translation(word, source_lang, target_lang)
             self.synonyms = get_synonyms(word)
             self.definition = get_definitions_by_pos(word) if get_definitions_by_pos(word) else {}
             self.examples  = get_examples_from_wordnet(word) if get_examples_from_wordnet(word) else {}

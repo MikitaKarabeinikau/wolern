@@ -108,17 +108,8 @@ class Vocabulary_Manager():
                 vocabulary.vocabulary[updated_word.word] = updated_word.to_dict()
                 vocabulary.save()
 
-            # logging.INFO(f'Word : {updated_word.word} was updated in vocabulary {vocabulary_name}')
 
-    def learning_stage_scanner(self):
-        '''
-        if word learning stage is 5
-        than transfer word to known
-        remove from current vocabulary
-        logging.info(f'Word: {word} was transfer from {old_vocabulary} to known
-        :return: Word
-        '''
-        pass
+
 
 
 class Vocabulary():

@@ -392,7 +392,7 @@ def get_translation_from_cache(word: str) -> dict[str, list[str]] | None:
 
 
 def get_translation(
-    word: str, target_lang: str = "russian"
+    word: str,source_lang: str = "english", target_lang: str = "polish"
 ) -> dict[str, list[str] | None]:
     """
     Retrieve translation for a word, using cache if available.
@@ -406,7 +406,7 @@ def get_translation(
             return {target_lang: translation}
 
     try:
-        translated_words = LingueeTranslator(source="english", target=target_lang).translate(word, return_all=True)
+        translated_words = LingueeTranslator(source=source_lang, target=target_lang).translate(word, return_all=True)
         _translation_cache.setdefault(w, {})[target_lang] = translated_words
         _save_translation_cache()
         return {target_lang: translated_words}
