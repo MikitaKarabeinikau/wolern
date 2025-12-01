@@ -28,7 +28,16 @@ def create_user_tag(db:Session, user_word_status_id:int, tag:str) -> models.User
         logger.error(f"Error creating UserTags for user_word_status_id '{user_word_status_id}': {e}", exc_info=True)
         db.rollback()
         raise
-    
+
+def get_user_definitions_by_user_word_status_id(db:Session, user_word_status_id:int) -> list[models.UserTags]:
+    """Retrieve UserTags by user_word_status_id."""
+    try:
+        tags = db.query(models.UserTags).filter(models.UserTags.user_word_status_id == user_word_status_id).all()
+        return tags
+    except Exception as e:
+        logger.error(f"Error retrieving UserTags for user_word_status_id '{user_word_status_id}': {e}", exc_info=True)
+        raise
+
 def get_user_tags(db:Session, user_word_status_id:int) -> list[models.UserTags]:
     """Retrieve UserTags by user_word_status_id."""
     try:

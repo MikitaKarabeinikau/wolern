@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
 
@@ -9,9 +9,9 @@ from .user_exercise_progress import UserExerciseProgressResponse
 # ============================================================================
 class UserExerciseBase(BaseModel):
     '''Base schema for user exercises'''
-    user_id: int = Field(..., example=1)
-    exercise_id: int = Field(..., example=1)
-    word_id: int = Field(..., example=1)
+    user_id: int = Field(..., json_schema_extra={"example": 1})
+    exercise_id: int = Field(..., json_schema_extra={"example": 1})
+    word_id: int = Field(..., json_schema_extra={"example": 1})
 
 # ============================================================================
 # CREATE SCHEMAS
@@ -30,8 +30,7 @@ class UserExerciseResponse(UserExerciseBase):
     exercise_id: int
     word_id: int
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # ============================================================================
 # DETAILED RESPONSE
@@ -40,5 +39,4 @@ class UserExerciseDetailResponse(UserExerciseResponse):
     '''Schema for detailed user exercise'''
     user_exercise_progress: UserExerciseProgressResponse
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

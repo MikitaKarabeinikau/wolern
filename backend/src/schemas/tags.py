@@ -1,18 +1,18 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 # ============================================================================
 # BASE SCHEMAS
 # ============================================================================
 class TagBase(BaseModel):
     """Base schema for tag entities."""
-    tag: str = Field(..., min_length=1, max_length=50, example="Sample Tag")
+    tag: str = Field(..., min_length=1, max_length=50, json_schema_extra={"example": "Sample Tag"})
     
 # ============================================================================
 # CREATE SCHEMAS
 # ============================================================================
 class TagCreate(TagBase):
     """Schema for creating a new tag."""
-    word_id: int = Field(..., example=1)
+    word_id: int = Field(..., gt=0, json_schema_extra={"example": 1})
     
 # ============================================================================
 # RESPONSE SCHEMAS
@@ -23,5 +23,4 @@ class TagResponse(BaseModel):
     word_id: int
     tag: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

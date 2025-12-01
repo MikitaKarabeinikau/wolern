@@ -3,8 +3,9 @@ from setuptools import setup, find_packages
 setup(
     name='wolern', 
     version='0.0.1', # Start with a version number
-    packages=find_packages(),
-    install_requires=[],
+    packages=find_packages(where="backend/src"),
+    package_dir={"": "backend/src"},
+    install_requires=[r.strip() for r in open("backend/requirements.txt").readlines()],
     package_data={
         'wolern':[
             'data/sources/frequencies_source/*.xls',
@@ -22,4 +23,5 @@ setup(
         'Operating System :: OS Independent',
     ],
     python_requires='>=3.8', 
+    author_email="nikitakarabeinikau@gmail.com"
 )

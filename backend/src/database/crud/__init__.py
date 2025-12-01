@@ -25,10 +25,8 @@ from .users import (
 # ============================================================================
 from .vocabulary import (
     create_vocabulary,
-    get_vocabulary_by_user,
     get_number_of_vocabularies_by_user,
     update_vocabulary_name,
-    delete_vocabulary,
 )
 
 # ============================================================================

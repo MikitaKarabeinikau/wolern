@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from src.database import models
+from backend.src.database import models
 import logging
 
 logger = logging.getLogger(__name__)
@@ -204,3 +204,4 @@ def verify_user_owns_translation(
     except Exception as e:
         logger.error(f"Error verifying translation ownership: {e}", exc_info=True)
         raise
+

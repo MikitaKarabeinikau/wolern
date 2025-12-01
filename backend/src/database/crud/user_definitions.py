@@ -4,7 +4,7 @@ import logging
 from sqlalchemy.orm.exc import NoResultFound
 logger = logging.getLogger(__name__)
 
-def create_user_definitions(db:Session, user_word_status_id:int, part_of_speech:str, definition:str) -> models.UserDefinitions:
+def create_user_definition(db:Session, user_word_status_id:int, part_of_speech:str, definition:str) -> models.UserDefinitions:
     """Create a new user definition for a user word status."""
     try:
         word_status = db.query(models.UserWordStatus).filter(models.UserWordStatus.id == user_word_status_id).first()

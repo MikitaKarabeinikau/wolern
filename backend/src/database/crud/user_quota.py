@@ -1,4 +1,4 @@
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta, timezone
 from sqlalchemy.orm import Session
 from .. import models
 import logging
@@ -26,7 +26,7 @@ def reset_quota_if_needed(db: Session, quota: models.UserQuota):
     Resets the user's exercise quota if a day has passed since the last reset.
     """
     try:
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         if now - quota.last_reset > timedelta(hours=settings.QUOTA_RESET_HOURS):
             quota.quota_remaining = settings.DEFAULT_USER_QUOTA
             quota.last_reset = now

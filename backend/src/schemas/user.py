@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, Field, EmailStr, field_validator, ConfigDict
 from typing import Optional
 from datetime import datetime
 from backend.src.config import settings
@@ -8,8 +8,8 @@ from backend.src.config import settings
 # ============================================================================
 class UserBase(BaseModel):
     """Base user schema with common fields."""
-    username: Optional[str] = Field(None, min_length=3, max_length=25, example="johndoe")
-    email: Optional[EmailStr] = Field(None, example="johndoe@example.com")
+    username: Optional[str] = Field(None, min_length=3, max_length=25, json_schema_extra={"example": "johndoe"})
+    email: Optional[EmailStr] = Field(None, json_schema_extra={"example": "johndoe@example.com"})
     
     @field_validator('username')
     def validate_username(cls, v):
@@ -35,10 +35,10 @@ class UserBase(BaseModel):
 # ============================================================================
 class UserCreate(UserBase):
     """Schema for creating a new user."""
-    clerk_id: str = Field(..., min_length=1, example="user_2abc123xyz")
-    role: str = Field(default="user", example="user")
-    native_language: Optional[str] = Field(default="polish", example="polish")
-    preferred_language: Optional[str] = Field(default="english", example="english")
+    clerk_id: str = Field(..., min_length=1, json_schema_extra={"example": "user_2abc123xyz"})
+    role: str = Field(default="user", json_schema_extra={"example": "user"})
+    native_language: Optional[str] = Field(default="polish", json_schema_extra={"example": "polish"})
+    preferred_language: Optional[str] = Field(default="english", json_schema_extra={"example": "english"})
     
     @field_validator('role')
     def validate_role(cls, v):
@@ -55,21 +55,21 @@ class UserCreate(UserBase):
 # ============================================================================
 class UserUpdateUsername(BaseModel):
     """Schema for updating username."""
-    username: str = Field(..., min_length=3, max_length=25, example="newusername")
+    username: str = Field(..., min_length=3, max_length=25, json_schema_extra={"example": "newusername"})
 
 
 class UserUpdateNativeLanguage(BaseModel):
     """Schema for updating native language."""
-    native_language: str = Field(..., min_length=2, max_length=15,   example="french")
+    native_language: str = Field(..., min_length=2, max_length=15,   json_schema_extra={"example": "french"})
 
 class UserUpdatePreferredLanguage(BaseModel):
     """Schema for updating preferred language."""
-    preferred_language: str = Field(..., min_length=2, max_length=15, example="spanish")
+    preferred_language: str = Field(..., min_length=2, max_length=15, json_schema_extra={"example": "spanish"})
     
 
 class UserUpdateRole(BaseModel):
     """Schema for updating user role (admin only)."""
-    role: str = Field(..., example="teacher")
+    role: str = Field(..., json_schema_extra={"example": "teacher"})
     
     @field_validator('role')
     def validate_role(cls, v):
@@ -92,8 +92,7 @@ class UserResponse(UserBase):
     preferred_language: Optional[str] = None
     created_at: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
  
 
@@ -103,8 +102,7 @@ class UserPublic(BaseModel):
     username: Optional[str] = None
     role: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserWithQuota(UserResponse):
@@ -112,5 +110,4 @@ class UserWithQuota(UserResponse):
     quota_remaining: Optional[int] = None
     quota_reset_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

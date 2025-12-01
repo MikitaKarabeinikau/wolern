@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from .. import models
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy.orm.exc import NoResultFound
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ def increase_correct_count(db:Session, id:int) -> models.UserExerciseProgress:
     try:
         user_exercise_progress = db.query(models.UserExerciseProgress).filter(models.UserExerciseProgress.id == id).one()
         user_exercise_progress.correct_count += 1
-        user_exercise_progress.last_attempted = datetime.utcnow()  # Update last_attempted timestamp
+        user_exercise_progress.last_attempted = datetime.now(timezone.utc)  # Update last_attempted timestamp
         db.commit()
         db.refresh(user_exercise_progress)
         
@@ -66,7 +66,7 @@ def increase_incorrect(db:Session, id:int) -> models.UserExerciseProgress:
     try:
         user_exercise_progress = db.query(models.UserExerciseProgress).filter(models.UserExerciseProgress.id == id).one()
         user_exercise_progress.incorrect_count += 1
-        user_exercise_progress.last_attempted = datetime.utcnow()  # Update last_attempted timestamp
+        user_exercise_progress.last_attempted = datetime.now(timezone.utc)  # Update last_attempted timestamp
         db.commit()
         db.refresh(user_exercise_progress)
         

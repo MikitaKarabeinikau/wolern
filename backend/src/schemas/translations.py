@@ -1,12 +1,12 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from backend.src.config import settings
 
 # ============================================================================
 # BASE SCHEMAS
 # ============================================================================
 class TranslationBase(BaseModel):
-    language: str = Field(..., example="english")
-    translation: str = Field(..., example="kot")
+    language: str = Field(..., json_schema_extra={"example": "english"})
+    translation: str = Field(..., json_schema_extra={"example": "kot"})
     
     @field_validator('language')
     def validate_language(cls, value):
@@ -19,15 +19,14 @@ class TranslationBase(BaseModel):
 # CREATE SCHEMAS
 # ============================================================================
 class TranslationCreate(TranslationBase):
-    word_id: int = Field(...,example=1)
+    word_id: int = Field(..., json_schema_extra={"example": 1})
     
 # ============================================================================
 # RESPONSE SCHEMAS
 # ============================================================================
 class TranslationResponse(TranslationBase):
-    id: int = Field(...,example=1)
-    word_id: int = Field(...,example=1)
+    id: int = Field(..., json_schema_extra={"example": 1})
+    word_id: int = Field(..., json_schema_extra={"example": 1})
     
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

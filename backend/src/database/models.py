@@ -2,7 +2,7 @@ from sqlalchemy import JSON, Integer, String, Column, DateTime, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
-from datetime import datetime
+from datetime import datetime,timezone
 from .database import Base, engine
 
 
@@ -15,9 +15,9 @@ class Words(Base):
     language = Column(String, nullable=False)
     audio_url = Column(String, nullable=True)
     frequency = Column(Float, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
     
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc), nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
     
     definitions = relationship("Definitions", back_populates="word", cascade="all, delete-orphan")
@@ -105,7 +105,7 @@ class Users(Base):
     role = Column(String, nullable=True, default="user")
     native_language = Column(String, nullable=True, default="polish")
     preferred_language = Column(String, nullable=True, default="english")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
     
     
     vocabulary = relationship("Vocabulary", back_populates="user", cascade="all, delete-orphan")
@@ -128,7 +128,7 @@ class VocabularyWords(Base):
     id = Column(Integer, primary_key=True, index=True)
     vocabulary_id = Column(Integer, ForeignKey('vocabulary.vocabulary_id', ondelete="CASCADE"), nullable=False)
     word_id = Column(Integer, ForeignKey('words.id', ondelete="RESTRICT"), nullable=False)
-    added_at = Column(DateTime, default=datetime.utcnow)
+    added_at = Column(DateTime, default=datetime.now(timezone.utc))
     
     vocabulary = relationship("Vocabulary", back_populates="vocabulary_words")
     word = relationship("Words", back_populates="vocabulary_words")
@@ -143,7 +143,7 @@ class UserWordStatus(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     vocabulary_word_id = Column(Integer, ForeignKey("vocabulary_words.id"), nullable=False)
-    last_updated = Column(DateTime, default=datetime.utcnow, nullable=False)
+    last_updated = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
     
     user_synonyms = relationship("UserSynonyms", back_populates="user_word_status", cascade="all, delete-orphan")
     user_examples = relationship("UserExamples", back_populates="user_word_status", cascade="all, delete-orphan")
@@ -162,7 +162,7 @@ class UserQuota(Base):
     user_id = Column(Integer, ForeignKey('users.id', ondelete="CASCADE"),unique=True, nullable=False)
     subscription_type = Column(String, nullable=True, default="free")
     quota_remaining = Column(Integer, nullable=False)
-    last_reset = Column(DateTime, default=datetime.utcnow)
+    last_reset = Column(DateTime, default=datetime.now(timezone.utc))
     
     user = relationship("Users", back_populates="quota")
 
@@ -175,7 +175,7 @@ class Exercise(Base):
     part_of_speech = Column(String, nullable=False) 
     question = Column(String, nullable=False)
     explanation = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
     hints = Column(JSON, nullable=False)
     
     word = relationship("Words", back_populates="exercises")
@@ -208,8 +208,8 @@ class MultipleChoiceExercise(Base):
     correct_answer = Column(Integer, nullable=False) 
     exercise_id = Column(Integer, ForeignKey('exercises.id', ondelete="CASCADE"), unique=True, nullable=False)
     
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+    updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc), nullable=False)
 
     exercise = relationship("Exercise", back_populates="multiple_choice")
 
@@ -221,7 +221,7 @@ class UserExerciseProgress(Base):
     user_exercise_id = Column(Integer, ForeignKey("user_exercises.id", ondelete="CASCADE"), nullable=False, unique=True)
     correct = Column(Integer, nullable=False, default=0)
     wrong = Column(Integer, nullable=False, default=0)
-    last_attempted = Column(DateTime, default=datetime.utcnow, nullable=False)
+    last_attempted = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
     
     user_exercise = relationship("UserExercises", back_populates="progress")
 
@@ -235,7 +235,7 @@ class UserQuizProgress(Base):
     wrong = Column(Integer, nullable=False, default=0)
     correct_streak = Column(Integer, nullable=False, default=0)
     wrong_streak = Column(Integer, nullable=False, default=0)
-    last_attempted = Column(DateTime, default=datetime.utcnow, nullable=False)
+    last_attempted = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
     time_to_repeat = Column(DateTime, nullable=True)
     
     user_word_status = relationship("UserWordStatus", back_populates="user_quiz_progress")

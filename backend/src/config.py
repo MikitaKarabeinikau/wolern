@@ -1,3 +1,4 @@
+from enum import Enum
 import os
 from typing import Optional
 from functools import lru_cache
@@ -95,7 +96,23 @@ class Settings():
     SUPPORTED_LANGUAGES: list[str] = ["english", "russian", "polish"]
     WORD_LEARNING_STAGE: Dict[int,str] = {0:'UNKNOWN',1:'LEARNING',2:'GOOD',3:'EXCELLENT',4:'KNOWN'}
     CORRECT_STREAK_THRESHOLD: int = 5
-        
+    
+    # ============================================================================
+    # ENUMS
+    # ============================================================================
+    class PART_OF_SPEECH(str, Enum):
+        """Valid parts of speech."""
+        NOUN = "noun"
+        VERB = "verb"
+        ADJECTIVE = "adjective"
+        ADVERB = "adverb"
+        PRONOUN = "pronoun"
+        PREPOSITION = "preposition"
+        CONJUNCTION = "conjunction"
+        INTERJECTION = "interjection"
+        DETERMINER = "determiner"
+        OTHER = "other"
+
     # ============================================================================
     # VOCABULARY SETTINGS
     # ===========================================================================

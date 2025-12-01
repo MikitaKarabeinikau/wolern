@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from typing import Optional, Literal
 from datetime import datetime
 from backend.src.config import settings
@@ -10,9 +10,9 @@ class UserQuotaBase(BaseModel):
     '''Base schema for user quota'''
     subscription_type: Optional[Literal["free", "premium", "enterprise"]] = Field(
         default="free", 
-        example="free"
+        json_schema_extra={"example": "free"}
     )
-    quota_remaining: int = Field(..., ge=0, example=100)
+    quota_remaining: int = Field(..., ge=0, json_schema_extra={"example": 100})
 
     @field_validator('subscription_type')
     @classmethod
@@ -26,12 +26,12 @@ class UserQuotaBase(BaseModel):
 # ============================================================================
 class UserQuotaCreate(BaseModel):
     '''Schema for creating user quota'''
-    user_id: int = Field(..., example=1)
+    user_id: int = Field(..., json_schema_extra={"example": 1})
     subscription_type: Optional[Literal["free", "premium", "enterprise"]] = Field(
         default="free", 
-        example="free"
+        json_schema_extra={"example": "free"}
     )
-    quota_remaining: int = Field(..., ge=0, example=100)
+    quota_remaining: int = Field(..., ge=0, json_schema_extra={"example": 100})
 
 # ============================================================================
 # UPDATE SCHEMAS
@@ -40,9 +40,9 @@ class UserQuotaUpdate(BaseModel):
     '''Schema for updating user quota'''
     subscription_type: Optional[Literal["free", "premium", "enterprise"]] = Field(
         None, 
-        example="premium"
+        json_schema_extra={"example": "premium"}
     )
-    quota_remaining: Optional[int] = Field(None, ge=0, example=50)
+    quota_remaining: Optional[int] = Field(None, ge=0, json_schema_extra={"example": 50})
 
 # ============================================================================
 # RESPONSE SCHEMAS
@@ -53,8 +53,7 @@ class UserQuotaResponse(UserQuotaBase):
     user_id: int
     last_reset: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # ============================================================================
 # QUOTA STATUS SCHEMA
@@ -66,5 +65,4 @@ class UserQuotaStatusResponse(BaseModel):
     quota_remaining: int
     last_reset: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

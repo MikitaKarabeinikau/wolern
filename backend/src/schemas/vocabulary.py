@@ -1,20 +1,25 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
+from datetime import datetime
 
 # ============================================================================
 # BASE SCHEMAS
 # ============================================================================
 class VocabularyBase(BaseModel):
     """Base vocabulary schema with common fields."""
-    name: Optional[str] = Field(None, min_length=3, max_length=50, example="English Basics")
+    name: str = Field(..., min_length=3, max_length=50, json_schema_extra={"example": "English Basics"})
     
     
 # ============================================================================
 # CREATE SCHEMAS
 # ============================================================================
 class VocabularyCreate(VocabularyBase):
-    """Schema for creating a new vocabulary."""
-    name: str = Field(..., min_length=3, max_length=50, example="English Basics")
+    """
+    Schema for creating a new vocabulary.
+    
+    Note: user_id is NOT included here - it's taken from the authenticated user's token.
+    """
+    pass 
 
 
 # ============================================================================
@@ -22,16 +27,32 @@ class VocabularyCreate(VocabularyBase):
 # ============================================================================
 class VocabularyUpdateName(BaseModel):
     """Schema for updating vocabulary name."""
-    name: str = Field(..., min_length=3, max_length=50, example="Advanced English")
+    name: str = Field(..., min_length=3, max_length=50, json_schema_extra={"example": "Advanced English"})
+
 
 # ============================================================================
 # RESPONSE SCHEMAS
 # ============================================================================
 class VocabularyResponse(BaseModel):
-    """Schema for user response"""
+    """Schema for vocabulary response."""
     vocabulary_id: int
     name: str
     user_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
+
+
+class VocabularyDetailResponse(VocabularyResponse):
+    """Extended vocabulary response with additional details."""
+    created_at: Optional[datetime] = None
+    word_count: int = 0
+
+    model_config = ConfigDict(from_attributes=True)
+
+class VocabularyListResponse(BaseModel):
+    """Schema for list of vocabularies."""
+    success: bool = True
+    count: int
+    vocabularies: list[VocabularyDetailResponse]

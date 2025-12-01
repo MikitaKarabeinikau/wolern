@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 
 # ============================================================================
@@ -7,8 +7,8 @@ from typing import Optional
 # ============================================================================
 class VocabularyWordBase(BaseModel):
     '''Base schema for vocabulary words'''
-    vocabulary_id: int = Field(..., example=1)
-    word_id: int = Field(..., example=1)
+    vocabulary_id: int = Field(..., json_schema_extra={"example": 1})
+    word_id: int = Field(..., json_schema_extra={"example": 1})
 
 # ============================================================================
 # CREATE SCHEMAS
@@ -35,5 +35,4 @@ class VocabularyWordDetailResponse(VocabularyWordResponse):
     '''Schema for detailed vocabulary word with word data'''
     word: Optional[dict] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

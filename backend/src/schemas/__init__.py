@@ -26,7 +26,7 @@ from .word import (
     WordCreate,
     WordResponse,
     WordPublic,
-    WordWithFullData,
+    WordWithFullDataResponse,
 )
 
 # ============================================================================

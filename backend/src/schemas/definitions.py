@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 # ============================================================================
 # BASE SCHEMAS
@@ -6,15 +6,15 @@ from pydantic import BaseModel, Field
 
 class DefinitionBase(BaseModel):
     """Base schema for definition entities."""
-    definition: str = Field(..., min_length=1, max_length=500, example="A statement of the exact meaning of a word.")
-    part_of_speech: str = Field(..., min_length=3, max_length=50, example="noun")
+    definition: str = Field(..., min_length=1, max_length=500, json_schema_extra={"example": "A statement of the exact meaning of a word."})
+    part_of_speech: str = Field(..., min_length=3, max_length=50, json_schema_extra={"example": "noun"})
 
 # ============================================================================
 # CREATE SCHEMAS
 # ============================================================================
 class DefinitionCreate(DefinitionBase):
     """Schema for creating a new definition."""
-    word_id: int = Field(..., example=1)
+    word_id: int = Field(..., json_schema_extra={"example": 1})
 
 
 # ============================================================================
@@ -27,5 +27,4 @@ class DefinitionResponse(BaseModel):
     definition: str
     part_of_speech: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 # ============================================================================
 # BASE SCHEMAS
@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 class SynonymBase(BaseModel):
     """Base schema for a synonym entry."""
-    synonym: str = Field(..., min_length=1, max_length=100, example="joyful")
+    synonym: str = Field(..., min_length=1, max_length=100, json_schema_extra={"example": "joyful"})
     
 # ============================================================================
 # CREATE SCHEMAS
@@ -14,7 +14,7 @@ class SynonymBase(BaseModel):
 
 class SynonymCreate(SynonymBase):
     """Schema for creating a new synonym."""
-    word_id: int = Field(..., example=1)
+    word_id: int = Field(..., json_schema_extra={"example": 1})
 
 # ============================================================================
 # RESPONSE SCHEMAS
@@ -26,8 +26,7 @@ class SynonymResponse(BaseModel):
     word_id: int
     synonym: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
     
     

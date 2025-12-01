@@ -29,14 +29,25 @@ def create_vocabulary(db:Session, user_id: int , name: str)-> models.Vocabulary:
         db.rollback()
         raise
 
-def get_vocabulary_by_vocabulary_id(db: Session, vocabulary_id: int) -> Optional[models.Vocabulary]:
+def get_vocabulary_by_vocabulary_id(db: Session,user_id: int, vocabulary_id: int) -> Optional[models.Vocabulary]:
     """Get vocabulary by ID."""
     try:
         return db.query(models.Vocabulary).filter(
+            models.Vocabulary.user_id == user_id,
             models.Vocabulary.vocabulary_id == vocabulary_id
         ).first()
     except Exception as e:
         logger.error(f"Error getting vocabulary: {e}", exc_info=True)
+        raise
+
+def get_vocabulary_by_name(db: Session,user_id:int, vocabulary_name: str) -> Optional[models.Vocabulary]:
+    """Get vocabulary by name for a specific user."""
+    try:
+        return db.query(models.Vocabulary).filter(models.Vocabulary.user_id == user_id,
+            models.Vocabulary.name == vocabulary_name
+        ).first()
+    except Exception as e:
+        logger.error(f"Error getting vocabulary by name '{vocabulary_name}' for user_id '{user_id}': {e}", exc_info=True)
         raise
 
 def get_number_of_vocabularies_by_user(db: Session, user_id: int) -> int:
@@ -72,19 +83,19 @@ def update_vocabulary_name(db: Session, user_id: int, vocabulary_id: int, new_na
         db.rollback()
         raise
 
-def get_vocabulary_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[models.Vocabulary]:
-    """Get all vocabulary lists for a specific user with pagination."""
+def get_vocabularies_by_user(db: Session, user_id: int) -> List[models.Vocabulary]:
+    """Get all vocabulary lists for a specific user."""
     try:
         vocabularies = db.query(models.Vocabulary).filter(
             models.Vocabulary.user_id == user_id
-        ).offset(skip).limit(limit).all()
+        ).all()
         logger.info(f"Retrieved {len(vocabularies)} vocabularies for user_id '{user_id}'.")
         return vocabularies
     except Exception as e:
         logger.error(f"Error getting vocabularies for user_id '{user_id}': {e}", exc_info=True)
         raise
     
-def delete_vocabulary(db: Session, user_id: int, vocabulary_id: int) -> bool:
+def delete_vocabulary_by_id(db: Session, user_id: int, vocabulary_id: int) -> bool:
     """Delete a vocabulary list."""
     try:
         vocabulary = db.query(models.Vocabulary).filter(models.Vocabulary.vocabulary_id == vocabulary_id).first()
@@ -102,5 +113,25 @@ def delete_vocabulary(db: Session, user_id: int, vocabulary_id: int) -> bool:
         raise
     except Exception as e:
         logger.error(f"Error deleting vocabulary id '{vocabulary_id}': {e}", exc_info=True)
+        db.rollback()
+        raise
+
+def delete_vocabulary_by_name(db: Session, user_id: int, vocabulary_name: str) -> bool:
+    """Delete a vocabulary list by name."""
+    try:
+        vocabulary = db.query(models.Vocabulary).filter(
+            models.Vocabulary.name == vocabulary_name,
+            models.Vocabulary.user_id == user_id
+        ).first()
+        if not vocabulary:
+            logger.warning(f"Vocabulary with name '{vocabulary_name}' not found for user_id '{user_id}'.")
+            return False
+        
+        db.delete(vocabulary)
+        db.commit()
+        logger.info(f"Vocabulary '{vocabulary_name}' deleted for user_id '{user_id}'.")
+        return True
+    except Exception as e:
+        logger.error(f"Error deleting vocabulary '{vocabulary_name}' for user_id '{user_id}': {e}", exc_info=True)
         db.rollback()
         raise

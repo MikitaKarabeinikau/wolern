@@ -6,9 +6,9 @@ import logging
 from svix.webhooks import Webhook
 
 from backend.src.config import settings
-from src.database.database import get_db
-from src.database.models import User
-from src.database.crud.users import create_user
+from backend.src.database.database import get_db
+from backend.src.database.models import Users
+from backend.src.database.crud.users import create_user
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -82,8 +82,8 @@ async def handle_user_created(db: Session, data: dict) -> dict:
     
     try:
         # Check if user already exists
-        existing_user = db.query(User).filter(
-            User.clerk_id == clerk_user_id
+        existing_user = db.query(Users).filter(
+            Users.clerk_id == clerk_user_id
         ).first()
         
         if existing_user:

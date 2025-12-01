@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 
 # ============================================================================
@@ -7,9 +7,9 @@ from typing import Optional
 # ============================================================================
 class UserQuizProgressBase(BaseModel):
     '''Base schema for user quiz progress'''
-    learning_stage: int = Field(default=1, ge=1, example=2)
-    correct: int = Field(default=0, ge=0, example=3)
-    wrong: int = Field(default=0, ge=0, example=1)
+    learning_stage: int = Field(default=1, ge=1, json_schema_extra={"example": 2})
+    correct: int = Field(default=0, ge=0, json_schema_extra={"example": 2})
+    wrong: int = Field(default=0, ge=0, json_schema_extra={"example": 2})
     correct_streak: int = Field(default=0, ge=0, example=2)
     wrong_streak: int = Field(default=0, ge=0, example=0)
 
@@ -18,23 +18,23 @@ class UserQuizProgressBase(BaseModel):
 # ============================================================================
 class UserQuizProgressCreate(BaseModel):
     '''Schema for creating user quiz progress'''
-    user_word_status_id: int = Field(..., example=1)
-    learning_stage: int = Field(default=1, ge=1, example=1)
-    correct: int = Field(default=0, ge=0, example=0)
-    wrong: int = Field(default=0, ge=0, example=0)
-    correct_streak: int = Field(default=0, ge=0, example=0)
-    wrong_streak: int = Field(default=0, ge=0, example=0)
+    user_word_status_id: int = Field(..., json_schema_extra={"example": 2})
+    learning_stage: int = Field(default=1, ge=1, json_schema_extra={"example": 2})
+    correct: int = Field(default=0, ge=0, json_schema_extra={"example": 2})
+    wrong: int = Field(default=0, ge=0, json_schema_extra={"example": 2})
+    correct_streak: int = Field(default=0, ge=0, json_schema_extra={"example": 2})
+    wrong_streak: int = Field(default=0, ge=0, json_schema_extra={"example": 0})
 
 # ============================================================================
 # UPDATE SCHEMAS
 # ============================================================================
 class UserQuizProgressUpdate(BaseModel):
     '''Schema for updating user quiz progress'''
-    learning_stage: Optional[int] = Field(None, ge=1, example=2)
-    correct: Optional[int] = Field(None, ge=0, example=3)
-    wrong: Optional[int] = Field(None, ge=0, example=1)
-    correct_streak: Optional[int] = Field(None, ge=0, example=2)
-    wrong_streak: Optional[int] = Field(None, ge=0, example=0)
+    learning_stage: Optional[int] = Field(None, ge=1, json_schema_extra={"example": 2})
+    correct: Optional[int] = Field(None, ge=0, json_schema_extra={"example": 3})
+    wrong: Optional[int] = Field(None, ge=0, json_schema_extra={"example": 1})
+    correct_streak: Optional[int] = Field(None, ge=0, json_schema_extra={"example": 2})
+    wrong_streak: Optional[int] = Field(None, ge=0, json_schema_extra={"example": 0})
 
 # ============================================================================
 # RESPONSE SCHEMAS
@@ -46,8 +46,7 @@ class UserQuizProgressResponse(UserQuizProgressBase):
     last_attempted: datetime
     time_to_repeat: Optional[datetime] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # ============================================================================
 # STATISTICS SCHEMA
@@ -63,5 +62,4 @@ class UserQuizStatsResponse(BaseModel):
     last_attempted: datetime
     time_to_repeat: Optional[datetime] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

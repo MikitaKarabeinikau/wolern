@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 
 from .user_examples import UserExampleResponse
@@ -15,7 +15,7 @@ from .word import WordWithFullDataResponse
 # ============================================================================
 class UserWordStatusBase(BaseModel):
     '''Base schema for user word status'''
-    vocabulary_word_id: int = Field(..., example=1)
+    vocabulary_word_id: int = Field(..., json_schema_extra={"example": 1})
 
 # ============================================================================
 # CREATE SCHEMAS
@@ -29,7 +29,7 @@ class UserWordStatusCreate(UserWordStatusBase):
 # ============================================================================
 class UserWordStatusUpdate(BaseModel):
     '''Schema for updating user word status'''
-    vocabulary_word_id: Optional[int] = Field(None, example=1)
+    vocabulary_word_id: Optional[int] = Field(None, json_schema_extra={"example": 1})
 
 # ============================================================================
 # RESPONSE SCHEMAS
@@ -39,8 +39,7 @@ class UserWordStatusResponse(UserWordStatusBase):
     id: int
     last_updated: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # ============================================================================
 # DETAILED RESPONSE WITH ALL RELATIONSHIPS
@@ -55,5 +54,4 @@ class UserWordStatusFullInfo(UserWordStatusResponse):
     user_synonyms: Optional[List[UserSynonymResponse]] = []
     user_quiz_progress: Optional[UserQuizProgressResponse] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

@@ -313,5 +313,5 @@ class Word:
         if self.time_to_repeat is None:
             logging.error(f'Time of word {self.word.upper()} was not initialized')
             raise ValueError(f'Time was not defined')
-        self.time_to_repeat = datetime.strptime(self.time_to_repeat,'%d-%m-%Y %H:%M:%S') + timedelta(minutes=minutes)
+        self.time_to_repeat = datetime.now(timezone.utc)strptime(self.time_to_repeat,'%d-%m-%Y %H:%M:%S') + timedelta(minutes=minutes)
         return self.time_to_repeat

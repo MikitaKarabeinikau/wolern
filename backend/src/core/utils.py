@@ -48,7 +48,7 @@ STANDART_SORTED_UNCHECKED_PATH = Path(
 STANDART_AUDIO_FILES_DIR = Path(__file__).resolve().parent.parent.parent / 'data' / 'cache' / 'audio'
 TEST_VOCABULARY = Path(__file__).resolve().parent.parent.parent / 'tests' / 'data' / 'test_vocabulary.json'
 VOCABULARY_DIR_PATH = Path(__file__).resolve().parent.parent.parent / 'data' / 'vocabularies'
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,timezone
 
 DEFUALT_USER = 'scoobykot'
 STANDART_VOCABULARIES_SET = ['known', 'new', 'weird','learning']
@@ -114,7 +114,7 @@ def get_N_random_word_from_subtlex_longer_then_3(N):
     return words
 
 def current_datetime():
-    return datetime.utcnow()
+    return datetime.now(timezone.utc)
 
 
 def parse_time_to_str(time):
@@ -122,16 +122,16 @@ def parse_time_to_str(time):
 
 
 def initial_repeat_time():
-    return datetime.utcnow() + timedelta(minutes=5)
+    return datetime.now(timezone.utc) + timedelta(minutes=5)
 
 def change_repeat_time(minutes, time=None):
     if time is None:
-        time = datetime.utcnow()
+        time = datetime.now(timezone.utc)
     return time + timedelta(minutes=minutes)
 
 
 def parse_str_to_time(time_str: str) -> datetime:
-    return datetime.strptime(time_str, "%d-%m-%Y %H:%M:%S")
+    return datetime.now(timezone.utc).strptime(time_str, "%d-%m-%Y %H:%M:%S")
 
 
 def convert_pos(tag):
