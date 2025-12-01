@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from .. import models
 import logging
 from sqlalchemy.orm.exc import NoResultFound
-from src.config import settings
+from backend.src.config import settings
 logger = logging.getLogger(__name__)
 
 def create_definition(db: Session, word_id: int, part_of_speech: str, definition: str) -> models.Definitions:

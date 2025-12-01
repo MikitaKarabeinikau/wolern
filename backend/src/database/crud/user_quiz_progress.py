@@ -17,6 +17,7 @@ def create_user_quiz_progress(db:Session, user_word_status_id:int) -> models.Use
         return new_progress
     except Exception as e:
         logger.error(f"Error creating UserQuizProgress for UserWordStatus ID '{user_word_status_id}': {e}", exc_info=True)
+        db.rollback()
         raise
     
 def get_user_quiz_progress(db:Session, user_word_status_id:int) -> models.UserQuizProgress:
@@ -43,4 +44,5 @@ def delete_user_quiz_progress(db:Session, user_quiz_progress_id:int) -> bool:
         return False
     except Exception as e:
         logger.error(f"Error deleting UserQuizProgress with id '{user_quiz_progress_id}': {e}", exc_info=True)
+        db.rollback()
         raise

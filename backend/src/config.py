@@ -1,10 +1,12 @@
 import os
 from typing import Optional
-from pydantic_settings import BaseSettings
 from functools import lru_cache
 from typing import Dict
+from dotenv import load_dotenv
 
-class Settings(BaseSettings):
+load_dotenv()
+
+class Settings():
     """
     Application settings loaded from environment variables.
     Uses Pydantic for validation and type safety.

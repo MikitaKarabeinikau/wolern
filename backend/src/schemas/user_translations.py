@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, field_validator  # ✅ Removed EmailStr
 from typing import Optional
-from src.config import settings
+from backend.src.config import settings
 
 # ============================================================================
 # BASE SCHEMAS

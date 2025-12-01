@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from .. import models
 import logging
 from sqlalchemy.orm.exc import NoResultFound
-from src.config import settings
+from backend.src.config import settings
 
 logger = logging.getLogger(__name__)
 

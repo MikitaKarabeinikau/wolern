@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from .. import models
 import logging
-from src.config import settings
+from backend.src.config import settings
 from typing import Optional,List
 import os 
 from dotenv import load_dotenv

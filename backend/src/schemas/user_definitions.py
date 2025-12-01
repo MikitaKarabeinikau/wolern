@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, field_validator
-from src.config import settings
+from backend.src.config import settings
 
 # ============================================================================
 # BASE SCHEMAS

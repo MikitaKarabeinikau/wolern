@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from .. import models
 import logging
 import re
-from src.schemas.word import WordCreate
+from backend.src.schemas.word import WordCreate
 from typing import List, Optional
 
 logger = logging.getLogger(__name__)

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
-from src.config import settings
+from backend.src.config import settings
 from src.api.webhooks import router as clerk_webhook_router
 
 # ============================================================================

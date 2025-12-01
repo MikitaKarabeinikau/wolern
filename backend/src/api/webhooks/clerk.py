@@ -5,7 +5,7 @@ import json
 import logging
 from svix.webhooks import Webhook
 
-from src.config import settings
+from backend.src.config import settings
 from src.database.database import get_db
 from src.database.models import User
 from src.database.crud.users import create_user

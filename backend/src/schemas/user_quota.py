@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Literal
 from datetime import datetime
-from src.config import settings
+from backend.src.config import settings
 
 # ============================================================================
 # BASE SCHEMAS

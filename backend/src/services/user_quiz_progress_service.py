@@ -3,7 +3,7 @@ from .. import models
 import logging
 from sqlalchemy.orm.exc import NoResultFound
 logger = logging.getLogger(__name__)
-from src.config import settings
+from backend.src.config import settings
 
 def answer_logic(db:Session, answer:bool, user_quiz_progress_id:int) -> models.UserQuizProgress:
     """Update user quiz progress based on whether the answer was correct or not."""

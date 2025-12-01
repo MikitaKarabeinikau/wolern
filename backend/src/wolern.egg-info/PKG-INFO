@@ -1,0 +1,483 @@
+Metadata-Version: 2.4
+Name: wolern
+Version: 0.0.1
+Summary: Coming soon...
+Home-page: https://github.com/MikitaKarabeinikau/wolern
+Author: Mikita Karabeinikau
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: aiodns==3.5.0
+Requires-Dist: aiohappyeyeballs==2.6.1
+Requires-Dist: aiohttp==3.12.15
+Requires-Dist: aiosignal==1.4.0
+Requires-Dist: alembic==1.17.0
+Requires-Dist: annotated-types==0.7.0
+Requires-Dist: anyio==4.10.0
+Requires-Dist: attrs==25.3.0
+Requires-Dist: beautifulsoup4==4.13.4
+Requires-Dist: Brotli==1.1.0
+Requires-Dist: bs4==0.0.2
+Requires-Dist: certifi==2025.7.14
+Requires-Dist: cffi==1.17.1
+Requires-Dist: charset-normalizer==3.4.2
+Requires-Dist: clerk-backend-api==3.3.1
+Requires-Dist: click==8.1.8
+Requires-Dist: coverage==7.12.0
+Requires-Dist: cryptography==45.0.7
+Requires-Dist: deep-translator==1.11.4
+Requires-Dist: deepl==1.22.0
+Requires-Dist: Deprecated==1.2.18
+Requires-Dist: distro==1.9.0
+Requires-Dist: fastapi==0.116.1
+Requires-Dist: frozenlist==1.7.0
+Requires-Dist: greenlet==3.2.4
+Requires-Dist: gTTS==2.5.4
+Requires-Dist: h11==0.16.0
+Requires-Dist: httpcore==1.0.9
+Requires-Dist: httpx==0.28.1
+Requires-Dist: idna==3.10
+Requires-Dist: iniconfig==2.1.0
+Requires-Dist: jiter==0.10.0
+Requires-Dist: joblib==1.5.1
+Requires-Dist: Mako==1.3.10
+Requires-Dist: markdown-it-py==3.0.0
+Requires-Dist: MarkupSafe==3.0.3
+Requires-Dist: mdurl==0.1.2
+Requires-Dist: mirakuru==3.0.1
+Requires-Dist: multidict==6.6.4
+Requires-Dist: nltk==3.9.1
+Requires-Dist: numpy==2.0.0
+Requires-Dist: openai==1.102.0
+Requires-Dist: packaging==25.0
+Requires-Dist: pandas==2.3.1
+Requires-Dist: pluggy==1.6.0
+Requires-Dist: port-for==1.0.0
+Requires-Dist: propcache==0.3.2
+Requires-Dist: psutil==7.1.3
+Requires-Dist: psycopg==3.2.13
+Requires-Dist: psycopg2==2.9.11
+Requires-Dist: psycopg2-binary==2.9.10
+Requires-Dist: pycares==4.10.0
+Requires-Dist: pycparser==2.22
+Requires-Dist: pydantic==2.11.2
+Requires-Dist: Pygments==2.19.2
+Requires-Dist: PyJWT==2.10.1
+Requires-Dist: pytest==8.4.1
+Requires-Dist: pytest-cov==7.0.0
+Requires-Dist: pytest-postgresql==7.0.2
+Requires-Dist: pytest-sqlalchemy==0.3.0
+Requires-Dist: python-dateutil==2.9.0.post0
+Requires-Dist: python-dotenv==1.1.1
+Requires-Dist: pyttsx3==2.99
+Requires-Dist: pytz==2025.2
+Requires-Dist: regex==2024.11.6
+Requires-Dist: requests==2.32.4
+Requires-Dist: rich==14.1.0
+Requires-Dist: setuptools==80.9.0
+Requires-Dist: six==1.17.0
+Requires-Dist: sniffio==1.3.1
+Requires-Dist: soupsieve==2.7
+Requires-Dist: SQLAlchemy==2.0.43
+Requires-Dist: SQLAlchemy-Utils==0.42.0
+Requires-Dist: starlette==0.47.3
+Requires-Dist: svix==1.76.1
+Requires-Dist: tqdm==4.67.1
+Requires-Dist: types-Deprecated==1.2.15.20250304
+Requires-Dist: types-python-dateutil==2.9.0.20250822
+Requires-Dist: typing-inspection==0.4.2
+Requires-Dist: typing_extensions==4.14.1
+Requires-Dist: tzdata==2025.2
+Requires-Dist: urllib3==2.5.0
+Requires-Dist: uvicorn==0.35.0
+Requires-Dist: wrapt==1.17.3
+Requires-Dist: xlrd==2.0.2
+Requires-Dist: yarl==1.20.1
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+
+# Wolern
+
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.116.1-green)
+![React](https://img.shields.io/badge/React-Latest-61dafb)
+![Status](https://img.shields.io/badge/Status-In%20Development-yellow)
+
+<div align="center">
+  <img src="backend/data/images/wide_version.png" alt="Wolern Banner" width="600"/>
+</div>
+
+## 📖 Overview
+
+**Wolern** is a modern, intelligent web application designed for vocabulary learning and language progress tracking. It provides a comprehensive platform for learners to expand their vocabulary through interactive exercises, spaced repetition, and personalized learning paths.
+
+The application combines a robust FastAPI backend with a responsive React frontend to deliver a seamless learning experience with features like word management, quiz generation, translation services, and progress tracking.
+
+## ✨ Key Features
+
+### 🎯 Core Functionality
+
+- **Vocabulary Management**: Create, organize, and manage multiple vocabularies
+- **Intelligent Word Addition**: Automated word validation with CEFR level detection
+- **Smart Exercises**: Multiple exercise types including:
+  - Input answer exercises
+  - Multiple choice questions
+  - Interactive quizzes with spaced repetition
+- **Translation Services**: Integrated translation and definition fetching
+- **Audio Pronunciation**: Text-to-speech support for word pronunciation
+- **Progress Tracking**: Comprehensive statistics and learning analytics
+
+### 🔍 Advanced Features
+
+- **CEFR Level Classification**: Automatic word difficulty assessment using CEFR-J standards
+- **Frequency Analysis**: Word usage frequency data from SUBTLEX-US corpus
+- **Synonym Management**: Build connections between related words
+- **Warning System**: Validate words before adding them to vocabulary
+- **User Authentication**: Secure authentication via Clerk
+- **API Quotas**: Usage tracking and quota management
+
+## 🛠 Technology Stack
+
+### Backend
+
+- **Framework**: FastAPI 0.116.1
+- **Database**: SQLAlchemy with PostgreSQL
+- **Authentication**: Clerk webhooks and JWT
+- **NLP**: NLTK for text processing
+- **Translation**: DeepL API, Google Translate
+- **Audio**: gTTS (Google Text-to-Speech)
+- **Testing**: pytest
+
+### Frontend
+
+- **Framework**: React with Vite
+- **Routing**: React Router
+- **Authentication**: Clerk React
+- **Styling**: CSS with modern design patterns
+
+### Development Tools
+
+- **Database Migration**: Alembic
+- **Environment Management**: python-dotenv
+- **Code Quality**: ESLint
+
+## 📁 Project Structure
+
+```
+wolern/
+├── backend/                    # Backend application
+│   ├── src/
+│   │   ├── core/              # Core business logic
+│   │   │   ├── word.py        # Word management
+│   │   │   ├── vocabulary.py  # Vocabulary operations
+│   │   │   ├── quiz.py        # Quiz generation
+│   │   │   ├── fetchers.py    # External API integrations
+│   │   │   └── tests/         # Unit tests
+│   │   ├── routes/            # API endpoints
+│   │   │   ├── words.py       # Word CRUD operations
+│   │   │   ├── quiz.py        # Quiz endpoints
+│   │   │   ├── exercise.py    # Exercise endpoints
+│   │   │   ├── translations.py
+│   │   │   └── user.py
+│   │   └── database/          # Database models and schemas
+│   ├── data/                  # Data files and sources
+│   │   ├── images/            # Application images
+│   │   └── source/            # CEFR and frequency data
+│   ├── app.py                 # FastAPI application
+│   └── server.py              # Server entry point
+├── frontend/                   # React frontend
+│   ├── src/
+│   │   ├── components/        # Reusable UI components
+│   │   ├── features/          # Feature-specific components
+│   │   │   ├── auth/          # Authentication
+│   │   │   ├── vocabularies/  # Vocabulary management
+│   │   │   ├── exerciese/     # Exercise system
+│   │   │   ├── quiz/          # Quiz interface
+│   │   │   └── statistics/    # Progress tracking
+│   │   ├── layout/            # Layout components
+│   │   └── api/               # API client
+│   └── index.html             # Entry HTML
+├── alembic/                   # Database migrations
+├── main.py                    # CLI interface
+├── requirements.txt           # Python dependencies
+└── setup.py                   # Package setup
+
+```
+
+## 🚀 Installation
+
+### Prerequisites
+
+- Python 3.8 or higher (3.12 recommended)
+- Node.js and npm (for frontend)
+- PostgreSQL database
+- Clerk account for authentication
+
+### Backend Setup
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/MikitaKarabeinikau/wolern.git
+cd wolern
+```
+
+2. **Create and activate virtual environment**
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+4. **Set up environment variables**
+   Create a `.env` file in the root directory:
+
+```env
+DATABASE_URL=postgresql://user:password@localhost/wolern
+CLERK_SECRET_KEY=your_clerk_secret_key
+OPENAI_API_KEY=your_openai_key  # Optional
+DEEPL_API_KEY=your_deepl_key    # Optional
+```
+
+5. **Initialize the database**
+
+```bash
+alembic upgrade head
+```
+
+6. **Run the backend server**
+
+```bash
+python backend/server.py
+# or use uvicorn directly:
+uvicorn backend.app:app --reload --host 0.0.0.0 --port 8000
+```
+
+The API will be available at `http://localhost:8000`
+
+### Frontend Setup
+
+1. **Navigate to frontend directory**
+
+```bash
+cd frontend
+```
+
+2. **Install dependencies**
+
+```bash
+npm install
+```
+
+3. **Configure environment**
+   Create a `.env` file in the `frontend` directory:
+
+```env
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+VITE_API_URL=http://localhost:8000
+```
+
+4. **Start the development server**
+
+```bash
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173`
+
+## 📚 Usage
+
+### Web Interface
+
+1. **Sign Up/Login**: Access the application and authenticate via Clerk
+2. **Create Vocabulary**: Start by creating a new vocabulary collection
+3. **Add Words**: Add words manually or import from text
+4. **Practice**: Use exercises and quizzes to learn
+5. **Track Progress**: Monitor your learning statistics
+
+## 🔌 API Documentation
+
+Once the backend is running, interactive API documentation is available at:
+
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+### Key Endpoints
+
+- `GET /`: API health check
+- `POST /words/add`: Add a new word
+- `GET /words/{word_id}`: Get word details
+- `POST /exercise/generate`: Generate exercises
+- `GET /quiz/`: Get quiz questions
+- `POST /webhooks/clerk`: Clerk authentication webhook
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+# Run all tests
+pytest
+
+# Run specific test file
+pytest backend/src/core/tests/test_vocabulary.py
+
+# Run with coverage
+pytest --cov=backend/src
+```
+
+## 🗃 Data Sources
+
+This project uses the following linguistic datasets:
+
+### CEFR-J Vocabulary & Grammar Profile
+
+- **Source**: © Tono Laboratory, Tokyo University of Foreign Studies
+- **License**: Free for research and commercial use with proper citation
+- **Usage**: Word difficulty classification (A1-C2 levels)
+
+### Octanove Vocabulary Profile (C1/C2)
+
+- **License**: CC BY-SA 4.0
+- **Usage**: Advanced vocabulary classification
+
+### SUBTLEX-US
+
+- **Source**: Brysbaert & New (2009)
+- **License**: Free for research and educational purposes
+- **Usage**: Word frequency data from American English subtitle corpora
+
+For detailed licensing information, see [DATA_LICENSES.md](DATA_LICENSES.md)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow PEP 8 for Python code
+- Use ESLint configuration for JavaScript/React code
+- Write tests for new features
+- Update documentation as needed
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👤 Author
+
+**Mikita Karabeinikau**
+
+- GitHub: [@MikitaKarabeinikau](https://github.com/MikitaKarabeinikau)
+- Project Repository: [wolern](https://github.com/MikitaKarabeinikau/wolern)
+
+## 🙏 Acknowledgments
+
+- CEFR-J Project at Tokyo University of Foreign Studies
+- Octanove Labs for vocabulary profiles
+- Brysbaert & New for SUBTLEX-US corpus
+- The open-source community
+
+---
+
+# **Note**: This project is currently in active development. Features and documentation may change as the project evolves.
+
+# Wolern ![Python](https://img.shields.io/badge/Python-3.12-blue) ![Status](https://img.shields.io/badge/Status-In%20Development-yellow)
+
+<table>
+<tr>
+<td width="40%">
+  <img src="backend/data/images/wide_version.png" alt="Wolern Banner" width=100% height="300"/>
+</td>
+<td>
+  
+Wolern - Language Learning Platform
+A full-stack language learning application built with React and FastAPI, featuring vocabulary management, spaced repetition exercises, and intelligent quiz generation.
+
+📋 Table of Contents
+
+- Features
+- Tech Stack
+- Project Structure
+- Getting Started
+- Backend Setup
+- Frontend Setup
+- Database Schema
+- API Endpoints
+- Features Deep Dive
+- Development
+- Contributing
+- License
+
+---
+
+✨ Features
+🎯 Core Features
+
+- Vocabulary Management
+
+  ** Add, edit, and delete words with translations
+  ** Multiple definitions with categories
+  ** Example sentences with context
+  ** Synonyms and tags
+  ** Usage warnings and notes
+  ** Part of speech classification
+  \*\* Spaced Repetition System
+
+4-stage learning progression
+Intelligent review scheduling
+Progress tracking (correct/incorrect answers)
+Adaptive difficulty based on performance
+Exercise Generation
+
+AI-powered exercise creation
+Multiple choice questions
+Answer input exercises
+Contextual hints
+Detailed explanations
+Quiz System
+
+Real-time progress tracking
+Visual feedback for answers
+Character-by-character comparison
+Learning stage advancement/demotion
+Review date scheduling
+User Management
+
+Clerk authentication integration
+User-specific vocabulary lists
+Exercise quota system (10 exercises per user)
+Personal progress tracking
+
+### Data sources
+
+\*\* CEFR‑J Vocabulary & Grammar Profile
+
+- \*\* — © Tono Laboratory, TUFS.  Used under the terms: “CEFR‑J vocabulary and grammar profile datasets can be used for research and commercial purposes with no charge, provided that you cite the dataset properly.”
+- \*\*Octanove Vocabulary Profile (C1/C2)
+- \*\* — Licensed under CC BY‑SA 4.0.
+- - SUBTLEX-US: Frequency data based on American English subtitle corpora.
+    - Source: Brysbaert & New (2009)
+    - Usage: Free for research and educational purposes.
+      > > > > > > > main
