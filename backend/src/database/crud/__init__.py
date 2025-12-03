@@ -59,14 +59,12 @@ __all__ = [
     "update_native_language",
     "update_preferred_language",
     "delete_user",
-    
     # Vocabulary operations
     "create_vocabulary",
     "get_vocabulary_by_user",
     "get_number_of_vocabularies_by_user",
     "update_vocabulary_name",
     "delete_vocabulary",
-    
     # Words operations
     "add_word",
     "get_all_words_from_db",

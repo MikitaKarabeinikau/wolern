@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+  - repo: local
+    hooks:
+      - id: pytest
+        name: Tests
+        entry: bash -c 'cd /home/scb/wolern && export PYTHONPATH=/home/scb/wolern/backend && python -m pytest backend/tests/unit/ -x'
+        language: system
+        pass_filenames: false

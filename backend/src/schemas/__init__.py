@@ -26,7 +26,6 @@ from .word import (
     WordCreate,
     WordResponse,
     WordPublic,
-    WordWithFullDataResponse,
 )
 
 # ============================================================================
@@ -107,45 +106,37 @@ __all__ = [
     "UserResponse",
     "UserPublic",
     "UserWithQuota",
-    
     # Word schemas
     "WordBase",
     "WordCreate",
     "WordResponse",
     "WordPublic",
     "WordWithFullData",
-    
     # Vocabulary schemas
     "VocabularyBase",
     "VocabularyCreate",
     "VocabularyUpdateName",
     "VocabularyResponse",
-    
     # Definition schemas
     "DefinitionBase",
     "DefinitionCreate",
     "DefinitionResponse",
-    
     # Example schemas
     "ExampleBase",
     "ExampleCreate",
     "ExampleResponse",
-    
     # Translation schemas
     "TranslationBase",
     "TranslationCreate",
     "TranslationResponse",
-    
     # Synonym schemas
     "SynonymBase",
     "SynonymCreate",
     "SynonymResponse",
-    
     # Tag schemas
     "TagBase",
     "TagCreate",
     "TagResponse",
-    
     # Warning schemas
     "WarningBase",
     "WarningCreate",

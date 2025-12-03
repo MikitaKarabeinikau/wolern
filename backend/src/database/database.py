@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, text
-
-from sqlalchemy.orm import sessionmaker, Session, declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
 import os
 import logging
@@ -11,11 +10,12 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 Base = declarative_base()
 
-engine = create_engine(DATABASE_URL,pool_pre_ping=True)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
 
 def get_db():
     db = SessionLocal()
@@ -23,6 +23,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 try:
     with engine.connect() as connection:

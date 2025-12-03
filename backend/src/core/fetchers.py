@@ -2,27 +2,39 @@
 This module provides utilities for fetching word data such as
 frequencies, CEFR levels, synonyms, and translations.
 """
-from pathlib import Path
-import os 
+
+import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))  
+
 import logging
 import json
 import csv
 import warnings
-from typing import List, Iterable
-import deepl
+from typing import List
 import requests
 from requests import RequestException
 import pandas as pd
 from bs4 import BeautifulSoup
-import nltk
-from nltk.corpus import wordnet
-from deep_translator import LingueeTranslator,exceptions
 
-from .utils import convert_pos, POS_TAG_MAP, CEFR_ORDER, TRANSLATION_CACHE_PATH, \
-    PATH_TO_SUBTLEXus, FREQUENCIES_CACHE_PATH, CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH, CEFR_CACHE_PATH
+from nltk.corpus import wordnet
+from deep_translator import LingueeTranslator, exceptions
+
+
+from .utils import (
+    convert_pos,
+    POS_TAG_MAP,
+    CEFR_ORDER,
+    TRANSLATION_CACHE_PATH,
+    PATH_TO_SUBTLEXus,
+    FREQUENCIES_CACHE_PATH,
+    CEFR_VOCABULARY_PROFILE_FILE_PATH,
+    CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH,
+    CEFR_CACHE_PATH,
+)
+
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))
 
 
 _translation_cache: dict[str, dict]
@@ -30,7 +42,6 @@ if TRANSLATION_CACHE_PATH.exists():
     _translation_cache = json.loads(TRANSLATION_CACHE_PATH.read_text(encoding="utf-8"))
 else:
     _translation_cache = {}
-
 
 
 def frequency_exist(word: str) -> bool:
@@ -130,7 +141,7 @@ def get_synonyms_datamuse(word: str) -> List[str]:
         - An empty result may indicate the word is rare or has no listed synonyms.
     """
     try:
-        response = requests.get(f"https://api.datamuse.com/words?rel_syn={word}",timeout=5)
+        response = requests.get(f"https://api.datamuse.com/words?rel_syn={word}", timeout=5)
         if response.status_code == 200:
             return [item["word"] for item in response.json()]
 
@@ -146,9 +157,7 @@ def replace_part(word: str, left_index: int | None, right_index: int | None) -> 
     return word[:left_index] + "..." + word[right_index:]
 
 
-def get_index_of_similar_part(
-    word: str, other_word: str
-) -> tuple[int | None, int | None]:
+def get_index_of_similar_part(word: str, other_word: str) -> tuple[int | None, int | None]:
     """
     Find the start and end indices of the longest common substring (length ≥ 3)
     between two words.
@@ -169,9 +178,9 @@ def get_index_of_similar_part(
         for j in range(len(other_word)):
             length = 0
             while (
-                    i + length < len(word)
-                    and j + length < len(other_word)
-                    and word[i + length] == other_word[j + length]
+                i + length < len(word)
+                and j + length < len(other_word)
+                and word[i + length] == other_word[j + length]
             ):
                 length += 1
             if length >= 3 and length > max_len:
@@ -184,19 +193,20 @@ def get_index_of_similar_part(
 
 def hide_similar_parts(word: str, compared_word: list[str]) -> List[str]:
     if word is None or compared_word is None:
-        raise ValueError('Could compare with None argument')
+        raise ValueError("Could compare with None argument")
     if len(word) < 3 or len(compared_word) < 3:
         return compared_word
-    if type(word) is not type('text') or type(compared_word) is not type('text'):
-        raise ValueError('Values should be string type')
+    if type(word) is not type("text") or type(compared_word) is not type("text"):
+        raise ValueError("Values should be string type")
 
-    start, end = get_index_of_similar_part(word,compared_word)
+    start, end = get_index_of_similar_part(word, compared_word)
     if start is None and end is None:
         return compared_word
     transformation = [i for i in compared_word]
-    for i in range(start,end):
-        transformation[i] = '.'
-    return ''.join(transformation)
+    for i in range(start, end):
+        transformation[i] = "."
+    return "".join(transformation)
+
 
 def get_synonyms(word: str) -> List[str]:
     """
@@ -250,24 +260,18 @@ def get_parts_of_speech(word: str) -> List[str]:
         pos_tags.add(convert_pos(synset.pos()))
     return list(pos_tags)
 
+
 def get_cefr_level(word):
-    CEFR_ORDER_MAP = {
-    "A1": 1,
-    "A2": 2,
-    "B1": 3,
-    "B2": 4,
-    "C1": 5,
-    "C2": 6
-}
-# A reverse map to convert the numerical rank back to a CEFR string
-    CEFR_RANK_TO_LEVEL = {v: k for k, v in CEFR_ORDER_MAP.items()}
-    logging.info(f'Fetching CEFR level for word: {word}')
+    CEFR_ORDER_MAP = {"A1": 1, "A2": 2, "B1": 3, "B2": 4, "C1": 5, "C2": 6}
+    # A reverse map to convert the numerical rank back to a CEFR string
+    # CEFR_RANK_TO_LEVEL = {v: k for k, v in CEFR_ORDER_MAP.items()}
+    logging.info(f"Fetching CEFR level for word: {word}")
 
     try:
         _cefr_cache = json.loads(CEFR_CACHE_PATH.read_text(encoding="utf-8"))
     except FileNotFoundError:
         return "ERROR: Cache file not found"
-    
+
     word_data = _cefr_cache.get(word.lower(), {})
     logging.info(f"Word data from cache: {word_data}")
     level = word_data
@@ -285,9 +289,9 @@ def get_cefr_level(word):
     if len(level) == 0:
         return level[0]
 
-    
     if not level:
         return "NEW"
+
 
 def get_definitions_by_pos(word):
 
@@ -305,12 +309,11 @@ def get_definitions_by_pos(word):
 
 
 def get_examples_from_wordnet(word: str) -> List[str]:
-    
-    
+
     examples = {}
     for syn in wordnet.synsets(word):
         print("\n\n\n\nSynset:", syn.name())
-        print("Part of Speech:", POS_TAG_MAP[syn.pos()]) 
+        print("Part of Speech:", POS_TAG_MAP[syn.pos()])
         if POS_TAG_MAP[syn.pos()] not in examples:
             examples[POS_TAG_MAP[syn.pos()]] = []
         for ex in syn.examples():
@@ -392,7 +395,7 @@ def get_translation_from_cache(word: str) -> dict[str, list[str]] | None:
 
 
 def get_translation(
-    word: str,source_lang: str = "english", target_lang: str = "polish"
+    word: str, source_lang: str = "english", target_lang: str = "polish"
 ) -> dict[str, list[str] | None]:
     """
     Retrieve translation for a word, using cache if available.
@@ -406,11 +409,15 @@ def get_translation(
             return {target_lang: translation}
 
     try:
-        translated_words = LingueeTranslator(source=source_lang, target=target_lang).translate(word, return_all=True)
+        translated_words = LingueeTranslator(source=source_lang, target=target_lang).translate(
+            word, return_all=True
+        )
         _translation_cache.setdefault(w, {})[target_lang] = translated_words
         _save_translation_cache()
         return {target_lang: translated_words}
-    except exceptions.ElementNotFoundInGetRequest as e:  # Can't narrow to RequestException here due to external lib
+    except (
+        exceptions.ElementNotFoundInGetRequest
+    ) as e:  # Can't narrow to RequestException here due to external lib
         warnings.warn(f"[translation] {word} → {target_lang} failed: {e}")
         _translation_cache.setdefault(w, {})[target_lang] = None
         _save_translation_cache()
@@ -426,8 +433,7 @@ def cefr_from_csv_to_json():
     """
     Build a CEFR dictionary from CSV files and save it to a JSON file.
     """
-    data = build_cefr_dict([CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH])
-    CEFR_CACHE_PATH.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+    data = build_cefr_dict(
+        [CEFR_VOCABULARY_PROFILE_FILE_PATH, CEFR_OCTANOVAE_VOCABULARY_PROFILE_FILE_PATH]
     )
-
+    CEFR_CACHE_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")

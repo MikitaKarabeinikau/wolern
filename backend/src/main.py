@@ -1,3 +1,4 @@
+from database.models import init_db
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
@@ -8,10 +9,7 @@ from backend.src.api.webhooks.clerk import router as clerk_webhook_router
 # ============================================================================
 # LOGGING SETUP
 # ============================================================================
-logging.basicConfig(
-    level=settings.LOG_LEVEL,
-    format=settings.LOG_FORMAT
-)
+logging.basicConfig(level=settings.LOG_LEVEL, format=settings.LOG_FORMAT)
 logger = logging.getLogger(__name__)
 
 # ============================================================================
@@ -42,6 +40,7 @@ app.add_middleware(
 
 app.include_router(clerk_webhook_router, prefix="/webhooks", tags=["webhooks"])
 
+
 # ============================================================================
 # ROOT ENDPOINTS
 # ============================================================================
@@ -50,8 +49,9 @@ async def root():
     return {
         "message": f"{settings.APP_NAME} is running",
         "version": settings.APP_VERSION,
-        "environment": settings.ENVIRONMENT
+        "environment": settings.ENVIRONMENT,
     }
+
 
 @app.get("/health")
 async def health_check():
@@ -59,8 +59,9 @@ async def health_check():
     return {
         "status": "healthy",
         "environment": settings.ENVIRONMENT,
-        "version": settings.APP_VERSION
+        "version": settings.APP_VERSION,
     }
+
 
 # ============================================================================
 # STARTUP/SHUTDOWN EVENTS
@@ -70,6 +71,8 @@ async def startup_event():
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"Debug mode: {settings.DEBUG}")
+    init_db()
+
 
 @app.on_event("shutdown")
 async def shutdown_event():

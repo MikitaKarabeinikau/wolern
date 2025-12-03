@@ -1,14 +1,16 @@
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 from typing import Optional
 
+
 # ============================================================================
 # BASE SCHEMAS
 # ============================================================================
 class UserTagBase(BaseModel):
-    '''Base schema for user tags'''
+    """Base schema for user tags"""
+
     tag: str = Field(..., min_length=1, max_length=50, json_schema_extra={"example": "animals"})
-    
-    @field_validator('tag')
+
+    @field_validator("tag")
     @classmethod
     def validate_tag(cls, v: str) -> str:
         """Validate tag is not just whitespace."""
@@ -21,7 +23,8 @@ class UserTagBase(BaseModel):
 # CREATE SCHEMAS
 # ============================================================================
 class UserTagCreate(UserTagBase):
-    '''Schema for creating a new user tag'''
+    """Schema for creating a new user tag"""
+
     user_word_status_id: int = Field(..., gt=0, json_schema_extra={"example": 1})
 
 
@@ -29,10 +32,13 @@ class UserTagCreate(UserTagBase):
 # UPDATE SCHEMAS
 # ============================================================================
 class UserTagUpdate(BaseModel):
-    '''Schema for updating a user tag'''
-    tag: Optional[str] = Field(None, min_length=1, max_length=50, json_schema_extra={"example": "nature"})
-    
-    @field_validator('tag')
+    """Schema for updating a user tag"""
+
+    tag: Optional[str] = Field(
+        None, min_length=1, max_length=50, json_schema_extra={"example": "nature"}
+    )
+
+    @field_validator("tag")
     @classmethod
     def validate_tag(cls, v: Optional[str]) -> Optional[str]:
         """Validate tag if provided."""
@@ -45,15 +51,18 @@ class UserTagUpdate(BaseModel):
 # RESPONSE SCHEMAS
 # ============================================================================
 class UserTagResponse(BaseModel):
-    '''Schema for user tag response'''
+    """Schema for user tag response"""
+
     id: int
     user_word_status_id: int
     tag: str
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class UserTagListResponse(BaseModel):
-    '''Schema for list of user tags'''
+    """Schema for list of user tags"""
+
     success: bool = True
     count: int
     tags: list[UserTagResponse]

@@ -8,5 +8,5 @@ export function lazyLoad(path, namedExport){
         } else {
             return promise.then(module => ({ default: module[namedExport] }))
         }
-    })  
+    })
 }

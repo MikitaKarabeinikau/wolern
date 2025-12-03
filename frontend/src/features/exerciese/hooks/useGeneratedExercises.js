@@ -8,7 +8,7 @@ const API_ENDPOINTS = {
 
 export const useGeneratedExercises = () => {
   const { getToken } = useAuth();
-  
+
   const [generatedExercisesList, setGeneratedExercisesList] = useState([]);
   const [currentExercise, setCurrentExercise] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

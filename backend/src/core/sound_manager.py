@@ -20,18 +20,21 @@ Dependencies
 - time
 - wolern.src.utils.AUDIO_DIR
 """
+
 import time
 from pathlib import Path
 from gtts import gTTS
 import pyttsx3
-import os 
+import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
-sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))  
+
 
 from requests import RequestException
 
 from .utils import STANDART_AUDIO_FILES_DIR
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "backend", "src"))
 
 
 def _filename(word: str, suffix: str) -> Path:

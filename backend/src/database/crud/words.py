@@ -1,3 +1,4 @@
+from core.word import Word
 from sqlalchemy.orm import Session
 from .. import models
 import logging
@@ -8,7 +9,7 @@ from typing import List, Optional
 logger = logging.getLogger(__name__)
 
 
-def add_word(db: Session, word: WordCreate) -> models.Words:
+def add_word(db: Session, word: Word) -> models.Words:
     """Add a new word."""
     if word is None:
         raise ValueError("Word is required")
@@ -17,80 +18,71 @@ def add_word(db: Session, word: WordCreate) -> models.Words:
         if existing_word:
             logger.info(f"Word '{word.word}' already exists in the database.")
             return existing_word
-        
+
         db_word = models.Words(
-            word=word.word,
+            word=word.word.lower(),
             language=word.language,
             frequency=word.frequency,
-            cefr_level=word.cefr_level,
-            audio_url=word.audio_url if hasattr(word, 'audio_url') else None
+            audio_url=word.audio_url if hasattr(word, "audio_url") else None,
         )
         db.add(db_word)
         db.flush()
-        
+
         logger.info(f"Word '{word.word}' added to database. ")
         for lang, translation in word.translation.items():
             if translation:
                 for t in word.translation[lang]:
                     db_translation = models.Translations(
-                        word_id=db_word.id,
-                        language=lang,
-                        translation=t
+                        word_id=db_word.id, language=lang, translation=t
                     )
                     db.add(db_translation)
-                    logger.info(f"Translation '{t}' added for language '{lang}' for word '{word.word}'.")
+                    logger.info(
+                        f"Translation '{t}' added for language '{lang}' for word '{word.word}'."
+                    )
 
         for synonym in word.synonyms:
-            db_synonym = models.Synonyms(
-                word_id=db_word.id,
-                synonym=synonym
-            )
-            
+            db_synonym = models.Synonyms(word_id=db_word.id, synonym=synonym)
+
             db.add(db_synonym)
             logger.info(f"Synonym '{synonym}' added for word '{word.word}'.")
 
         for part_of_speech, definitions in word.definition.items():
             for definition in definitions:
                 db_definition = models.Definitions(
-                    word_id=db_word.id,
-                    part_of_speech=part_of_speech,
-                    definition=definition
-                ) 
+                    word_id=db_word.id, part_of_speech=part_of_speech, definition=definition
+                )
                 db.add(db_definition)
-                logger.info(f"Definition '{definition}' added for part of speech '{part_of_speech}' for word '{word.word}'.")
+                logger.info(
+                    f"Definition '{definition}' added for part of speech '{part_of_speech}' \\\
+                        for word '{word.word}'."
+                )
 
         for part_of_speech, example in word.examples.items():
             for ex in example:
-                pattern = r'\b' + re.escape(db_word.word) + r'\b.*'
-                if not re.search(pattern, ex, re.IGNORECASE): 
+                pattern = r"\b" + re.escape(db_word.word) + r"\b.*"
+                if not re.search(pattern, ex, re.IGNORECASE):
                     logger.warning(f"Example '{ex}' does not contain the word '{word.word}'.")
                     continue
 
                 db_example = models.Examples(
-                    word_id=db_word.id,
-                    part_of_speech=part_of_speech,
-                    example=ex
+                    word_id=db_word.id, part_of_speech=part_of_speech, example=ex
                 )
                 db.add(db_example)
-                logger.info(f"Example '{ex}' added for part of speech '{part_of_speech}' for word '{word.word}'.")
+                logger.info(
+                    f"Example '{ex}' added for part of speech '{part_of_speech}' \\\
+                        for word '{word.word}'."
+                )
 
         for tag in word.tags:
-            db_tag = models.Tags(
-                word_id=db_word.id,
-                tag=tag
-            )
+            db_tag = models.Tags(word_id=db_word.id, tag=tag)
             db.add(db_tag)
             logger.info(f"Tag '{tag}' added for word '{word.word}'.")
 
         for warning in word.warnings:
-            db_warning = models.Warnings(
-                word_id=db_word.id,
-                warning_message=warning
-            )
+            db_warning = models.Warnings(word_id=db_word.id, warning_message=warning)
             db.add(db_warning)
             logger.info(f"Warning '{warning}' added for word '{word.word}'.")
-    
-        
+
         db.commit()
         logger.info(f"Word '{word.word}' added successfully .")
         return db_word
@@ -108,7 +100,8 @@ def get_all_words_from_db(db: Session) -> List[models.Words]:
         return words
     except Exception as e:
         logger.debug(f"Error getting all words: {e}", exc_info=True)
-        raise 
+        raise
+
 
 def get_word_id_by_word(db: Session, word: str) -> Optional[int]:
     """Get the ID of a word."""
@@ -123,6 +116,7 @@ def get_word_id_by_word(db: Session, word: str) -> Optional[int]:
         logger.debug(f"Error getting word ID by word '{word}': {e}", exc_info=True)
         raise
 
+
 def get_word_by_id(db: Session, word_id: int) -> Optional[models.Words]:
     """Get a word by its ID."""
     try:
@@ -136,6 +130,7 @@ def get_word_by_id(db: Session, word_id: int) -> Optional[models.Words]:
         logger.debug(f"Error getting word by ID '{word_id}': {e}", exc_info=True)
         raise
 
+
 def get_words_count(db: Session) -> int:
     """Get the total number of words added by a specific user."""
     try:
@@ -146,6 +141,7 @@ def get_words_count(db: Session) -> int:
         logger.debug(f"Error getting total words count: {e}", exc_info=True)
         raise
 
+
 def get_words_by_language(db: Session, language: str) -> List[models.Words]:
     """Get words by language."""
     try:
@@ -155,7 +151,8 @@ def get_words_by_language(db: Session, language: str) -> List[models.Words]:
     except Exception as e:
         logger.debug(f"Error getting words by language '{language}': {e}", exc_info=True)
         raise
-    
+
+
 def get_word_audio_url(db: Session, word_id: int) -> Optional[str]:
     """Get the audio URL for a specific word by its ID."""
     try:
@@ -168,6 +165,19 @@ def get_word_audio_url(db: Session, word_id: int) -> Optional[str]:
             return None
     except Exception as e:
         logger.debug(f"Error getting audio URL for word ID '{word_id}': {e}", exc_info=True)
+        raise
+
+def get_word_by_text(db: Session, word_text: str) -> Optional[models.Words]:
+    """Get a word by its text."""
+    try:
+        word_entry = db.query(models.Words).filter(models.Words.word == word_text.strip()).first()
+        if word_entry:
+            logger.info(f"Word found for text '{word_text}': ID {word_entry.id}")
+            return word_entry
+        else:
+            raise ValueError(f"Word '{word_text}' not found in the database.")
+    except Exception as e:
+        logger.debug(f"Error getting word by text '{word_text}': {e}", exc_info=True)
         raise
 
 def get_word_frequency(db: Session, word_id: int) -> Optional[float]:
@@ -184,15 +194,21 @@ def get_word_frequency(db: Session, word_id: int) -> Optional[float]:
         logger.debug(f"Error getting frequency for word ID '{word_id}': {e}", exc_info=True)
         raise
 
+
 def search_words(db: Session, query: str, skip: int = 0, limit: int = 50) -> List[models.Words]:
     """Search words by partial text match."""
     try:
-        return db.query(models.Words).filter(
-            models.Words.word.ilike(f"%{query}%")
-        ).offset(skip).limit(limit).all()
+        return (
+            db.query(models.Words)
+            .filter(models.Words.word.ilike(f"%{query}%"))
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
     except Exception as e:
         logger.error(f"Error searching words: {e}", exc_info=True)
         raise
+
 
 # ============================================================================
 # 🔒 IMMUTABILITY ENFORCEMENT - NO UPDATE/DELETE FUNCTIONS

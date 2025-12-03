@@ -454,21 +454,21 @@
     width: 95%;
     margin: 10px;
   }
-  
+
   .input {
     flex-direction: column;
   }
-  
+
   .category-selector {
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
   }
-  
+
   .category-table {
     font-size: 0.9rem;
   }
-  
+
   .category-table th,
   .category-table td {
     padding: 8px;
@@ -578,7 +578,7 @@
   width: auto;
   padding: 1rem;
   border-right: 1px solid #ccc; /* Adds a visual separator */
-} 
+}
 
 .middle-panel {
   flex: 1; /* Adjust as needed */
@@ -592,4 +592,3 @@
   padding: 1rem;
   width: auto;
 }
-

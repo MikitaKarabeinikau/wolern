@@ -4,6 +4,7 @@ Version: 0.0.1
 Summary: Coming soon...
 Home-page: https://github.com/MikitaKarabeinikau/wolern
 Author: Mikita Karabeinikau
+Author-email: nikitakarabeinikau@gmail.com
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
@@ -95,7 +96,9 @@ Requires-Dist: uvicorn==0.35.0
 Requires-Dist: wrapt==1.17.3
 Requires-Dist: xlrd==2.0.2
 Requires-Dist: yarl==1.20.1
+Requires-Dist: pre-commit==3.6.0
 Dynamic: author
+Dynamic: author-email
 Dynamic: classifier
 Dynamic: description
 Dynamic: description-content-type
@@ -411,7 +414,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
   <img src="backend/data/images/wide_version.png" alt="Wolern Banner" width=100% height="300"/>
 </td>
 <td>
-  
+
 Wolern - Language Learning Platform
 A full-stack language learning application built with React and FastAPI, featuring vocabulary management, spaced repetition exercises, and intelligent quiz generation.
 

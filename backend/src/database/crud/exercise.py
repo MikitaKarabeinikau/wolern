@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 from .. import models
 import logging
-from sqlalchemy.orm.exc import NoResultFound
-import json
+
 logger = logging.getLogger(__name__)
 
 
@@ -25,13 +24,20 @@ def create_exercise(
             db.rollback()
             return None
 
-        exercise = db.query(models.Exercise).filter(
-            models.Exercise.word_id == word_id,
-            models.Exercise.difficulty == difficulty,
-            models.Exercise.question == question
-        ).first()
+        exercise = (
+            db.query(models.Exercise)
+            .filter(
+                models.Exercise.word_id == word_id,
+                models.Exercise.difficulty == difficulty,
+                models.Exercise.question == question,
+            )
+            .first()
+        )
         if exercise:
-            logger.warning(f"Exercise for word_id '{word_id}' with the same difficulty and question already exists.")
+            logger.warning(
+                f"Exercise for word_id '{word_id}' with \\\
+                    the same difficulty and question already exists."
+            )
             db.rollback()
             return exercise
 
@@ -48,10 +54,11 @@ def create_exercise(
         db.refresh(exercise)
         logger.info(f"Created new exercise with ID {exercise.id} for user")
         return exercise
-    except Exception as e: 
+    except Exception as e:
         logger.error(f"Error creating exercise for word_id '{word_id}': {e}", exc_info=True)
         db.rollback()
         raise
+
 
 def get_exercise_by_id(db: Session, id: int):
     """
@@ -61,6 +68,7 @@ def get_exercise_by_id(db: Session, id: int):
     logger.info(f"Retrieved exercise with ID {id}")
     return exercise
 
+
 def get_exercises_by_word_id(db: Session, word_id: int):
     """
     Retrieves all exercises for a specific word by its ID.
@@ -68,6 +76,3 @@ def get_exercises_by_word_id(db: Session, word_id: int):
     exercises = db.query(models.Exercise).filter(models.Exercise.word_id == word_id).all()
     logger.info(f"Retrieved {len(exercises)} exercises for word ID {word_id}")
     return exercises
-
-
-
