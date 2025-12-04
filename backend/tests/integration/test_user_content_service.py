@@ -1,5 +1,3 @@
-from database.crud.user_synonyms import create_user_synonym
-from database.crud.user_tags import create_user_tag
 from database.crud.user_translations import create_user_translation
 from database.crud.vocabulary_words import create_vocabulary_word
 import pytest
@@ -7,14 +5,13 @@ from services.user_content_service import list_user_synonyms_by_word_status_secu
 from services.user_word_status_service import get_user_word_status_by_vocabulary_word_id
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from tests.api.test_user_content import test_word_status
 from backend.src.database.database import Base
 from database import models
-from backend.src.core.word import Word  
+from backend.src.core.word import Word
 import backend.src.services.auth as user_content_service
 import backend.src.core.word as word_module
 from backend.src.database.crud.words import add_word
-import backend.src.services.user_content_service as user_content_service 
+import backend.src.services.user_content_service as user_content_service
 from backend.src.services.auth import  OwnershipVerificationError
 # Test database URL
 TEST_DATABASE_URL = "postgresql+psycopg2://woler_test_user:password@localhost/test_db"
@@ -54,15 +51,15 @@ def test_vocabulary(db_session, test_user):
 def test_word(db_session):
     """Create a test word."""
     word_data = word_module.Word(
-        word="cat", 
+        word="cat",
         language="english",
-        translation={"russian": ["кот", "кошка"]}, 
-        synonyms=["feline", "kitty"], 
-        definition={"noun": ["a small domesticated carnivorous mammal", "a feline animal"]}, 
+        translation={"russian": ["кот", "кошка"]},
+        synonyms=["feline", "kitty"],
+        definition={"noun": ["a small domesticated carnivorous mammal", "a feline animal"]},
         examples={"noun": ["The cat sat on the mat.", "She has a pet cat."]},
         part_of_speech=["noun", "verb"],
         frequency=0.1,
-        date_added="2024-01-01", 
+        date_added="2024-01-01",
         tags=["animal", "pet"],
     )
 
@@ -74,7 +71,7 @@ def test_word(db_session):
 # ====================================USER TRANSLATIONS TEST=========================================
 class TestUserTranslations:
     """Test user have a word status after adding a vocabulary word."""
-    
+
     def test_add_new_vocabulary_word_creates_new_word(self, db_session, test_vocabulary,test_word):
         """Test existens of user_word_status after adding a vocabulary word."""
         test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
@@ -91,7 +88,7 @@ class TestUserTranslations:
         """Test adding a user translation to a vocabulary word."""
         test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
         word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
-        
+
         assert word_status is not None, "UserWordStatus was not found."
 
         # Add user translation
@@ -112,7 +109,7 @@ class TestUserTranslations:
         db_session.add(test_vocabulary_word)
         db_session.commit()
         word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
-        
+
         assert word_status is not None, "UserWordStatus was not found."
 
         # Add user translation
@@ -122,7 +119,7 @@ class TestUserTranslations:
             translation="котяра",
             language="russian"
         )
-        
+
         # Securely update the user translation
         updated_user_translation = user_content_service.update_user_translation_secure(
             db=db_session,
@@ -142,7 +139,7 @@ class TestUserTranslations:
         db_session.add(test_vocabulary_word)
         db_session.commit()
         word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
-        
+
         assert word_status is not None, "UserWordStatus was not found."
 
         # Add user translation
@@ -170,7 +167,7 @@ class TestUserTranslations:
         """Test secure update of a user translation with no fields provided."""
         test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
         word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
-        
+
         assert word_status is not None, "UserWordStatus was not found."
 
         # Add user translation
@@ -180,7 +177,7 @@ class TestUserTranslations:
             translation="котяра",
             language="russian"
         )
-        
+
         # Attempt to securely update the user translation with no fields
         with pytest.raises(ValueError):
             user_content_service.update_user_translation_secure(
@@ -193,7 +190,7 @@ class TestUserTranslations:
         """Test secure update of a user translation by unauthorized user."""
         test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
         word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
-        
+
         assert word_status is not None, "UserWordStatus was not found."
 
         # Create with correct user
@@ -212,12 +209,12 @@ class TestUserTranslations:
                 translation="котик"
             )
 
-        
+
     def test_list_translations_by_word_status_secure(self, db_session, test_vocabulary,test_word,test_user):
         """Test listing user translations by word status securely."""
         test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
         word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
-        
+
         assert word_status is not None, "UserWordStatus was not found."
 
         # Add user translations
@@ -233,14 +230,14 @@ class TestUserTranslations:
             translation="кіт",
             language="ukrainian"
         )
-       
+
         # List user translations securely
         user_translations = user_content_service.list_user_translations_by_word_status_secure(
             db=db_session,
             user_word_status_id=word_status.id,
             user_id=test_user.id
         )
-        
+
         assert len(user_translations) == 2, "User translations count mismatch."
         translations_set = {ut.translation for ut in user_translations}
         assert "котяра" in translations_set, "'котяра' translation not found."
@@ -249,12 +246,12 @@ class TestUserTranslations:
     def test_secure_delete_user_translation(self, db_session, test_vocabulary, test_word, test_user):
         """Test secure deletion of a user translation."""
         test_vocabulary_word = create_vocabulary_word(
-            db_session, 
-            vocabulary_id=test_vocabulary.vocabulary_id, 
+            db_session,
+            vocabulary_id=test_vocabulary.vocabulary_id,
             word_id=test_word.id
         )
         word_status = get_user_word_status_by_vocabulary_word_id(
-            db_session, 
+            db_session,
             vocabulary_word_id=test_vocabulary_word.id
         )
         assert word_status is not None, "UserWordStatus was not found."
@@ -267,16 +264,16 @@ class TestUserTranslations:
             language="russian"
         )
 
-        
+
         translation_id = user_translation.id  # Save ID before deletion
-        
+
         # Delete the translation
         user_content_service.delete_user_translation_secure(
-            db=db_session, 
-            translation_id=translation_id, 
+            db=db_session,
+            translation_id=translation_id,
             user_id=test_user.id
         )
-        
+
         # Verify deletion using the saved ID
         deleted_translation = db_session.query(models.UserTranslations).filter_by(id=translation_id).first()
         assert deleted_translation is None, "User translation was not deleted securely."
@@ -310,7 +307,7 @@ class TestUserExamples:
         test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
         word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
         assert word_status is not None, "UserWordStatus was not found."
-    
+
         user_example = user_content_service.create_user_example_secure(
             db=db_session,
             user_word_status_id=word_status.id,
@@ -384,7 +381,7 @@ class TestUserExamples:
         updated = db_session.query(models.UserExamples).filter_by(id=user_example.id).first()
         assert updated.example == "My cat is playing.", "User example was not updated."
         assert updated.part_of_speech == "verb", "User example part of speech was not updated."
-    
+
     def test_secure_update_user_example_none_fields(self, db_session, test_vocabulary, test_word, test_user):
         """Test secure update of a user example with no fields provided."""
         test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
@@ -725,7 +722,7 @@ class TestUserTags:
         """Test secure update of a user tag with no fields provided."""
         test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
         word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
-        assert word_status is not None, "UserWordStatus was not found." 
+        assert word_status is not None, "UserWordStatus was not found."
         user_tag = user_content_service.create_user_tag_secure(
             db=db_session, user_word_status_id=word_status.id, user_id=test_user.id, tag="favorite"
         )

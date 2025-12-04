@@ -29,6 +29,9 @@ jobs:
           JWK_KEY: ${{ secrets.JWK_KEY }}
           PYTHONPATH: backend
     steps:
+    - name : Set PYTHONPATH
+      run: export PYTHONPATH="${PYTHONPATH}:$(pwd)/backend"
+
     - name: Checkout code
       uses: actions/checkout@v4
 
