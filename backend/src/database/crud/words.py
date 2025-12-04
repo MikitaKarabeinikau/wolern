@@ -130,6 +130,19 @@ def get_word_by_id(db: Session, word_id: int) -> Optional[models.Words]:
         logger.debug(f"Error getting word by ID '{word_id}': {e}", exc_info=True)
         raise
 
+def get_word_by_word_text(db: Session, word_text: str) -> Optional[models.Words]:
+    """Get a word by its text."""
+    try:
+        word_entry = db.query(models.Words).filter(models.Words.word == word_text.strip().lower()).first()
+        if word_entry:
+            logger.info(f"Word found for text '{word_text}': ID {word_entry.id}")
+            return word_entry
+        else:
+            logger.warning(f"Word '{word_text}' not found in the database.")
+            return None
+    except Exception as e:
+        logger.debug(f"Error getting word by text '{word_text}': {e}", exc_info=True)
+        raise
 
 def get_words_count(db: Session) -> int:
     """Get the total number of words added by a specific user."""
@@ -141,6 +154,20 @@ def get_words_count(db: Session) -> int:
         logger.debug(f"Error getting total words count: {e}", exc_info=True)
         raise
 
+def search_words_by_prefix(db: Session, prefix: str, limit: int = 50) -> List[models.Words]:
+    """Search words by prefix."""
+    try:
+        words = (
+            db.query(models.Words)
+            .filter(models.Words.word.ilike(f"{prefix}%"))
+            .limit(limit)
+            .all()
+        )
+        logger.info(f"Found {len(words)} words with prefix '{prefix}'.")
+        return words
+    except Exception as e:
+        logger.debug(f"Error searching words by prefix '{prefix}': {e}", exc_info=True)
+        raise
 
 def get_words_by_language(db: Session, language: str) -> List[models.Words]:
     """Get words by language."""
