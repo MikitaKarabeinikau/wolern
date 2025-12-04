@@ -57,7 +57,7 @@ jobs:
 
     - name: Set environment variables
       run: |
-        echo "DATABASE_URL=postgresql+psycopg2://test_user:password@localhost:5432/test_db" >> $GITHUB_ENV
+        echo "DATABASE_URL=postgresql+psycopg2://woler_test_user:password@localhost:5432/test_db" >> $GITHUB_ENV
         echo "PYTHONPATH=$GITHUB_WORKSPACE/backend/src" >> $GITHUB_ENV
 
     - name: Run unit tests
