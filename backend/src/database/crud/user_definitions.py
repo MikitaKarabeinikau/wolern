@@ -97,13 +97,14 @@ def get_user_definition_by_id(db: Session, id: int) -> models.UserDefinitions:
         raise
 
 
-def update_user_definition(db: Session, id: int, new_definition: str) -> models.UserDefinitions:
+def update_user_definition(db: Session, id: int, new_definition: str, part_of_speech: str) -> models.UserDefinitions:
     """Update an existing user definition."""
     try:
         user_definition = (
             db.query(models.UserDefinitions).filter(models.UserDefinitions.id == id).one()
         )
         user_definition.definition = new_definition
+        user_definition.part_of_speech = part_of_speech
         db.commit()
         db.refresh(user_definition)
         logger.info(f"User definition with id '{id}' updated successfully.")

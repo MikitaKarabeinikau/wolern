@@ -116,11 +116,12 @@ def get_user_example_by_id(db: Session, id: int) -> models.UserExamples:
         raise
 
 
-def update_user_example(db: Session, id: int, new_example: str) -> models.UserExamples:
+def update_user_example(db: Session, id: int, new_example: str, part_of_speech: str) -> models.UserExamples:
     """Update an existing user example."""
     try:
         user_example = db.query(models.UserExamples).filter(models.UserExamples.id == id).one()
         user_example.example = new_example
+        user_example.part_of_speech = part_of_speech
         db.commit()
         db.refresh(user_example)
 

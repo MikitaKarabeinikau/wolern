@@ -58,17 +58,9 @@ def test_vocabulary_word(db_session, test_vocabulary, test_word):
     db_session.commit()
     return vocab_word
 
+
 class TestVocabularyService:
     """Test suite for the vocabulary service."""
-
-    def check_word_status_created(self, db_session, vocabulary_word_id):
-        """Helper method to check if UserWordStatus is created."""
-        user_word_status = (
-            db_session.query(models.UserWordStatus)
-            .filter_by(vocabulary_word_id=vocabulary_word_id)
-            .first()
-        )
-        assert user_word_status is not None, "UserWordStatus was not created."
 
     def test_add_new_vocabulary_word_creates_new_word(self, db_session, test_vocabulary):
         """Test adding a new vocabulary word that doesn't exist in the base words table."""

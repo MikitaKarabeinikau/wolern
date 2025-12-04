@@ -44,6 +44,21 @@ def create_user_synonym(db: Session, user_word_status_id: int, synonym: str) -> 
         db.rollback()
         raise
 
+def get_user_synonyms_by_word_status_id(db: Session, user_word_status_id: int) -> list[models.UserSynonyms]:
+    """Retrieve UserSynonyms by UserWordStatus ID."""
+    try:
+        synonyms = (
+            db.query(models.UserSynonyms)
+            .filter(models.UserSynonyms.user_word_status_id == user_word_status_id)
+            .all()
+        )
+        return synonyms
+    except Exception as e:
+        logger.error(
+            f"Error retrieving UserSynonyms for UserWordStatus ID '{user_word_status_id}': {e}",
+            exc_info=True,
+        )
+        raise
 
 def get_user_synonyms(db: Session, user_word_status_id: int) -> list[models.UserSynonyms]:
     """Retrieve UserSynonyms by UserWordStatus ID."""

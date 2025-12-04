@@ -31,8 +31,6 @@ class NotFoundError(Exception):
 # ============================================================================
 # USER EXAMPLES - Secure Operations
 # ============================================================================
-
-
 def create_user_example_secure(
     db: Session, user_word_status_id: int, user_id: int, part_of_speech: str, example: str
 ) -> models.UserExamples:
@@ -58,8 +56,7 @@ def create_user_example_secure(
         logger.error(f"Error creating user example: {e}", exc_info=True)
         raise
 
-
-def get_user_example_secure(db: Session, example_id: int, user_id: int) -> models.UserExamples:
+def get_user_example_secure(db: Session, example_id: int, user_id: int, part_of_speech: Optional[str] = None) -> models.UserExamples:
     """Get a user example with ownership verification."""
     try:
         verify_user_owns_example(db, example_id, user_id)
@@ -78,7 +75,6 @@ def get_user_example_secure(db: Session, example_id: int, user_id: int) -> model
     except Exception as e:
         logger.error(f"Error retrieving user example: {e}", exc_info=True)
         raise
-
 
 def get_user_examples_by_word_status_secure(
     db: Session, user_word_status_id: int, user_id: int
@@ -99,6 +95,24 @@ def get_user_examples_by_word_status_secure(
         logger.error(f"Error retrieving examples: {e}", exc_info=True)
         raise
 
+def list_user_examples_by_word_status_secure(
+    db: Session, user_word_status_id: int, user_id: int
+) -> list[models.UserExamples]:
+    """Get all examples for a word status with ownership verification."""
+    from .auth import verify_user_owns_word_status
+
+    try:
+        verify_user_owns_word_status(db, user_word_status_id, user_id)
+        return user_examples.get_user_examples_by_word_status_id(db, user_word_status_id)
+
+    except OwnershipVerificationError:
+        logger.warning(
+            f"User {user_id} attempted to access examples for word_status {user_word_status_id}"
+        )
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving examples: {e}", exc_info=True)
+        raise
 
 def update_user_example_secure(
     db: Session,
@@ -109,6 +123,12 @@ def update_user_example_secure(
 ) -> models.UserExamples:
     """Update a user example with ownership verification."""
     try:
+        if not part_of_speech and not example:
+            raise ValueError("At least one of part_of_speech or example must be provided.")
+        if not example:
+            example = get_user_example_secure(db, example_id, user_id).example
+        if not part_of_speech:
+            part_of_speech = get_user_example_secure(db, example_id, user_id).part_of_speech
         verify_user_owns_example(db, example_id, user_id)
 
         updated = user_examples.update_user_example(
@@ -128,7 +148,6 @@ def update_user_example_secure(
     except Exception as e:
         logger.error(f"Error updating user example: {e}", exc_info=True)
         raise
-
 
 def delete_user_example_secure(db: Session, example_id: int, user_id: int) -> bool:
     """Delete a user example with ownership verification."""
@@ -155,8 +174,6 @@ def delete_user_example_secure(db: Session, example_id: int, user_id: int) -> bo
 # ============================================================================
 # USER DEFINITIONS - Secure Operations
 # ============================================================================
-
-
 def create_user_definition_secure(
     db: Session, user_word_status_id: int, user_id: int, part_of_speech: str, definition: str
 ) -> models.UserDefinitions:
@@ -208,10 +225,15 @@ def update_user_definition_secure(
 ) -> models.UserDefinitions:
     """Update a user definition with ownership verification."""
     try:
+        if not part_of_speech and not definition:
+            raise ValueError("At least one of part_of_speech or definition must be provided.")
         verify_user_owns_definition(db, definition_id, user_id)
-
+        if not definition:
+            definition = get_user_definition_secure(db, definition_id, user_id).definition
+        if not part_of_speech:
+            part_of_speech = get_user_definition_secure(db, definition_id, user_id).part_of_speech
         return user_definitions.update_user_definition(
-            db=db, definition_id=definition_id, part_of_speech=part_of_speech, definition=definition
+            db=db, id=definition_id, part_of_speech=part_of_speech, new_definition=definition
         )
 
     except OwnershipVerificationError:
@@ -219,6 +241,23 @@ def update_user_definition_secure(
         raise
     except Exception as e:
         logger.error(f"Error updating user definition: {e}", exc_info=True)
+        raise
+
+def list_user_definitions_by_word_status_secure(db: Session, user_word_status_id: int, user_id: int) -> list[models.UserDefinitions]:
+    """Get all definitions for a word status with ownership verification."""
+    from .auth import verify_user_owns_word_status
+
+    try:
+        verify_user_owns_word_status(db, user_word_status_id, user_id)
+        return user_definitions.get_user_definitions_by_user_word_status_id(db, user_word_status_id)
+
+    except OwnershipVerificationError:
+        logger.warning(
+            f"User {user_id} attempted to access definitions for word_status {user_word_status_id}"
+        )
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving definitions: {e}", exc_info=True)
         raise
 
 
@@ -253,6 +292,23 @@ def get_definitions_for_word_status_secure(
         raise
     except Exception as e:
         logger.error(f"Error retrieving definitions: {e}", exc_info=True)
+        raise
+
+def get_list_of_user_definitions_secure(db:Session, user_id:int) -> list[models.UserDefinitions]:
+    """Get all user definitions for a user with ownership verification."""
+    try:
+        definitions = (
+            db.query(models.UserDefinitions)
+            .join(models.UserWordStatus)
+            .filter(models.UserWordStatus.user_id == user_id)
+            .all()
+        )
+        return definitions
+    except Exception as e:
+        logger.error(
+            f"Error retrieving definitions for user id '{user_id}': {e}",
+            exc_info=True,
+        )
         raise
 
 
@@ -354,7 +410,7 @@ def list_user_synonyms_by_word_status_secure(
 
     try:
         verify_user_owns_word_status(db, user_word_status_id, user_id)
-        return user_synonyms.get_synonyms_by_word_status(db, user_word_status_id)
+        return user_synonyms.get_user_synonyms_by_word_status_id(db, user_word_status_id)
 
     except OwnershipVerificationError:
         logger.warning(
@@ -386,6 +442,8 @@ def update_user_synonym_secure(
         NotFoundError: If synonym doesn't exist
     """
     try:
+        if synonym.strip() == "":
+            raise ValueError("Synonym must be provided.")
         verify_user_owns_synonym(db, synonym_id, user_id)
 
         updated = user_synonyms.update_user_synonym(db, synonym_id, synonym)
@@ -565,6 +623,9 @@ def update_user_tag_secure(db: Session, tag_id: int, user_id: int, tag: str) -> 
         NotFoundError: If tag doesn't exist
     """
     try:
+        
+        if tag.strip() == "":
+            raise ValueError("Tag must be provided.")
         verify_user_owns_tag(db, tag_id, user_id)
 
         updated = user_tags.update_user_tag(db, tag_id, tag)
@@ -761,10 +822,16 @@ def update_user_translation_secure(
         NotFoundError: If translation doesn't exist
     """
     try:
+        if not language and not translation:
+            raise ValueError("At least one of language or translation must be provided.")
+        if not translation:
+            translation = get_user_translation_secure(db, translation_id, user_id).translation
+        if not language:
+            language = get_user_translation_secure(db, translation_id, user_id).language
         verify_user_owns_translation(db, translation_id, user_id)
 
         updated = user_translations.update_user_translation(
-            db=db, translation_id=translation_id, language=language, translation=translation
+            db=db, user_translation_id=translation_id, language=language, new_translation=translation
         )
 
         if not updated:

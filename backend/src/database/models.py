@@ -187,7 +187,7 @@ class Users(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     clerk_id = Column(String, unique=True, index=True, nullable=False)
-    username = Column(String, unique=True, index=True, nullable=False)
+    username = Column(String, unique=True, index=True, nullable=True)
     email = Column(String, unique=True, index=True, nullable=False)
     role = Column(String, nullable=True, default="user")
     native_language = Column(String, nullable=True, default="polish")
@@ -257,7 +257,6 @@ class UserWordStatus(Base):
     vocabulary_word_id = Column(Integer, ForeignKey("vocabulary_words.id"), nullable=False)
     last_updated = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
-    # ✅ User-created content relationships
     user_synonyms = relationship(
         "UserSynonyms", back_populates="user_word_status", cascade="all, delete-orphan"
     )

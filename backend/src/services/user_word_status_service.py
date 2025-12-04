@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from .. import models
+from backend.src.database import models
 import logging
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -48,3 +48,22 @@ def get_all_words_by_learning_stage(
             exc_info=True,
         )
         raise
+
+def get_user_word_status_by_vocabulary_word_id(db: Session, vocabulary_word_id: int) -> models.UserWordStatus:
+    """Retrieve UserWordStatus by vocabulary_word_id."""
+    try:
+        status = (
+            db.query(models.UserWordStatus)
+            .filter(models.UserWordStatus.vocabulary_word_id == vocabulary_word_id)
+            .one()
+        )
+        return status
+    except NoResultFound:
+        logger.warning(f"UserWordStatus for vocabulary_word_id '{vocabulary_word_id}' not found.")
+        return None
+    except Exception as e:
+        logger.error(
+            f"Error retrieving UserWordStatus for vocabulary_word_id '{vocabulary_word_id}': {e}",
+            exc_info=True,
+        )
+        raise   

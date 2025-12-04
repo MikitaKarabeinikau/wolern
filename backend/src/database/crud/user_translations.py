@@ -65,6 +65,21 @@ def get_user_translations(db: Session, user_word_status_id: int) -> list[models.
         )
         raise
 
+def get_translations_by_word_status(db: Session, user_word_status_id: int) -> list[models.UserTranslations]:
+    """Retrieve UserTranslations by UserWordStatus ID."""
+    try:
+        translations = (
+            db.query(models.UserTranslations)
+            .filter(models.UserTranslations.user_word_status_id == user_word_status_id)
+            .all()
+        )
+        return translations
+    except Exception as e:
+        logger.error(
+            f"Error retrieving UserTranslations for UserWordStatus ID '{user_word_status_id}': {e}",
+            exc_info=True,
+        )
+        raise
 
 def get_user_translation_by_word_id(
     db: Session, user_word_status_id: int
@@ -87,9 +102,29 @@ def get_user_translation_by_word_id(
         )
         raise
 
+def get_user_translation_by_id(
+    db: Session, user_translation_id: int
+) -> models.UserTranslations:
+    """Retrieve a UserTranslations by its ID."""
+    try:
+        translation = (
+            db.query(models.UserTranslations)
+            .filter(models.UserTranslations.id == user_translation_id)
+            .one()
+        )
+        return translation
+    except NoResultFound:
+        logger.warning(f"User translation with id '{user_translation_id}' not found.")
+        return None
+    except Exception as e:
+        logger.error(
+            f"Error retrieving UserTranslations with id '{user_translation_id}': {e}",
+            exc_info=True,
+        )
+        raise
 
 def update_user_translation(
-    db: Session, user_translation_id: int, new_translation: str
+    db: Session, user_translation_id: int, new_translation: str, language: str = None
 ) -> models.UserTranslations:
     """Update an existing UserTranslations entry."""
     try:
@@ -99,6 +134,8 @@ def update_user_translation(
             .one()
         )
         translation_entry.translation = new_translation
+        if language:
+            translation_entry.language = language
         db.commit()
         db.refresh(translation_entry)
         return translation_entry

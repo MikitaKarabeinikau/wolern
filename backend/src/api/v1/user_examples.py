@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from backend.src.database.database import get_db
-from backend.src.services import user_content_serice as crud_service
+from services import user_content_service as crud_service
 from backend.src.schemas import user_examples as user_example_schema
 from backend.src.api.dependencies import get_current_user
 import logging
