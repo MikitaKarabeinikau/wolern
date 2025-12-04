@@ -24,7 +24,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
+    env:
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}   # or a CI dummy value if tests mock authentication
+          JWK_KEY: ${{ secrets.JWK_KEY }}
+          PYTHONPATH: backend
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
