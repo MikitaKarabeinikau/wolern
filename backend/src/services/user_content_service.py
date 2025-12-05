@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from backend.src.database import models
 from backend.src.database.crud import (
     user_examples,
@@ -623,7 +623,7 @@ def update_user_tag_secure(db: Session, tag_id: int, user_id: int, tag: str) -> 
         NotFoundError: If tag doesn't exist
     """
     try:
-        
+
         if tag.strip() == "":
             raise ValueError("Tag must be provided.")
         verify_user_owns_tag(db, tag_id, user_id)
@@ -882,4 +882,39 @@ def delete_user_translation_secure(db: Session, translation_id: int, user_id: in
         raise
     except Exception as e:
         logger.error(f"Error deleting user translation: {e}", exc_info=True)
+        raise
+
+def get_full_data_user_word_status_by_id_secure(
+    db: Session, user_word_status_id: int, user_id: int
+) -> Optional[models.UserWordStatus]:
+    """
+    Get complete user word status data with all relationships eagerly loaded and ownership verification.
+
+    Returns SQLAlchemy model with all relationships loaded in a single query.
+    """
+    from .auth import verify_user_owns_word_status
+
+    try:
+        verify_user_owns_word_status(db, user_word_status_id, user_id)
+
+        return (
+            db.query(models.UserWordStatus)
+            .options(
+                joinedload(models.UserWordStatus.user_definitions),
+                joinedload(models.UserWordStatus.user_examples),
+                joinedload(models.UserWordStatus.user_synonyms),
+                joinedload(models.UserWordStatus.user_translations),
+                joinedload(models.UserWordStatus.user_tags),
+            )
+            .filter(models.UserWordStatus.id == user_word_status_id)
+            .first()
+        )
+
+    except OwnershipVerificationError:
+        logger.warning(
+            f"User {user_id} attempted to access word_status {user_word_status_id}"
+        )
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving user word status: {e}", exc_info=True)
         raise

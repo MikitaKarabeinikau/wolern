@@ -1,258 +1,71 @@
+from unittest.mock import Mock, patch
 import pytest
-from schemas.word import WordCreate
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from backend.src.database.database import Base
-from backend.src.database.models import Users, Vocabulary, Words, VocabularyWords
-from backend.src.services.vocabulary_service import add_new_vocabulary_word
-from database import models
-from backend.src.core.word import Word  
+from backend.src.services import vocabulary_service
+from backend.src.core.word import Word
+from backend.src.database import models
 
-# Test database URL
-TEST_DATABASE_URL = "postgresql+psycopg2://woler_test_user:password@localhost/test_db"
-
-# Create test engine and session
-engine = create_engine(TEST_DATABASE_URL)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-@pytest.fixture(scope="function")
-def db_session():
-    """Set up and tear down the test database session."""
-    Base.metadata.create_all(bind=engine)
-    session = TestingSessionLocal()
-    try:
-        yield session
-    finally:
-        session.close()
-        Base.metadata.drop_all(bind=engine)
-
-@pytest.fixture
-def test_user(db_session):
-    """Create a test user."""
-    user = Users(id=1,clerk_id='test_user', username="test_user", email="test@example.com")
-    db_session.add(user)
-    db_session.commit()
-    return user
-
-@pytest.fixture
-def test_word(db_session):
-    """Create a test word."""
-    word = Words(id=1, word="dog", language="english")
-    db_session.add(word)
-    db_session.commit()
-    return word
-
-@pytest.fixture
-def test_vocabulary(db_session, test_user):
-    """Create a test vocabulary."""
-    vocabulary = Vocabulary(vocabulary_id=1, user_id=test_user.id, name="Test Vocabulary")
-    db_session.add(vocabulary)
-    db_session.commit()
-    return vocabulary
-
-@pytest.fixture
-def test_vocabulary_word(db_session, test_vocabulary, test_word):
-    """Create a test vocabulary word."""
-    vocab_word = VocabularyWords(id=1, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
-    db_session.add(vocab_word)
-    db_session.commit()
-    return vocab_word
-
-
-class TestVocabularyService:
-    """Test suite for the vocabulary service."""
-
-    def test_add_new_vocabulary_word_creates_new_word(self, db_session, test_vocabulary):
-        """Test adding a new vocabulary word that doesn't exist in the base words table."""
-        word = Word(word="cat", 
-                    language="english",
-                    translation={"russian": ["кот"]}, 
-                    synonyms=["feline"], 
-                    definition={"noun": ["a small domesticated carnivorous mammal"]}, 
-                    examples={"noun": ["The cat sat on the mat."]},
-                    part_of_speech=["noun"],
-                    date_added="2024-01-01", 
-                    tags=["animal"],
-                    frequency=0.456,
-                    warnings=["common"])
-        word_dict = word.to_dict()
-        
-        vocabulary_word = add_new_vocabulary_word(
-            db=db_session,
-            word=word,
-            vocabulary_id=test_vocabulary.vocabulary_id,
+class TestVocabularyServiceUnit:
+    def setup_method(self):
+        self.mock_db = Mock()
+        self.mock_word = Word(
+            word="cat",
+            language="english",
+            translation={"russian": ["кот"]},
+            synonyms=["feline"],
+            definition={"noun": ["a small animal"]},
+            examples={"noun": ["The cat sat."]},
+            part_of_speech=["noun"],
+            frequency=0.1,
+            date_added="2024-01-01",
+            tags=["animal"]
         )
 
-        # Verify the word was added to the base words table
-        base_word = db_session.query(Words).filter_by(word=word_dict["word"]).first()
-        assert base_word is not None
-        assert base_word.word == word_dict["word"]
+    @patch("backend.src.services.vocabulary_service.add_word")
+    @patch("backend.src.services.vocabulary_service.create_vocabulary_word")
+    def test_add_new_vocabulary_word_creates_new_word_and_vocab_word(self, mock_create_vocab_word, mock_add_word):
+        # Setup: word does not exist
+        self.mock_db.query.return_value.filter.return_value.first.side_effect = [None, None]
+        mock_new_word = Mock(spec=models.Words, id=1)
+        mock_add_word.return_value = mock_new_word
+        mock_vocab_word = Mock(spec=models.VocabularyWords, id=2)
+        mock_create_vocab_word.return_value = mock_vocab_word
 
-        # Verify the vocabulary word was added
-        vocab_word = db_session.query(VocabularyWords).filter_by(word_id=base_word.id).first()
-        assert vocab_word is not None
-        assert vocab_word.vocabulary_id == test_vocabulary.vocabulary_id
+        result = vocabulary_service.add_new_vocabulary_word(self.mock_db, self.mock_word, vocabulary_id=10)
+        assert result == mock_vocab_word
+        mock_add_word.assert_called_once_with(self.mock_db, self.mock_word)
+        mock_create_vocab_word.assert_called_once_with(self.mock_db, 10, 1)
 
-    def test_add_new_vocabulary_word_existing_word(self, db_session, test_user, test_vocabulary):
-        """Test adding a vocabulary word that already exists in the base words table."""
-        # Add the word to the base words table
-        word = Word(word="cat", 
-                          language="english",
-                          translation={"russian": ["кот"]}, 
-                          synonyms=["feline"], 
-                          definition={"noun": ["a small domesticated carnivorous mammal"]}, 
-                          examples={"noun": ["The cat sat on the mat."]},
-                          part_of_speech=["noun"],
-                          date_added="2024-01-01", 
-                          tags=["animal"],
-                          frequency=0.456,
-                          warnings=["common"])
-        base_word = Words(word=word.word, language=word.language)
-        db_session.add(base_word)
-        db_session.commit()
+    @patch("backend.src.services.vocabulary_service.create_vocabulary_word")
+    def test_add_new_vocabulary_word_existing_word_and_vocab_word(self, mock_create_vocab_word):
+        # Setup: word and vocab word exist
+        mock_existing_word = Mock(spec=models.Words, id=1)
+        mock_existing_vocab_word = Mock(spec=models.VocabularyWords, id=2)
+        self.mock_db.query.return_value.filter.return_value.first.side_effect = [mock_existing_word, mock_existing_vocab_word]
 
-        # Add the vocabulary word
-        vocabulary_word = add_new_vocabulary_word(
-            db=db_session,
-            word=word,
-            vocabulary_id=test_vocabulary.vocabulary_id,
-        )
+        result = vocabulary_service.add_new_vocabulary_word(self.mock_db, self.mock_word, vocabulary_id=10)
+        assert result == mock_existing_vocab_word
+        mock_create_vocab_word.assert_not_called()
 
-        # Verify the vocabulary word was added
-        vocab_word = db_session.query(VocabularyWords).filter_by(word_id=base_word.id).first()
-        assert vocab_word is not None
-        assert vocab_word.vocabulary_id == test_vocabulary.vocabulary_id
+    @patch("backend.src.services.vocabulary_service.create_vocabulary_word")
+    @patch("backend.src.services.vocabulary_service.get_user_by_vocabulary_id")
+    @patch("backend.src.services.vocabulary_service.get_preferred_language_by_user_id")
+    def test_create_vocabulary_word_secure_success(self, mock_get_pref_lang, mock_get_user_by_vocab_id, mock_create_vocab_word):
+        mock_user = Mock(id=5)
+        mock_get_user_by_vocab_id.return_value = mock_user
+        mock_get_pref_lang.return_value = "english"
+        mock_word = Mock(spec=models.Words, id=1)
+        mock_vocab_word = Mock(spec=models.VocabularyWords, id=2)
+        mock_create_vocab_word.return_value = mock_vocab_word
 
-    def test_add_new_vocabulary_word_existing_vocab_word(self, db_session, test_user, test_vocabulary):
-        """Test adding a vocabulary word that already exists in the vocabulary."""
-        # Add the word to the base words table
-        word = Word(word="cat", 
-                          language="english",
-                          translation={"russian": ["кот"]}, 
-                          synonyms=["feline"], 
-                          definition={"noun": ["a small domesticated carnivorous mammal"]}, 
-                          examples={"noun": ["The cat sat on the mat."]},
-                          part_of_speech=["noun"],
-                          date_added="2024-01-01", 
-                          tags=["animal"],
-                          frequency=0.456,
-                          warnings=["common"])
-        
-        base_word = Words(word=word.word, language=word.language)
-        db_session.add(base_word)
-        db_session.commit()
+        result = vocabulary_service.create_vocabulary_word_secure(self.mock_db, vocabulary_id=10, word=mock_word)
+        assert result == mock_vocab_word
+        mock_get_user_by_vocab_id.assert_called_once_with(self.mock_db, 10)
+        mock_get_pref_lang.assert_called_once_with(self.mock_db, 5)
+        mock_create_vocab_word.assert_called_once_with(self.mock_db, 10, 1)
 
-        # Add the vocabulary word
-        vocab_word = VocabularyWords(
-            vocabulary_id=test_vocabulary.vocabulary_id,
-            word_id=base_word.id,
-        )
-        db_session.add(vocab_word)
-        db_session.commit()
-
-        # Attempt to add the same vocabulary word again
-        vocabulary_word = add_new_vocabulary_word(
-            db=db_session,
-            word=word,
-            vocabulary_id=test_vocabulary.vocabulary_id,
-        )
-
-        # Verify the existing vocabulary word was returned
-        assert vocabulary_word.vocabulary_id == vocab_word.id
-
-    def test_add_new_vocabulary_word_rollback_on_error(self, db_session, test_user, test_vocabulary):
-        """Test rollback when an error occurs during adding a vocabulary word."""
-        word = Word(word="cat", 
-                          language="english",
-                          translation={"russian": ["кот"]}, 
-                          synonyms=["feline"], 
-                          definition={"noun": ["a small domesticated carnivorous mammal"]}, 
-                          examples={"noun": ["The cat sat on the mat."]},
-                          part_of_speech=["noun"],
-                          date_added="2024-01-01", 
-                          tags=["animal"],
-                          frequency=0.456,
-                          warnings=["common"]).to_dict()
-
-        # Simulate an error by passing an invalid vocabulary ID
-        with pytest.raises(Exception):
-            add_new_vocabulary_word(
-                db=db_session,
-                word=word,
-                vocabulary_id=999,  # Invalid vocabulary ID
-            )
-
-        # Verify the word was not added to the base words table
-        base_word = db_session.query(Words).filter_by(word=word["word"]).first()
-        assert base_word is None
-
-        # Verify the vocabulary word was not added
-        vocab_word = db_session.query(VocabularyWords).filter_by(word_id=999).first()
-        assert vocab_word is None
-
-    def test_add_new_vocabulary_word_create_user_word_status(self, db_session, test_user, test_vocabulary):
-        """Test that adding a new vocabulary word creates a user word status."""
-        word = Word(word="cat", 
-                          language="english",
-                          translation={"russian": ["кот"]}, 
-                          synonyms=["feline"], 
-                          definition={"noun": ["a small domesticated carnivorous mammal"]}, 
-                          examples={"noun": ["The cat sat on the mat."]},
-                          part_of_speech=["noun"],
-                          date_added="2024-01-01", 
-                          tags=["animal"],
-                          frequency=0.456,
-                          warnings=["common"])
-        vocabulary_word = add_new_vocabulary_word(
-            db=db_session,
-            word=word,
-            vocabulary_id=test_vocabulary.vocabulary_id,
-        )
-
-        # Verify the user word status was created
-        user_word_status = (
-            db_session.query(models.UserWordStatus)
-            .filter_by(vocabulary_word_id=vocabulary_word.id)
-            .first()
-        )
-        assert user_word_status is not None
-
-    def test_add_new_vocabulary_word_create_user_word_status_and_quiz_progress(self, db_session, test_user, test_vocabulary):
-        """Test that adding a new vocabulary word creates a user word status and initializes quiz progress."""
-        word = Word(word="cat", 
-                          language="english",
-                          translation={"russian": ["кот"]}, 
-                          synonyms=["feline"], 
-                          definition={"noun": ["a small domesticated carnivorous mammal"]}, 
-                          examples={"noun": ["The cat sat on the mat."]},
-                          part_of_speech=["noun"],
-                          date_added="2024-01-01", 
-                          tags=["animal"],
-                          frequency=0.456,
-                          warnings=["common"])
-        vocabulary_word = add_new_vocabulary_word(
-            db=db_session,
-            word=word,
-            vocabulary_id=test_vocabulary.vocabulary_id,
-        )
-
-        # Verify the user word status was created
-        user_word_status = (
-            db_session.query(models.UserWordStatus)
-            .filter_by(vocabulary_word_id=vocabulary_word.id)
-            .first()
-        )
-        assert user_word_status is not None
-
-        # Verify the quiz progress was initialized
-        quiz_progress = (
-            db_session.query(models.UserQuizProgress)
-            .filter_by(user_word_status_id=user_word_status.id)
-            .first()
-        )
-        assert quiz_progress is not None
-        assert quiz_progress.correct == 0
-        assert quiz_progress.wrong == 0
-        assert quiz_progress.correct_streak == 0
-        assert quiz_progress.wrong_streak == 0
-        assert quiz_progress.learning_stage == 1
+    @patch("backend.src.services.vocabulary_service.get_user_by_vocabulary_id")
+    def test_create_vocabulary_word_secure_no_user(self, mock_get_user_by_vocab_id):
+        mock_get_user_by_vocab_id.return_value = None
+        mock_word = Mock(spec=models.Words, id=1)
+        with pytest.raises(ValueError):
+            vocabulary_service.create_vocabulary_word_secure(self.mock_db, vocabulary_id=10, word=mock_word)

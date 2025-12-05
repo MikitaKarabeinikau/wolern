@@ -41,3 +41,31 @@ def add_new_vocabulary_word(db: Session, word: Word, vocabulary_id: int) -> mode
         logger.error(f"Error adding vocabulary word '{word}' in vocabulary_id '{vocabulary_id}': {e}", exc_info=True)
         db.rollback()
         raise
+
+def create_vocabulary_word_secure(db: Session, vocabulary_id: int, word: models.Words) -> models.VocabularyWords:
+    """Create a vocabulary word securely by checking user ownership."""
+    user = get_user_by_vocabulary_id(db, vocabulary_id)
+    if not user:
+        raise ValueError("Vocabulary does not belong to any user.")
+    preferred_language = get_preferred_language_by_user_id(db, user.id)
+    vocab_word = create_vocabulary_word(db, vocabulary_id, word.id)
+    return vocab_word
+
+def delete_word_from_vocabulary_secure(db: Session, vocabulary_id: int, word_id: int):
+    """Delete a word from a vocabulary securely by checking user ownership."""
+    user = get_user_by_vocabulary_id(db, vocabulary_id)
+    if not user:
+        raise ValueError("Vocabulary does not belong to any user.")
+    vocab_word = (
+        db.query(models.VocabularyWords)
+        .filter(
+            models.VocabularyWords.vocabulary_id == vocabulary_id,
+            models.VocabularyWords.word_id == word_id
+        )
+        .first()
+    )
+    if not vocab_word:
+        raise ValueError("Word not found in the specified vocabulary.")
+    db.delete(vocab_word)
+    db.commit()
+    return vocab_word

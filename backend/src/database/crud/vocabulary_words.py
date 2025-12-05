@@ -1,3 +1,4 @@
+from clerk_backend_api import Optional
 from database.crud.user_word_status import create_user_word_status
 from sqlalchemy.orm import Session
 from backend.src.database import models
@@ -77,6 +78,20 @@ def get_vocabulary_words(
         logger.error(f"Error getting vocabulary words: {e}", exc_info=True)
         raise
 
+def get_vocabulary_word_by_vocab_and_word_id(db: Session, vocabulary_id: int, word_id: int) -> Optional[models.VocabularyWords]:
+    """Get a specific vocabulary word entry by vocabulary ID and word ID."""
+    try:
+        return (
+            db.query(models.VocabularyWords)
+            .filter(
+                models.VocabularyWords.vocabulary_id == vocabulary_id,
+                models.VocabularyWords.word_id == word_id,
+            )
+            .first()
+        )
+    except Exception as e:
+        logger.error(f"Error getting vocabulary word: {e}", exc_info=True)
+        raise
 
 def delete_vocabulary_word(db: Session, vocabulary_word_id: int) -> bool:
     """Delete a vocabulary word entry by its ID."""

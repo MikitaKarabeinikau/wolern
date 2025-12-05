@@ -34,12 +34,12 @@ class Words(Base):
     )
     is_active = Column(Boolean, default=True, nullable=False)
 
-    definitions = relationship("Definitions", back_populates="word", cascade="all, delete-orphan")
-    examples = relationship("Examples", back_populates="word", cascade="all, delete-orphan")
-    synonyms = relationship("Synonyms", back_populates="word", cascade="all, delete-orphan")
-    translations = relationship("Translations", back_populates="word", cascade="all, delete-orphan")
-    tags = relationship("Tags", back_populates="word", cascade="all, delete-orphan")
-    warnings = relationship("Warnings", back_populates="word", cascade="all, delete-orphan")
+    definitions = relationship("Definitions", back_populates="word", lazy="joined", cascade="all, delete-orphan")
+    examples = relationship("Examples", back_populates="word", lazy="joined", cascade="all, delete-orphan")
+    synonyms = relationship("Synonyms", back_populates="word", lazy="joined", cascade="all, delete-orphan")
+    translations = relationship("Translations", back_populates="word", lazy="joined", cascade="all, delete-orphan")
+    tags = relationship("Tags", back_populates="word", lazy="joined", cascade="all, delete-orphan")
+    warnings = relationship("Warnings", back_populates="word", lazy="joined", cascade="all, delete-orphan")
     vocabulary_words = relationship("VocabularyWords", back_populates="word")
     exercises = relationship("Exercise", back_populates="word")
 
@@ -258,19 +258,19 @@ class UserWordStatus(Base):
     last_updated = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
     user_synonyms = relationship(
-        "UserSynonyms", back_populates="user_word_status", cascade="all, delete-orphan"
+        "UserSynonyms", back_populates="user_word_status",lazy="joined", cascade="all, delete-orphan"
     )
     user_examples = relationship(
-        "UserExamples", back_populates="user_word_status", cascade="all, delete-orphan"
+        "UserExamples", back_populates="user_word_status",lazy="joined", cascade="all, delete-orphan"
     )
     user_tags = relationship(
-        "UserTags", back_populates="user_word_status", cascade="all, delete-orphan"
+        "UserTags", back_populates="user_word_status",lazy="joined", cascade="all, delete-orphan"
     )
     user_definitions = relationship(
-        "UserDefinitions", back_populates="user_word_status", cascade="all, delete-orphan"
+        "UserDefinitions", back_populates="user_word_status",lazy="joined", cascade="all, delete-orphan"
     )
     user_translations = relationship(
-        "UserTranslations", back_populates="user_word_status", cascade="all, delete-orphan"
+        "UserTranslations", back_populates="user_word_status",lazy="joined", cascade="all, delete-orphan"
     )
 
     hidden_base_translations = relationship(

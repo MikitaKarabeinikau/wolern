@@ -19,3 +19,6 @@ data/vocabularies/scoobykot
 
 .env
 alembic.ini
+
+.coverage
+htmlcov/
