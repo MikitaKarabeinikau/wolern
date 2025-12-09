@@ -354,7 +354,7 @@ class TestUserWordStatusModel:
 
         assert word_status.id is not None
         assert word_status.vocabulary_word_id == vocab_word.id
-        isinstance(word_status.last_updated, datetime)  # Default
+        isinstance(word_status.created_at, datetime)  # Default
 
 
 # ============================================================================

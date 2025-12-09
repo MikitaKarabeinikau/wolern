@@ -255,7 +255,7 @@ class UserWordStatus(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     vocabulary_word_id = Column(Integer, ForeignKey("vocabulary_words.id"), nullable=False)
-    last_updated = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
     user_synonyms = relationship(
         "UserSynonyms", back_populates="user_word_status",lazy="joined", cascade="all, delete-orphan"

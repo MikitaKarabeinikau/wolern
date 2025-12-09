@@ -22,3 +22,5 @@ alembic.ini
 
 .coverage
 htmlcov/
+
+todo.txt
