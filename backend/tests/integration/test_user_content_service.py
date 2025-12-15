@@ -12,6 +12,7 @@ import backend.src.services.auth as user_content_service
 import backend.src.core.word as word_module
 from backend.src.database.crud.words import add_word
 import backend.src.services.user_content_service as user_content_service
+import backend.src.services.user_word_status_service as user_word_status_service
 from backend.src.services.auth import  OwnershipVerificationError
 # Test database URL
 TEST_DATABASE_URL = "postgresql+psycopg2://woler_test_user:password@localhost/test_db"
@@ -53,10 +54,10 @@ def test_word(db_session):
     word_data = word_module.Word(
         word="cat",
         language="english",
-        translation={"russian": ["кот", "кошка"]},
-        synonyms=["feline", "kitty"],
-        definition={"noun": ["a small domesticated carnivorous mammal", "a feline animal"]},
-        examples={"noun": ["The cat sat on the mat.", "She has a pet cat."]},
+        translation={"russian": ["кот", "кошка"], "polish": ["kot", "kocia"]},
+        synonyms=["feline", "kitty", "pussycat"],
+        definition={"noun": ["a small domesticated carnivorous mammal", "a feline animal", "a pet animal"]},
+        examples={"noun": ["The cat sat on the mat.", "She has a pet cat.", "Cats are great hunters."]},
         part_of_speech=["noun", "verb"],
         frequency=0.1,
         date_added="2024-01-01",
@@ -892,3 +893,349 @@ class TestUserSynonyms:
 
         deleted_synonym = db_session.query(models.UserSynonyms).filter_by(id=user_synonym.id).first()
         assert deleted_synonym is None, "User synonym was not deleted securely."
+
+class TestUserHiddenDefinitions:
+    """Test user hidden definitions CRUD operations."""
+
+    def test_add_user_hidden_definition_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding a user hidden element to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_definition_secure(
+            db=db_session, user_word_status_id=word_status.id, definition_id=1
+        )
+
+        assert user_hidden_element is not None, "User hidden element was not created."
+
+    def test_add_existed_user_hidden_definition_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden element to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_definition_secure(
+            db=db_session, user_word_status_id=word_status.id, definition_id=1
+        )
+
+        assert user_hidden_element is not None, "User hidden element was not created."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_definition_secure(
+                db=db_session, user_word_status_id=word_status.id, definition_id=1
+            )
+
+    def test_add_unexisted_definition_user_hidden_definition_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden element to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_definition_secure(
+                db=db_session, user_word_status_id=word_status.id, definition_id=9999
+            )
+
+
+    def test_delete_user_hidden_definition_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test secure deletion of a user hidden element."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_definition_secure(
+            db=db_session, user_word_status_id=word_status.id, definition_id=1
+        )
+
+        user_word_status_service.delete_user_hidden_definition_secure(
+            db=db_session, hidden_definition_id=user_hidden_element.id, user_id=test_user.id
+        )
+
+        deleted_hidden_element = db_session.query(models.UserHiddenBaseDefinition).filter_by(id=user_hidden_element.id).first()
+        assert deleted_hidden_element is None, "User hidden element was not deleted securely."
+
+    def test_delete_user_hidden_definition_secure_unauthorized(self, db_session, test_vocabulary, test_word, test_user):
+        """Test secure deletion of a user hidden element by unauthorized user."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_definition_secure(
+            db=db_session, user_word_status_id=word_status.id, definition_id=1
+        )
+
+        with pytest.raises(ValueError):
+            user_word_status_service.delete_user_hidden_definition_secure(
+                db=db_session, hidden_definition_id=user_hidden_element.id, user_id=9999
+            )
+ 
+class TestUserHiddenTranslations:
+    """Test user hidden translations CRUD operations."""
+    def test_add_user_hidden_translation_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding a user hidden translation to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_translation_secure(
+            db=db_session, user_word_status_id=word_status.id, translation_id=1
+        )
+
+        assert user_hidden_element is not None, "User hidden element was not created."
+
+    def test_add_existed_user_hidden_translation_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden translation to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_translation_secure(
+            db=db_session, user_word_status_id=word_status.id, translation_id=1
+        )
+
+        assert user_hidden_element is not None, "User hidden element was not created."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_translation_secure(
+                db=db_session, user_word_status_id=word_status.id, translation_id=1
+            )
+
+    def test_add_unexisted_translation_user_hidden_translation_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden translation to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_translation_secure(
+                db=db_session, user_word_status_id=word_status.id, translation_id=9999
+            )
+   
+    def test_delete_user_hidden_translation_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test secure deletion of a user hidden translation."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_translation_secure(
+            db=db_session, user_word_status_id=word_status.id, translation_id=1
+        )
+
+        user_word_status_service.delete_user_hidden_translation_secure(
+            db=db_session, hidden_translation_id=user_hidden_element.id, user_id=test_user.id
+        )
+
+        deleted_hidden_element = db_session.query(models.UserHiddenBaseTranslation).filter_by(id=user_hidden_element.id).first()
+        assert deleted_hidden_element is None, "User hidden element was not deleted securely."
+
+class TestUserHiddenSynonyms:
+    """Test user hidden synonyms CRUD operations."""
+    def test_add_user_hidden_synonym_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding a user hidden synonym to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+
+        user_hidden_element = user_word_status_service.create_user_hidden_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, synonym_id=1
+        )
+        assert user_hidden_element is not None, "User hidden element was not created."
+
+    def test_add_existed_user_hidden_synonym_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden synonym to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, synonym_id=1
+        )
+
+        assert user_hidden_element is not None, "User hidden element was not created."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_synonym_secure(
+                db=db_session, user_word_status_id=word_status.id, synonym_id=1
+            )
+
+    def test_add_unexisted_synonym_user_hidden_synonym_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden synonym to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_synonym_secure(
+                db=db_session, user_word_status_id=word_status.id, synonym_id=9999
+            )
+    
+    def test_delete_user_hidden_synonym_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test secure deletion of a user hidden synonym."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, synonym_id=1
+        )
+
+        user_word_status_service.delete_user_hidden_synonym_secure(
+            db=db_session, hidden_synonym_id=user_hidden_element.id, user_id=test_user.id
+        )
+
+        deleted_hidden_element = db_session.query(models.UserHiddenBaseSynonym).filter_by(id=user_hidden_element.id).first()
+        assert deleted_hidden_element is None, "User hidden element was not deleted securely."
+
+class TestUserHiddenExamples:
+    """Test user hidden examples CRUD operations."""
+    def test_add_user_hidden_example_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding a user hidden example to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+
+        user_hidden_element = user_word_status_service.create_user_hidden_example_secure(
+            db=db_session, user_word_status_id=word_status.id, example_id=1
+        )
+        assert user_hidden_element is not None, "User hidden element was not created."
+
+    def test_add_existed_user_hidden_example_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden example to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_example_secure(
+            db=db_session, user_word_status_id=word_status.id, example_id=1
+        )
+
+        assert user_hidden_element is not None, "User hidden element was not created."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_example_secure(
+                db=db_session, user_word_status_id=word_status.id, example_id=1
+            )
+    
+    def test_add_unexisted_example_user_hidden_example_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden example to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_example_secure(
+                db=db_session, user_word_status_id=word_status.id, example_id=9999
+            )
+
+    def test_delete_user_hidden_example_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test secure deletion of a user hidden example."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_example_secure(
+            db=db_session, user_word_status_id=word_status.id, example_id=1
+        )
+
+        user_word_status_service.delete_user_hidden_example_secure(
+            db=db_session, hidden_example_id=user_hidden_element.id, user_id=test_user.id
+        )
+
+        deleted_hidden_element = db_session.query(models.UserHiddenBaseExample).filter_by(id=user_hidden_element.id).first()
+        assert deleted_hidden_element is None, "User hidden element was not deleted securely."
+
+class TestUserHiddenTags:
+    """Test user hidden tags CRUD operations."""
+    def test_add_user_hidden_tag_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding a user hidden tag to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+
+        user_hidden_element = user_word_status_service.create_user_hidden_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, tag_id=1
+        )
+        assert user_hidden_element is not None, "User hidden element was not created."
+    
+    def test_add_existed_user_hidden_tag_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden tag to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, tag_id=1
+        )
+
+        assert user_hidden_element is not None, "User hidden element was not created."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_tag_secure(
+                db=db_session, user_word_status_id=word_status.id, tag_id=1
+            )
+    
+    def test_add_unexisted_tag_user_hidden_tag_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test adding an existed user hidden tag to a vocabulary word."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        with pytest.raises(ValueError):
+            user_word_status_service.create_user_hidden_tag_secure(
+                db=db_session, user_word_status_id=word_status.id, tag_id=9999
+            )
+    
+    def test_delete_user_hidden_tag_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test secure deletion of a user hidden tag."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, tag_id=1
+        )
+
+        user_word_status_service.delete_user_hidden_tag_secure(
+            db=db_session, hidden_tag_id=user_hidden_element.id, user_id=test_user.id
+        )
+
+        deleted_hidden_element = db_session.query(models.UserHiddenBaseTag).filter_by(id=user_hidden_element.id).first()
+        assert deleted_hidden_element is None, "User hidden element was not deleted securely."
+
+    def test_delete_user_hidden_tag_secure_unauthorized(self, db_session, test_vocabulary, test_word, test_user):
+        """Test secure deletion of a user hidden tag by unauthorized user."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+        
+        user_hidden_element = user_word_status_service.create_user_hidden_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, tag_id=1
+        )
+
+        with pytest.raises(ValueError):
+            user_word_status_service.delete_user_hidden_tag_secure(
+                db=db_session, hidden_tag_id=user_hidden_element.id, user_id=9999
+            )

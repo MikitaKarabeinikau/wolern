@@ -2,6 +2,11 @@ from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 
+from schemas.user_hidden_base_example import UserHiddenBaseExampleResponse
+from schemas.user_hidden_base_synonym import UserHiddenBaseSynonymResponse
+from schemas.user_hidden_base_tag import UserHiddenBaseTagResponse
+from schemas.user_hidden_base_translation import UserHiddenBaseTranslationResponse
+
 from .user_examples import UserExampleResponse
 from .user_quiz_progress import UserQuizProgressResponse
 from .user_tags import UserTagResponse
@@ -64,7 +69,15 @@ class UserWordStatusFullInfo(UserWordStatusResponse):
     user_synonyms: Optional[List[UserSynonymResponse]] = []
     user_quiz_progress: Optional[UserQuizProgressResponse] = None
 
+    hidden_base_translations: Optional[List[UserHiddenBaseTranslationResponse]] = []
+    hidden_base_examples: Optional[List[UserHiddenBaseExampleResponse]] = []
+    hidden_base_tags: Optional[List[UserHiddenBaseTagResponse]] = []
+    hidden_base_synonyms: Optional[List[UserHiddenBaseSynonymResponse]] = []
+
     model_config = ConfigDict(from_attributes=True)
 
 class UserWordStatusHiddenInfoResponse(UserWordStatusResponse):
-    pass
+    """Schema for user word status with hidden info"""
+
+
+    model_config = ConfigDict(from_attributes=True)

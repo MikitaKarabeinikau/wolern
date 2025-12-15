@@ -277,35 +277,40 @@ class UserWordStatus(Base):
         "UserHiddenBaseTranslation",
         back_populates="user_word_status",
         cascade="all, delete-orphan",
+        lazy="joined",
         primaryjoin="UserWordStatus.id == UserHiddenBaseTranslation.user_word_status_id"
     )
     hidden_base_definitions = relationship(
         "UserHiddenBaseDefinition",
         back_populates="user_word_status",
         cascade="all, delete-orphan",
+        lazy="joined",
         primaryjoin="UserWordStatus.id == UserHiddenBaseDefinition.user_word_status_id"
     )
     hidden_base_examples = relationship(
         "UserHiddenBaseExample",
         back_populates="user_word_status",
         cascade="all, delete-orphan",
+        lazy="joined",
         primaryjoin="UserWordStatus.id == UserHiddenBaseExample.user_word_status_id"
     )
     hidden_base_synonyms = relationship(
         "UserHiddenBaseSynonym",
         back_populates="user_word_status",
         cascade="all, delete-orphan",
+        lazy="joined",
         primaryjoin="UserWordStatus.id == UserHiddenBaseSynonym.user_word_status_id"
     )
     hidden_base_tags = relationship(
         "UserHiddenBaseTag",
         back_populates="user_word_status",
         cascade="all, delete-orphan",
+        lazy="joined",
         primaryjoin="UserWordStatus.id == UserHiddenBaseTag.user_word_status_id"
     )
 
     user_quiz_progress = relationship(
-        "UserQuizProgress", back_populates="user_word_status", cascade="all, delete-orphan"
+        "UserQuizProgress", back_populates="user_word_status",lazy="joined", cascade="all, delete-orphan"
     )
     vocabulary_words = relationship("VocabularyWords", back_populates="user_word_status")
 

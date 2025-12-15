@@ -137,3 +137,118 @@ def change_vocabulary(db: Session, word_id, new_vocabulary_id: int, old_vocabula
         db.delete(delete_vocabulary_word)
     db.commit()
     return create_vocabulary_word
+
+def get_word_translations(db: Session, word_id: int) -> Optional[models.Words]:
+    """
+    Get complete word data with translations eagerly loaded.
+
+    Returns SQLAlchemy model with translations relationship loaded in a single query.
+    """
+    try:
+        return (
+            db.query(models.Words)
+            .options(
+                joinedload(models.Words.translations)
+            )
+            .filter(models.Words.id == word_id)
+            .first()
+        )
+    except Exception as e:
+        logger.error(
+            f"Error fetching word translations for word_id '{word_id}': {e}" 
+        )
+        logger.debug(
+            f"Stack trace:", exc_info=True)
+        raise
+
+def get_word_examples(db: Session, word_id: int) -> Optional[models.Words]:
+    """
+    Get complete word data with examples eagerly loaded.
+
+    Returns SQLAlchemy model with examples relationship loaded in a single query.
+    """
+    try:
+        return (
+            db.query(models.Words)
+            .options(
+                joinedload(models.Words.examples)
+            )
+            .filter(models.Words.id == word_id)
+            .first()
+        )
+    except Exception as e:
+        logger.error(
+            f"Error fetching word examples for word_id '{word_id}': {e}" 
+        )
+        logger.debug(
+            f"Stack trace:", exc_info=True)
+        raise
+
+def get_word_definitions(db: Session, word_id: int) -> Optional[models.Words]:
+    """
+    Get complete word data with definitions eagerly loaded.
+
+    Returns SQLAlchemy model with definitions relationship loaded in a single query.
+    """
+    try:
+        return (
+            db.query(models.Words)
+            .options(
+                joinedload(models.Words.definitions)
+            )
+            .filter(models.Words.id == word_id)
+            .first()
+        )
+    except Exception as e:
+        logger.error(
+            f"Error fetching word definitions for word_id '{word_id}': {e}" 
+        )
+        logger.debug(
+            f"Stack trace:", exc_info=True)
+        raise
+
+def get_word_synonyms(db: Session, word_id: int) -> Optional[models.Words]:
+    """
+    Get complete word data with synonyms eagerly loaded.
+
+    Returns SQLAlchemy model with synonyms relationship loaded in a single query.
+    """
+    try:
+        return (
+            db.query(models.Words)
+            .options(
+                joinedload(models.Words.synonyms)
+            )
+            .filter(models.Words.id == word_id)
+            .first()
+        )
+    except Exception as e:
+        logger.error(
+            f"Error fetching word synonyms for word_id '{word_id}': {e}" 
+        )
+        logger.debug(
+            f"Stack trace:", exc_info=True)
+        raise
+
+def get_word_tags(db: Session, word_id: int) -> Optional[models.Words]:
+    """
+    Get complete word data with tags eagerly loaded.
+
+    Returns SQLAlchemy model with tags relationship loaded in a single query.
+    """
+    try:
+        return (
+            db.query(models.Words)
+            .options(
+                joinedload(models.Words.tags)
+            )
+            .filter(models.Words.id == word_id)
+            .first()
+        )
+    except Exception as e:
+        logger.error(
+            f"Error fetching word tags for word_id '{word_id}': {e}" 
+        )
+        logger.debug(
+            f"Stack trace:", exc_info=True)
+        raise
