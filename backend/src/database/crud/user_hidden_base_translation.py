@@ -1,4 +1,4 @@
-from backend.src.database.models import UserHiddenTranslations
+from backend.src.database.models import UserHiddenBaseTranslation
 from sqlalchemy.orm import Session
 import logging
 
@@ -8,10 +8,10 @@ def create_hidden_translation(
     db: Session,
     user_word_status_id: int,
     translation_id: int,
-) -> UserHiddenTranslations:
+) -> UserHiddenBaseTranslation:
     """Create a new UserHiddenTranslations entry."""
     try:
-        hidden_translation = UserHiddenTranslations(
+        hidden_translation = UserHiddenBaseTranslation(
             user_word_status_id=user_word_status_id,
             translation_id=translation_id,
         )
@@ -30,12 +30,12 @@ def create_hidden_translation(
 def get_hidden_translations_by_user_word_status_id(
     db: Session,
     user_word_status_id: int,
-) -> list[UserHiddenTranslations]:
+) -> list[UserHiddenBaseTranslation]:
     """Retrieve hidden translations for a given user_word_status_id."""
     try:
         hidden_translations = (
-            db.query(UserHiddenTranslations)
-            .filter(UserHiddenTranslations.user_word_status_id == user_word_status_id)
+            db.query(UserHiddenBaseTranslation)
+            .filter(UserHiddenBaseTranslation.user_word_status_id == user_word_status_id)
             .all()
         )
         return hidden_translations
@@ -53,8 +53,8 @@ def delete_from_hidden_translation(
     """Delete a UserHiddenTranslations entry by its ID."""
     try:
         hidden_translation = (
-            db.query(UserHiddenTranslations)
-            .filter(UserHiddenTranslations.id == hidden_translation_id)
+            db.query(UserHiddenBaseTranslation)
+            .filter(UserHiddenBaseTranslation.id == hidden_translation_id)
             .one()
         )
         db.delete(hidden_translation)
