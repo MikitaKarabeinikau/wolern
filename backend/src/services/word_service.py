@@ -155,7 +155,7 @@ def get_word_translations(db: Session, word_id: int) -> Optional[models.Words]:
         )
     except Exception as e:
         logger.error(
-            f"Error fetching word translations for word_id '{word_id}': {e}" 
+            f"Error fetching word translations for word_id '{word_id}': {e}"
         )
         logger.debug(
             f"Stack trace:", exc_info=True)
@@ -178,7 +178,7 @@ def get_word_examples(db: Session, word_id: int) -> Optional[models.Words]:
         )
     except Exception as e:
         logger.error(
-            f"Error fetching word examples for word_id '{word_id}': {e}" 
+            f"Error fetching word examples for word_id '{word_id}': {e}"
         )
         logger.debug(
             f"Stack trace:", exc_info=True)
@@ -201,7 +201,7 @@ def get_word_definitions(db: Session, word_id: int) -> Optional[models.Words]:
         )
     except Exception as e:
         logger.error(
-            f"Error fetching word definitions for word_id '{word_id}': {e}" 
+            f"Error fetching word definitions for word_id '{word_id}': {e}"
         )
         logger.debug(
             f"Stack trace:", exc_info=True)
@@ -224,7 +224,7 @@ def get_word_synonyms(db: Session, word_id: int) -> Optional[models.Words]:
         )
     except Exception as e:
         logger.error(
-            f"Error fetching word synonyms for word_id '{word_id}': {e}" 
+            f"Error fetching word synonyms for word_id '{word_id}': {e}"
         )
         logger.debug(
             f"Stack trace:", exc_info=True)
@@ -247,7 +247,7 @@ def get_word_tags(db: Session, word_id: int) -> Optional[models.Words]:
         )
     except Exception as e:
         logger.error(
-            f"Error fetching word tags for word_id '{word_id}': {e}" 
+            f"Error fetching word tags for word_id '{word_id}': {e}"
         )
         logger.debug(
             f"Stack trace:", exc_info=True)

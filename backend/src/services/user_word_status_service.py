@@ -490,4 +490,3 @@ def requiered_word_data_with_user_word_status(
         "user_data": user_data
     }
     return combine_data
-
