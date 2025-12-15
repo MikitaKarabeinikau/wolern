@@ -300,17 +300,17 @@ class TestVocabularyService:
             .first()
         )
         assert user_word_status is None
-    
+
     def test_create_vocabulary_word_secure_success(self, db_session, test_user, test_vocabulary, test_word):
         """Test successfully creating a vocabulary word with security check."""
         from backend.src.services.vocabulary_service import create_vocabulary_word_secure
-        
+
         vocab_word = create_vocabulary_word_secure(
             db=db_session,
             vocabulary_id=test_vocabulary.vocabulary_id,
             word=test_word
         )
-        
+
         assert vocab_word is not None
         assert vocab_word.vocabulary_id == test_vocabulary.vocabulary_id
         assert vocab_word.word_id == test_word.id
@@ -318,7 +318,7 @@ class TestVocabularyService:
     def test_create_vocabulary_word_secure_invalid_vocabulary(self, db_session, test_word):
         """Test that creating a vocabulary word with invalid vocabulary raises error."""
         from backend.src.services.vocabulary_service import create_vocabulary_word_secure
-        
+
         with pytest.raises(ValueError) as excinfo:
             create_vocabulary_word_secure(
                 db=db_session,
@@ -330,35 +330,35 @@ class TestVocabularyService:
     def test_get_all_vocabulary_words_by_vocabulary_id_empty(self, db_session, test_user, test_vocabulary):
         """Test getting vocabulary words from an empty vocabulary."""
         from backend.src.services.vocabulary_service import get_all_vocabulary_words_by_vocabulary_id
-        
+
         vocab_words = get_all_vocabulary_words_by_vocabulary_id(
             db=db_session,
             vocabulary_id=test_vocabulary.vocabulary_id
         )
-        
+
         assert vocab_words == []
 
     def test_get_all_vocabulary_words_by_vocabulary_id_multiple_words(self, db_session, test_user, test_vocabulary):
         """Test getting multiple vocabulary words from a vocabulary."""
         from backend.src.services.vocabulary_service import get_all_vocabulary_words_by_vocabulary_id
-        
+
         word1 = Words(id=10, word="cat", language="english")
         word2 = Words(id=11, word="dog", language="english")
         word3 = Words(id=12, word="bird", language="english")
         db_session.add_all([word1, word2, word3])
         db_session.commit()
-        
+
         vocab_word1 = VocabularyWords(vocabulary_id=test_vocabulary.vocabulary_id, word_id=word1.id)
         vocab_word2 = VocabularyWords(vocabulary_id=test_vocabulary.vocabulary_id, word_id=word2.id)
         vocab_word3 = VocabularyWords(vocabulary_id=test_vocabulary.vocabulary_id, word_id=word3.id)
         db_session.add_all([vocab_word1, vocab_word2, vocab_word3])
         db_session.commit()
-        
+
         vocab_words = get_all_vocabulary_words_by_vocabulary_id(
             db=db_session,
             vocabulary_id=test_vocabulary.vocabulary_id
         )
-        
+
         assert len(vocab_words) == 3
         word_ids = [vw.word_id for vw in vocab_words]
         assert word1.id in word_ids
@@ -371,7 +371,7 @@ class TestVocabularyService:
             db=db_session,
             vocabulary_id=test_vocabulary.vocabulary_id
         )
-        
+
         assert words_data == {}
 
     def test_delete_word_from_vocabulary_secure_invalid_vocabulary(self, db_session, test_word):
@@ -399,17 +399,17 @@ class TestVocabularyService:
             frequency=0.0,
             warnings=[]
         )
-        
+
         vocabulary_word = add_new_vocabulary_word(
             db=db_session,
             word=word_minimal,
             vocabulary_id=test_vocabulary.vocabulary_id,
         )
-        
+
         assert vocabulary_word is not None
         base_word = db_session.query(Words).filter_by(word="test").first()
         assert base_word is not None
-    
+
     def test_get_all_words_in_vocabulary_with_data(self, db_session, test_user, test_vocabulary):
         word_1 = word.Word(word="cat",
                           language="english",
@@ -451,72 +451,72 @@ class TestVocabularyService:
         assert len(words_with_data) == 2
         assert "cat" in words_with_data
         assert "bird" in words_with_data
-        
+
         # Test cat data
         cat_data = words_with_data["cat"]
         assert cat_data["word"] == "cat"
         assert cat_data["language"] == "english"
-        
+
         # Translations are returned as a list of objects
         assert isinstance(cat_data["translations"], list)
         assert len(cat_data["translations"]) > 0
         russian_translation = next((t for t in cat_data["translations"] if t["language"] == "russian"), None)
         assert russian_translation is not None
         assert russian_translation["translation"] == "кот"
-        
+
         # Synonyms are a list of synonym objects
         assert isinstance(cat_data["synonyms"], list)
         assert len(cat_data["synonyms"]) > 0
         assert cat_data["synonyms"][0]["synonym"] == "feline"
-        
+
         # Definitions are a list of definition objects
         assert isinstance(cat_data["definitions"], list)
         assert len(cat_data["definitions"]) > 0
         noun_definition = next((d for d in cat_data["definitions"] if d["part_of_speech"] == "noun"), None)
         assert noun_definition is not None
         assert noun_definition["definition"] == "a small domesticated carnivorous mammal"
-        
+
         # Examples are a list of example objects
         assert isinstance(cat_data["examples"], list)
         assert len(cat_data["examples"]) > 0
         noun_example = next((e for e in cat_data["examples"] if e["part_of_speech"] == "noun"), None)
         assert noun_example is not None
         assert noun_example["example"] == "The cat sat on the mat."
-        
+
         # Tags are a list of tag objects - extract the tag field
         assert isinstance(cat_data["tags"], list)
         assert len(cat_data["tags"]) > 0
         tag_values = [t["tag"] for t in cat_data["tags"]]
         assert "animal" in tag_values
-        
+
         assert cat_data["frequency"] == 0.456
-        
+
         # Warnings are a list of warning objects
         assert isinstance(cat_data["warnings"], list)
         assert len(cat_data["warnings"]) > 0
         assert cat_data["warnings"][0]["warning_message"] == "common"
-        
+
         # Test bird data
         bird_data = words_with_data["bird"]
         assert bird_data["word"] == "bird"
         assert bird_data["language"] == "english"
-        
+
         russian_translation_bird = next((t for t in bird_data["translations"] if t["language"] == "russian"), None)
         assert russian_translation_bird is not None
         assert russian_translation_bird["translation"] == "птица"
-        
+
         assert len(bird_data["synonyms"]) > 0
         assert bird_data["synonyms"][0]["synonym"] == "avian"
-        
+
         assert len(bird_data["definitions"]) > 0
         assert len(bird_data["examples"]) > 0
-        
+
         # Extract tag values for bird
         bird_tag_values = [t["tag"] for t in bird_data["tags"]]
         assert "animal" in bird_tag_values
-        
+
         assert bird_data["frequency"] == 0.345
-        
+
     def test_get_all_words_in_vocabulary_with_multiple_data(self, db_session, test_user, test_vocabulary):
         """Test getting words with multiple translations, definitions, examples, and tags."""
         word_1 = word.Word(
@@ -554,7 +554,7 @@ class TestVocabularyService:
             frequency=0.89,
             warnings=["irregular verb", "multiple meanings"]
         )
-        
+
         word_2 = word.Word(
             word="book",
             language="english",
@@ -590,7 +590,7 @@ class TestVocabularyService:
             frequency=0.92,
             warnings=["noun-verb confusion", "common"]
         )
-        
+
         vocab_word_1 = add_new_vocabulary_word(
             db=db_session,
             word=word_1,
@@ -601,7 +601,7 @@ class TestVocabularyService:
             word=word_2,
             vocabulary_id=test_vocabulary.vocabulary_id,
         )
-        
+
         words_with_data = get_all_words_in_vocabulary_with_data(
             db=db_session,
             vocabulary_id=test_vocabulary.vocabulary_id,
@@ -610,24 +610,24 @@ class TestVocabularyService:
         assert len(words_with_data) == 2
         assert "run" in words_with_data
         assert "book" in words_with_data
-        
+
         # Test run data with multiple translations
         run_data = words_with_data["run"]
         assert run_data["word"] == "run"
         assert run_data["language"] == "english"
-        
+
         # Check multiple translations
         assert isinstance(run_data["translations"], list)
         assert len(run_data["translations"]) == 3  # russian, spanish, french
-        
+
         russian_trans = next((t for t in run_data["translations"] if t["language"] == "russian"), None)
         assert russian_trans is not None
         assert russian_trans["translation"] in ["бегать", "убегать"]
-        
+
         polish_trans = next((t for t in run_data["translations"] if t["language"] == "polish"), None)
         assert polish_trans is not None
         assert polish_trans["translation"] == "biegać"
-        
+
 
         # Check multiple synonyms
         assert isinstance(run_data["synonyms"], list)
@@ -636,40 +636,40 @@ class TestVocabularyService:
         assert "sprint" in synonym_values
         assert "jog" in synonym_values
         assert "dash" in synonym_values
-        
+
         # Check multiple definitions for different parts of speech
         assert isinstance(run_data["definitions"], list)
         assert len(run_data["definitions"]) >= 5  # 3 verb + 2 noun definitions
-        
+
         verb_definitions = [d for d in run_data["definitions"] if d["part_of_speech"] == "verb"]
         assert len(verb_definitions) == 3
         verb_def_texts = [d["definition"] for d in verb_definitions]
         assert "move at a speed faster than a walk" in verb_def_texts
         assert "be in charge of; manage" in verb_def_texts
         assert "operate or function" in verb_def_texts
-        
+
         noun_definitions = [d for d in run_data["definitions"] if d["part_of_speech"] == "noun"]
         assert len(noun_definitions) == 2
         noun_def_texts = [d["definition"] for d in noun_definitions]
         assert "an act or spell of running" in noun_def_texts
         assert "a continuous stretch or period" in noun_def_texts
-        
+
         # Check multiple examples for different parts of speech
         assert isinstance(run_data["examples"], list)
-        assert len(run_data["examples"]) >= 4  
-        
+        assert len(run_data["examples"]) >= 4
+
         verb_examples = [e for e in run_data["examples"] if e["part_of_speech"] == "verb"]
         assert len(verb_examples) == 2
         verb_example_texts = [e["example"] for e in verb_examples]
         assert "He runs a successful business." in verb_example_texts
         assert "The engine runs smoothly." in verb_example_texts
-        
+
         noun_examples = [e for e in run_data["examples"] if e["part_of_speech"] == "noun"]
         assert len(noun_examples) == 2
         noun_example_texts = [e["example"] for e in noun_examples]
         assert "I went for a morning run." in noun_example_texts
         assert "The play had a long run on Broadway." in noun_example_texts
-        
+
         # Check multiple tags
         assert isinstance(run_data["tags"], list)
         assert len(run_data["tags"]) == 4
@@ -678,34 +678,34 @@ class TestVocabularyService:
         assert "sports" in tag_values
         assert "business" in tag_values
         assert "movement" in tag_values
-                
+
         assert run_data["frequency"] == 0.89
-        
+
         # Check multiple warnings
         assert isinstance(run_data["warnings"], list)
         assert len(run_data["warnings"]) == 2
         warning_messages = [w["warning_message"] for w in run_data["warnings"]]
         assert "irregular verb" in warning_messages
         assert "multiple meanings" in warning_messages
-        
+
         # Test book data with multiple translations and definitions
         book_data = words_with_data["book"]
         assert book_data["word"] == "book"
         assert book_data["language"] == "english"
-        
+
         # Check multiple translations for book
         assert isinstance(book_data["translations"], list)
         assert len(book_data["translations"]) == 4  # russian, polish
-        
+
         russian_book_trans = next((t for t in book_data["translations"] if t["language"] == "russian"), None)
         assert russian_book_trans is not None
         assert russian_book_trans["translation"] in ["книга", "заказывать"]
-        
+
         polish_book_trans = next((t for t in book_data["translations"] if t["language"] == "polish"), None)
         assert polish_book_trans is not None
         assert polish_book_trans["translation"] in ["książka", "rezerwować"]
-  
-        
+
+
         # Check multiple synonyms for book
         assert len(book_data["synonyms"]) == 4
         book_synonym_values = [s["synonym"] for s in book_data["synonyms"]]
@@ -713,25 +713,25 @@ class TestVocabularyService:
         assert "tome" in book_synonym_values
         assert "publication" in book_synonym_values
         assert "reserve" in book_synonym_values
-        
+
         # Check multiple definitions for book
         assert len(book_data["definitions"]) >= 4  # 2 noun + 2 verb definitions
-        
+
         book_noun_definitions = [d for d in book_data["definitions"] if d["part_of_speech"] == "noun"]
         assert len(book_noun_definitions) == 2
-        
+
         book_verb_definitions = [d for d in book_data["definitions"] if d["part_of_speech"] == "verb"]
         assert len(book_verb_definitions) == 2
-        
+
         # Check multiple examples for book
         assert len(book_data["examples"]) >= 5  # 3 noun + 2 verb examples
-        
+
         book_noun_examples = [e for e in book_data["examples"] if e["part_of_speech"] == "noun"]
         assert len(book_noun_examples) == 3
-        
+
         book_verb_examples = [e for e in book_data["examples"] if e["part_of_speech"] == "verb"]
         assert len(book_verb_examples) == 2
-        
+
         # Check multiple tags for book
         assert len(book_data["tags"]) == 4
         book_tag_values = [t["tag"] for t in book_data["tags"]]
@@ -739,9 +739,9 @@ class TestVocabularyService:
         assert "education" in book_tag_values
         assert "travel" in book_tag_values
         assert "literature" in book_tag_values
-        
+
         assert book_data["frequency"] == 0.92
-        
+
         # Check multiple warnings for book
         assert len(book_data["warnings"]) == 2
         book_warning_messages = [w["warning_message"] for w in book_data["warnings"]]

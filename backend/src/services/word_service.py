@@ -137,5 +137,3 @@ def change_vocabulary(db: Session, word_id, new_vocabulary_id: int, old_vocabula
         db.delete(delete_vocabulary_word)
     db.commit()
     return create_vocabulary_word
-
-

@@ -31,7 +31,7 @@ class ExampleResponse(ExampleBase):
     """Schema for responding with example entity data."""
 
     id: int
-    word_id: int 
+    word_id: int
     part_of_speech: str
-    example: str 
+    example: str
     model_config = ConfigDict(from_attributes=True)
