@@ -8,7 +8,7 @@ class ExampleBase(BaseModel):
     """Base schema for example entities."""
 
     part_of_speech: str = Field(
-        ..., min_length=5, max_length=50, json_schema_extra={"example": "Noun"}
+        ..., min_length=1, max_length=50, json_schema_extra={"example": "Noun"}
     )
     example: str = Field(
         ..., min_length=1, max_length=100, json_schema_extra={"example": "Sample Example"}
@@ -30,7 +30,8 @@ class ExampleCreate(ExampleBase):
 class ExampleResponse(ExampleBase):
     """Schema for responding with example entity data."""
 
-    id: int = Field(..., json_schema_extra={"example": 1})
-    word_id: int = Field(..., json_schema_extra={"example": 1})
-
+    id: int
+    word_id: int 
+    part_of_speech: str
+    example: str 
     model_config = ConfigDict(from_attributes=True)

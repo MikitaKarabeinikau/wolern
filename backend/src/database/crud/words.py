@@ -59,9 +59,12 @@ def add_word(db: Session, word: Word) -> models.Words:
 
         for part_of_speech, example in word.examples.items():
             for ex in example:
-                pattern = r"\b" + re.escape(db_word.word) + r"\b.*"
+                # Match word with common suffixes: s, es, ed, ing, etc.
+                base_word = re.escape(db_word.word)
+                pattern = rf"\b{base_word}(s|es|ed|ing|d)?\b"
+                
                 if not re.search(pattern, ex, re.IGNORECASE):
-                    logger.warning(f"Example '{ex}' does not contain the word '{word.word}'.")
+                    logger.warning(f"Example '{ex}' does not contain the word '{word.word}' or its variations.")
                     continue
 
                 db_example = models.Examples(

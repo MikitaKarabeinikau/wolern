@@ -65,3 +65,6 @@ class UserWordStatusFullInfo(UserWordStatusResponse):
     user_quiz_progress: Optional[UserQuizProgressResponse] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+class UserWordStatusHiddenInfoResponse(UserWordStatusResponse):
+    pass
