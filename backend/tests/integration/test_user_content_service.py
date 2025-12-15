@@ -1239,3 +1239,123 @@ class TestUserHiddenTags:
             user_word_status_service.delete_user_hidden_tag_secure(
                 db=db_session, hidden_tag_id=user_hidden_element.id, user_id=9999
             )
+
+class TestUserWordStatusContainAllHiddenElementsAndUserData:
+    """Test that UserWordStatus contains all hidden elements relations."""
+    def test_user_word_status_contains_all_hidden_elements(self, db_session, test_vocabulary, test_word, test_user):
+        """Test that UserWordStatus contains all hidden elements relations."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+
+        hidden_definition = user_word_status_service.create_user_hidden_definition_secure(
+            db=db_session, user_word_status_id=word_status.id, definition_id=1
+        )
+        hidden_translation = user_word_status_service.create_user_hidden_translation_secure(
+            db=db_session, user_word_status_id=word_status.id, translation_id=1
+        )
+        hidden_synonym = user_word_status_service.create_user_hidden_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, synonym_id=1
+        )
+        hidden_example = user_word_status_service.create_user_hidden_example_secure(
+            db=db_session, user_word_status_id=word_status.id, example_id=1
+        )
+        hidden_tag = user_word_status_service.create_user_hidden_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, tag_id=1
+        )
+
+        fetched_word_status = db_session.query(models.UserWordStatus).filter_by(id=word_status.id).first()
+        print(fetched_word_status)
+        assert len(fetched_word_status.hidden_base_definitions) == 1, "Hidden definitions count mismatch."
+        assert len(fetched_word_status.hidden_base_translations) == 1, "Hidden translations count mismatch."
+        assert len(fetched_word_status.hidden_base_synonyms) == 1, "Hidden synonyms count mismatch."
+        assert len(fetched_word_status.hidden_base_examples) == 1, "Hidden examples count mismatch."
+        assert len(fetched_word_status.hidden_base_tags) == 1, "Hidden tags count mismatch."
+
+    def test_user_word_status_contains_user_data(self, db_session, test_vocabulary, test_word, test_user):
+        """Test that UserWordStatus contains user data relations."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+
+        user_tag = user_content_service.create_user_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, user_id=test_user.id, tag="favorite"
+        )
+        user_synonym = user_content_service.create_user_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, user_id=test_user.id, synonym="kitten"
+        )
+        user_definition = user_content_service.create_user_definition_secure(
+            db=db_session, user_word_status_id=word_status.id,part_of_speech="noun", user_id=test_user.id, definition="A small cat"
+        )
+        user_translation = user_content_service.create_user_translation_secure(
+            db=db_session, user_word_status_id=word_status.id,language="russian", user_id=test_user.id, translation="котенок"
+        )
+        user_example = user_content_service.create_user_example_secure(
+            db=db_session, user_word_status_id=word_status.id,part_of_speech="noun", user_id=test_user.id, example="The kitten is playing."
+        )
+
+
+        fetched_word_status = db_session.query(models.UserWordStatus).filter_by(id=word_status.id).first()
+        print(fetched_word_status)
+        assert len(fetched_word_status.user_tags) == 1, "User tags count mismatch."
+        assert len(fetched_word_status.user_synonyms) == 1, "User synonyms count mismatch."
+        assert len(fetched_word_status.user_definitions) == 1, "User definitions count mismatch."
+        assert len(fetched_word_status.user_translations) == 1, "User translations count mismatch."
+        assert len(fetched_word_status.user_examples) == 1, "User examples count mismatch."
+
+    def test_user_word_status_contain_all_data(self, db_session, test_vocabulary, test_word, test_user):
+        """Test that UserWordStatus contains all hidden elements and user data relations."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+
+        # Create hidden elements
+        user_word_status_service.create_user_hidden_definition_secure(
+            db=db_session, user_word_status_id=word_status.id, definition_id=1
+        )
+        user_word_status_service.create_user_hidden_translation_secure(
+            db=db_session, user_word_status_id=word_status.id, translation_id=1
+        )
+        user_word_status_service.create_user_hidden_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, synonym_id=1
+        )
+        user_word_status_service.create_user_hidden_example_secure(
+            db=db_session, user_word_status_id=word_status.id, example_id=1
+        )
+        user_word_status_service.create_user_hidden_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, tag_id=1
+        )
+
+        # Create user data
+        user_content_service.create_user_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, user_id=test_user.id, tag="favorite"
+        )
+        user_content_service.create_user_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, user_id=test_user.id, synonym="kitten"
+        )
+        user_content_service.create_user_definition_secure(
+            db=db_session, user_word_status_id=word_status.id,part_of_speech="noun", user_id=test_user.id, definition="A small cat"
+        )
+        user_content_service.create_user_translation_secure(
+            db=db_session, user_word_status_id=word_status.id,language="russian", user_id=test_user.id, translation="котенок"
+        )
+        user_content_service.create_user_example_secure(
+            db=db_session, user_word_status_id=word_status.id,part_of_speech="noun", user_id=test_user.id, example="The kitten is playing."
+        )
+
+        fetched_word_status = db_session.query(models.UserWordStatus).filter_by(id=word_status.id).first()
+        print(fetched_word_status)
+        assert len(fetched_word_status.hidden_base_definitions) == 1, "Hidden definitions count mismatch."
+        assert len(fetched_word_status.hidden_base_translations) == 1, "Hidden translations count mismatch."
+        assert len(fetched_word_status.hidden_base_synonyms) == 1   , "Hidden synonyms count mismatch."
+        assert len(fetched_word_status.hidden_base_examples) == 1, "Hidden examples count mismatch."
+        assert len(fetched_word_status.hidden_base_tags) == 1, "Hidden tags count mismatch."
+        assert len(fetched_word_status.user_tags) == 1, "User tags count mismatch."
+        assert len(fetched_word_status.user_synonyms) == 1, "User synonyms count mismatch."
+        assert len(fetched_word_status.user_definitions) == 1, "User definitions count mismatch."
+        assert len(fetched_word_status.user_translations) == 1, "User translations count mismatch."
+        assert len(fetched_word_status.user_examples) == 1, "User examples count mismatch."
+        assert fetched_word_status.user_quiz_progress is not None, "User quiz progress is missing."
