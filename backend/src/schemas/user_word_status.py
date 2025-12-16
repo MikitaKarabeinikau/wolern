@@ -6,6 +6,7 @@ from schemas.user_hidden_base_example import UserHiddenBaseExampleResponse
 from schemas.user_hidden_base_synonym import UserHiddenBaseSynonymResponse
 from schemas.user_hidden_base_tag import UserHiddenBaseTagResponse
 from schemas.user_hidden_base_translation import UserHiddenBaseTranslationResponse
+from schemas.user_hidden_base_definition import UserHiddenBaseDefinitionResponse
 
 from .user_examples import UserExampleResponse
 from .user_quiz_progress import UserQuizProgressResponse
@@ -50,7 +51,7 @@ class UserWordStatusResponse(UserWordStatusBase):
     """Schema for user word status response"""
 
     id: int
-    last_updated: datetime
+    created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -61,18 +62,19 @@ class UserWordStatusResponse(UserWordStatusBase):
 class UserWordStatusFullInfo(UserWordStatusResponse):
     """Schema for user word status with full info"""
 
-    word_info: Optional[WordWithFullDataResponse] = None
-    user_definitions: Optional[List[UserDefinitionResponse]] = []
-    user_examples: Optional[List[UserExampleResponse]] = []
-    user_translations: Optional[List[UserTranslationResponse]] = []
-    user_tags: Optional[List[UserTagResponse]] = []
-    user_synonyms: Optional[List[UserSynonymResponse]] = []
+    # word_info: Optional[WordWithFullDataResponse] = None
+    user_definitions: List[UserDefinitionResponse] = []
+    user_examples: List[UserExampleResponse] = []
+    user_translations: List[UserTranslationResponse] = []
+    user_tags: List[UserTagResponse] = []
+    user_synonyms: List[UserSynonymResponse] = []
     user_quiz_progress: Optional[UserQuizProgressResponse] = None
 
-    hidden_base_translations: Optional[List[UserHiddenBaseTranslationResponse]] = []
-    hidden_base_examples: Optional[List[UserHiddenBaseExampleResponse]] = []
-    hidden_base_tags: Optional[List[UserHiddenBaseTagResponse]] = []
-    hidden_base_synonyms: Optional[List[UserHiddenBaseSynonymResponse]] = []
+    hidden_base_translations: List[UserHiddenBaseTranslationResponse] = []
+    hidden_base_examples: List[UserHiddenBaseExampleResponse] = []
+    hidden_base_tags: List[UserHiddenBaseTagResponse] = []
+    hidden_base_synonyms: List[UserHiddenBaseSynonymResponse] = []
+    hidden_base_definitions: List[UserHiddenBaseDefinitionResponse] = []
 
     model_config = ConfigDict(from_attributes=True)
 

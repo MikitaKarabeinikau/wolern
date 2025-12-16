@@ -1,4 +1,6 @@
 from typing import Optional
+from schemas.user_word_status import UserWordStatusFullInfo
+from schemas.word import WordWithFullDataResponse
 from services.auth import OwnershipVerificationError, verify_user_owns_word_status
 from services.word_service import get_full_word_data_by_id, get_word_definitions, get_word_examples, get_word_synonyms, get_word_tags, get_word_translations
 from sqlalchemy.orm import Session, joinedload
@@ -91,7 +93,7 @@ def get_word_id_by_user_word_status_id(db: Session, user_word_status_id: int) ->
         )
         raise
 
-def get_full_word_data_by_user_word_status_id(db: Session, user_word_status_id: int) -> Optional[models.Words]:
+def get_full_word_data_by_user_word_status_id(db: Session, word_id: int) -> Optional[models.Words]:
     return db.query(models.Words).options(
             joinedload(models.Words.definitions),
             joinedload(models.Words.examples),
@@ -99,7 +101,7 @@ def get_full_word_data_by_user_word_status_id(db: Session, user_word_status_id: 
             joinedload(models.Words.translations),
             joinedload(models.Words.tags),
             joinedload(models.Words.warnings)
-        )
+        ).filter(models.Words.id == word_id).first()
 
 def get_full_user_word_status_by_user_word_status_id(db: Session, user_word_status_id: int) -> Optional[models.UserWordStatus]:
     """Retrieve full UserWordStatus with related Word data by user_word_status_id."""
@@ -109,18 +111,16 @@ def get_full_user_word_status_by_user_word_status_id(db: Session, user_word_stat
             .options(
                 joinedload(models.UserWordStatus.user_definitions),
                 joinedload(models.UserWordStatus.user_examples),
-                joinedload(models.UserWordStatus.user_synonyms),
                 joinedload(models.UserWordStatus.user_translations),
                 joinedload(models.UserWordStatus.user_tags),
+                joinedload(models.UserWordStatus.user_synonyms),
                 joinedload(models.UserWordStatus.user_quiz_progress),
                 joinedload(models.UserWordStatus.hidden_base_definitions),
+                joinedload(models.UserWordStatus.hidden_base_translations),
                 joinedload(models.UserWordStatus.hidden_base_examples),
-                joinedload(models.UserWordStatus.hidden_base_synonyms),
                 joinedload(models.UserWordStatus.hidden_base_tags),
-                joinedload(models.UserWordStatus.hidden_base_translations)
-                )
-            .filter(models.UserWordStatus.user_word_status_id == user_word_status_id)
-            .one()
+                joinedload(models.UserWordStatus.hidden_base_synonyms),
+            ).filter_by(id=user_word_status_id).first()
         )
         return user_word_status
     except NoResultFound:
@@ -150,7 +150,8 @@ def get_full_user_word_status_by_vocabulary_word_id(db: Session, vocabulary_word
                 joinedload(models.UserWordStatus.hidden_base_synonyms),
                 joinedload(models.UserWordStatus.hidden_base_tags),
                 joinedload(models.UserWordStatus.hidden_base_translations)
-                )
+                ).filter(models.UserWordStatus.vocabulary_word_id == vocabulary_word_id)
+            .one()
         )
         return user_word_status
     except NoResultFound:
@@ -476,17 +477,18 @@ def delete_user_hidden_tag_secure(
 
 def requiered_word_data_with_user_word_status(
     db: Session,
-    user_word_status: models.UserWordStatus
-) -> models.UserWordStatus:
+    user_word_status_id: int,
+    word_id: int
+) -> dict:
     """Combine base word data with user-specific word status data."""
     user_data = get_full_user_word_status_by_user_word_status_id(
         db= db,
-        user_word_status_id=user_word_status.user_word_status_id)
+        user_word_status_id=user_word_status_id)
     base_word_data = get_full_word_data_by_user_word_status_id(
         db= db,
-        user_word_status_id=user_word_status.user_word_status_id)
+        word_id= word_id)
     combine_data = {
-        "base_word_data": base_word_data,
-        "user_data": user_data
+        "base_word_data": WordWithFullDataResponse.model_validate(base_word_data).model_dump(),
+        "user_data": UserWordStatusFullInfo.model_validate(user_data).model_dump()
     }
     return combine_data

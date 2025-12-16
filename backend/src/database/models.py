@@ -310,7 +310,7 @@ class UserWordStatus(Base):
     )
 
     user_quiz_progress = relationship(
-        "UserQuizProgress", back_populates="user_word_status",lazy="joined", cascade="all, delete-orphan"
+        "UserQuizProgress", back_populates="user_word_status",lazy="joined",uselist=False, cascade="all, delete-orphan"
     )
     vocabulary_words = relationship("VocabularyWords", back_populates="user_word_status")
 

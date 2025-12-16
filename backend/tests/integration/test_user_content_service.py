@@ -1359,3 +1359,81 @@ class TestUserWordStatusContainAllHiddenElementsAndUserData:
         assert len(fetched_word_status.user_translations) == 1, "User translations count mismatch."
         assert len(fetched_word_status.user_examples) == 1, "User examples count mismatch."
         assert fetched_word_status.user_quiz_progress is not None, "User quiz progress is missing."
+
+class TestGettingFullWordData:
+    """Test getting full word data including hidden elements and user data."""
+    def test_get_full_word_data_secure(self, db_session, test_vocabulary, test_word, test_user):
+        """Test getting full word data securely."""
+        test_vocabulary_word = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=test_vocabulary_word.id)
+
+        assert word_status is not None, "UserWordStatus was not found."
+
+        # Create hidden elements
+        user_word_status_service.create_user_hidden_definition_secure(
+            db=db_session, user_word_status_id=word_status.id, definition_id=1
+        )
+        user_word_status_service.create_user_hidden_translation_secure(
+            db=db_session, user_word_status_id=word_status.id, translation_id=1
+        )
+        user_word_status_service.create_user_hidden_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, synonym_id=1
+        )
+        user_word_status_service.create_user_hidden_example_secure(
+            db=db_session, user_word_status_id=word_status.id, example_id=1
+        )
+        user_word_status_service.create_user_hidden_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, tag_id=1
+        )
+
+        # Create user data
+        user_content_service.create_user_tag_secure(
+            db=db_session, user_word_status_id=word_status.id, user_id=test_user.id, tag="favorite"
+        )
+        user_content_service.create_user_synonym_secure(
+            db=db_session, user_word_status_id=word_status.id, user_id=test_user.id, synonym="kitten"
+        )
+        user_content_service.create_user_definition_secure(
+            db=db_session, user_word_status_id=word_status.id,part_of_speech="noun", user_id=test_user.id, definition="A small cat"
+        )
+        user_content_service.create_user_translation_secure(
+            db=db_session, user_word_status_id=word_status.id,language="russian", user_id=test_user.id, translation="котенок"
+        )
+        user_content_service.create_user_example_secure(
+            db=db_session, user_word_status_id=word_status.id,part_of_speech="noun", user_id=test_user.id, example="The kitten is playing."
+        )
+
+        full_word_data = user_word_status_service.requiered_word_data_with_user_word_status(
+            db=db_session, user_word_status_id=word_status.id, word_id=test_word.id)
+        
+        assert full_word_data is not None, "Full word data was not retrieved."
+        assert len(full_word_data["user_data"]['hidden_base_definitions']) == 1, "Hidden definitions count mismatch."
+        assert len(full_word_data["user_data"]['hidden_base_translations']) == 1, "Hidden translations count mismatch."
+        assert len(full_word_data["user_data"]['hidden_base_synonyms']) == 1   , "Hidden synonyms count mismatch."
+        assert len(full_word_data["user_data"]['hidden_base_examples']) == 1, "Hidden examples count mismatch."
+        assert len(full_word_data["user_data"]['hidden_base_tags']) == 1, "Hidden tags count mismatch."
+        assert len(full_word_data["user_data"]['user_tags']) == 1, "User tags count mismatch."
+        assert len(full_word_data["user_data"]['user_synonyms']) == 1, "User synonyms count mismatch."
+        assert len(full_word_data["user_data"]['user_definitions']) == 1, "User definitions count mismatch."
+        assert len(full_word_data["user_data"]['user_translations']) == 1, "User translations count mismatch."
+        assert len(full_word_data["user_data"]['user_examples']) == 1, "User examples count mismatch."
+        assert full_word_data["base_word_data"] is not None, "Base word data is missing."
+        assert full_word_data["base_word_data"]['word'] == test_word.word, "Base word data mismatch."
+        assert full_word_data["user_data"]["user_quiz_progress"] is not None, "User quiz progress is missing."
+        assert full_word_data["user_data"]["user_quiz_progress"]['learning_stage'] == 1, "User quiz progress mismatch."
+        
+
+        definitions = full_word_data["base_word_data"]['definitions']
+        assert isinstance(definitions, list), "Definitions should be a list"
+        assert len(definitions) >= 3, "Should have at least 3 definitions"
+        
+        # Get noun definitions
+        noun_definitions = [d for d in definitions if d.get('part_of_speech') == 'noun']
+        assert len(noun_definitions) == 3, "Should have 3 noun definitions"
+        
+        # Check the definition texts
+        definition_texts = [d.get('definition') for d in noun_definitions]
+        assert "a small domesticated carnivorous mammal" in definition_texts
+        assert "a feline animal" in definition_texts
+        assert "a pet animal" in definition_texts
+        
