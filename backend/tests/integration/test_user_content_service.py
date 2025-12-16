@@ -1405,7 +1405,7 @@ class TestGettingFullWordData:
 
         full_word_data = user_word_status_service.requiered_word_data_with_user_word_status(
             db=db_session, user_word_status_id=word_status.id, word_id=test_word.id)
-        
+
         assert full_word_data is not None, "Full word data was not retrieved."
         assert len(full_word_data["user_data"]['hidden_base_definitions']) == 1, "Hidden definitions count mismatch."
         assert len(full_word_data["user_data"]['hidden_base_translations']) == 1, "Hidden translations count mismatch."
@@ -1421,19 +1421,18 @@ class TestGettingFullWordData:
         assert full_word_data["base_word_data"]['word'] == test_word.word, "Base word data mismatch."
         assert full_word_data["user_data"]["user_quiz_progress"] is not None, "User quiz progress is missing."
         assert full_word_data["user_data"]["user_quiz_progress"]['learning_stage'] == 1, "User quiz progress mismatch."
-        
+
 
         definitions = full_word_data["base_word_data"]['definitions']
         assert isinstance(definitions, list), "Definitions should be a list"
         assert len(definitions) >= 3, "Should have at least 3 definitions"
-        
+
         # Get noun definitions
         noun_definitions = [d for d in definitions if d.get('part_of_speech') == 'noun']
         assert len(noun_definitions) == 3, "Should have 3 noun definitions"
-        
+
         # Check the definition texts
         definition_texts = [d.get('definition') for d in noun_definitions]
         assert "a small domesticated carnivorous mammal" in definition_texts
         assert "a feline animal" in definition_texts
         assert "a pet animal" in definition_texts
-        
