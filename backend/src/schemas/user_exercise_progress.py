@@ -43,6 +43,7 @@ class UserExerciseProgressResponse(UserExerciseProgressBase):
     id: int
     user_exercise_id: int
     last_attempted: datetime
+    time_to_repeat: datetime
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -57,5 +58,6 @@ class UserExerciseStatsResponse(BaseModel):
     correct: int
     wrong: int
     last_attempted: datetime
+    time_to_repeat: datetime
 
     model_config = ConfigDict(from_attributes=True)

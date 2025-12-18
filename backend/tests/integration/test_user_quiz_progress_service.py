@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from backend.src.database.database import Base
 import backend.src.core.word as word_module
 from backend.src.database.crud.words import add_word
-from backend.src.services.user_quiz_progress_service import answer_logic
+from backend.src.services.user_quiz_progress_service import answer_logic, get_due_quizzes_for_today, get_quiz_by_vocabulary_id
 from backend.src.services.user_word_status_service import get_user_quiz_progress, get_user_word_status_by_vocabulary_word_id
 from backend.src.config import settings
 
@@ -66,6 +66,47 @@ def test_word(db_session):
     db_session.commit()
     return word
 
+@pytest.fixture
+def test_word2(db_session):
+    """Create a second test word."""
+    word_data = word_module.Word(
+        word="dog",
+        language="english",
+        translation={"russian": ["собака"], "polish": ["pies"]},
+        synonyms=["canine", "puppy"],
+        definition={"noun": ["a domesticated carnivorous mammal"]},
+        examples={"noun": ["The dog barked loudly."]},
+        part_of_speech=["noun"],
+        frequency=0.1,
+        date_added="2024-01-02",
+        tags=["animal", "pet"],
+    )
+
+    word = add_word(db_session, word_data)
+    db_session.add(word)
+    db_session.commit()
+    return word
+
+@pytest.fixture
+def test_word3(db_session):
+    """Create a third test word."""
+    word_data = word_module.Word(
+        word="bird",
+        language="english",
+        translation={"russian": ["птица"], "polish": ["ptak"]},
+        synonyms=["avian", "fowl"],
+        definition={"noun": ["a warm-blooded egg-laying vertebrate"]},
+        examples={"noun": ["The bird sang a beautiful song."]},
+        part_of_speech=["noun"],
+        frequency=0.1,
+        date_added="2024-01-03",
+        tags=["animal", "wildlife"],
+    )
+
+    word = add_word(db_session, word_data)
+    db_session.add(word)
+    db_session.commit()
+    return word
 
 # ==============================QUIZ PROGRESS TESTS ==============================
 class TestUserCorrectAnswer:
@@ -368,3 +409,83 @@ class TestSettingNewTimeToRepeat:
                 assert updated_progress.learning_stage == stage
                 assert updated_progress.correct_streak == streak
                 assert abs(updated_progress_time - expected_time) <= timedelta(minutes=1)  # Allowing a 1 minute margin for test execution time
+
+
+class TestQuizForVocabulary:
+    def test_quiz_includes_all_words(
+        self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words, test_word2: models.Words, test_word3: models.Words
+    ):
+        # Add words to vocabulary
+        vocab_word1 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        vocab_word2 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word2.id)
+        vocab_word3 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word3.id)
+
+        word_status1 = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=vocab_word1.id)
+        word_status2 = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=vocab_word2.id)
+        word_status3 = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=vocab_word3.id)
+
+        quiz_progress1 = get_user_quiz_progress(db_session, word_status1.id)
+        quiz_progress2 = get_user_quiz_progress(db_session, word_status2.id)
+        quiz_progress3 = get_user_quiz_progress(db_session, word_status3.id)
+
+        assert quiz_progress1 is not None
+        assert quiz_progress2 is not None
+        assert quiz_progress3 is not None
+    
+    def test_get_quiz_by_vocabulary_id(
+        self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words,test_user: models.Users, test_word2: models.Words, test_word3: models.Words
+    ):
+        # Add words to vocabulary
+        vocab_word1 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        vocab_word2 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word2.id)
+        vocab_word3 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word3.id)
+
+        retrieved_quiz_progress = get_quiz_by_vocabulary_id(db_session, vocabulary_id=test_vocabulary.vocabulary_id, user_id=test_user.id)
+        ids = [item["id"] for item in retrieved_quiz_progress]
+        print(f"Retrieved quiz progress IDs: {ids}")
+        assert retrieved_quiz_progress is not None
+        assert ids == [1,2,3]
+
+    def test_get_quiz_by_vocabulary_and_change_time_to_repeat(
+        self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words,test_user: models.Users, test_word2: models.Words, test_word3: models.Words
+    ):
+        vocab_word1 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        vocab_word2 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word2.id)
+        vocab_word3 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word3.id)
+
+        retrieved_quiz_progress = get_quiz_by_vocabulary_id(db_session, vocabulary_id=test_vocabulary.vocabulary_id, user_id=test_user.id)
+        ids = [item["id"] for item in retrieved_quiz_progress]
+        print(retrieved_quiz_progress[0])
+        print(f"Retrieved quiz progress IDs: {ids}")
+        print(f"Time to repeat before answer logic: {retrieved_quiz_progress[0]['time_to_repeat']}")
+        answer_logic(db_session, True, ids[0])
+        print(f"Time to repeat after answer logic: {retrieved_quiz_progress[0]['time_to_repeat']}")
+        updated_quiz_progress = get_quiz_by_vocabulary_id(db_session, vocabulary_id=test_vocabulary.vocabulary_id, user_id=test_user.id)
+        updated_ids = [item["id"] for item in updated_quiz_progress]
+        print(f"Updated quiz progress IDs: {updated_ids}")
+        
+        assert updated_ids == [2,3,1]
+
+    def test_get_quiz_by_vocabulary_no_words(
+        self, db_session: Session, test_user: models.Users
+    ):
+        retrieved_quiz_progress = get_quiz_by_vocabulary_id(db_session, vocabulary_id=999, user_id=test_user.id)
+        assert retrieved_quiz_progress == None
+
+    def test_get_quiz_for_today(self,db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words,test_user: models.Users, test_word2: models.Words, test_word3: models.Words):
+        vocab_word1 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
+        vocab_word2 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word2.id)
+        vocab_word3 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word3.id)
+        
+        for i in range(15):
+            word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=vocab_word1.id)
+            user_quiz_progress = get_user_quiz_progress(
+                db_session, word_status.id
+            )
+            answer_logic(db_session, True, user_quiz_progress.id)
+
+        retrieved_quiz_progress = get_due_quizzes_for_today(db_session, vocabulary_id=test_vocabulary.vocabulary_id, user_id=test_user.id)
+        ids = [item["id"] for item in retrieved_quiz_progress]
+        print(f"Retrieved quiz progress IDs: {ids}")
+
+        assert ids == [2,3]

@@ -352,7 +352,6 @@ class Exercise(Base):
         cascade="all, delete-orphan",
     )
 
-
 class UserExercises(Base):
     __tablename__ = "user_exercises"
 
@@ -407,7 +406,6 @@ class UserExerciseProgress(Base):
     correct = Column(Integer, nullable=False, default=0)
     wrong = Column(Integer, nullable=False, default=0)
     last_attempted = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
-
     user_exercise = relationship("UserExercises", back_populates="progress")
 
 
@@ -424,7 +422,7 @@ class UserQuizProgress(Base):
     correct_streak = Column(Integer, nullable=False, default=0)
     wrong_streak = Column(Integer, nullable=False, default=0)
     last_attempted = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
-    time_to_repeat = Column(DateTime, nullable=True)
+    time_to_repeat = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
 
     user_word_status = relationship("UserWordStatus", back_populates="user_quiz_progress")
 
