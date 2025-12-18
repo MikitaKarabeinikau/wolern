@@ -150,7 +150,7 @@ class TestUserCorrectAnswer:
 
         assert user_quiz_progress.learning_stage == 2
         assert user_quiz_progress.correct_streak == 1  # Reset after level up
-    
+
     def test_learning_stage_decrements_on_wrong_streak(
         self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words
     ):
@@ -173,7 +173,7 @@ class TestUserCorrectAnswer:
 
         assert user_quiz_progress.learning_stage == 2
         assert user_quiz_progress.wrong_streak == 1  # Reset after level down
-    
+
     def test_no_learning_stage_below_one(
         self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words
     ):
@@ -205,7 +205,7 @@ class TestUserCorrectAnswer:
             user_quiz_progress = answer_logic(db_session, True, user_quiz_progress.id)
 
         assert user_quiz_progress.learning_stage == 5  # Should not go above 5
-    
+
     def test_correct_streak_resets_after_level_up(
         self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words
     ):
@@ -222,7 +222,7 @@ class TestUserCorrectAnswer:
 
         assert user_quiz_progress.learning_stage == 2
         assert user_quiz_progress.correct_streak == 1  # Should reset to 1 after level up
-    
+
     def test_wrong_streak_resets_after_level_down(
         self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words
     ):
@@ -245,7 +245,7 @@ class TestUserCorrectAnswer:
 
         assert user_quiz_progress.learning_stage == 2
         assert user_quiz_progress.wrong_streak == 1  # Should reset to 1 after level down
-    
+
     def test_correct_streak_doesnt_reset_after_mastered_level(
         self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words
     ):
@@ -308,7 +308,7 @@ class TestSettingNewTimeToRepeat:
         updated_progress_time = updated_progress.time_to_repeat.astimezone(timezone.utc).replace(second=0, microsecond=0)
         expected_time = (initial_time_to_repeat + timedelta(minutes=expected_minute_increment)).replace(second=0, microsecond=0)
         assert abs(updated_progress_time - expected_time) <= timedelta(minutes=1)  # Allowing a 1 minute margin for test execution time
-    
+
     def test_set_new_time_to_repeat_wrong_answer(
         self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words
     ):
@@ -330,7 +330,7 @@ class TestSettingNewTimeToRepeat:
         updated_progress_time = updated_progress.time_to_repeat.astimezone(timezone.utc).replace(second=0, microsecond=0)
         expected_time = (initial_time_to_repeat + timedelta(minutes=expected_minute_increment)).replace(second=0, microsecond=0)
         assert abs(updated_progress_time - expected_time) <= timedelta(minutes=1)  # Allowing a 1 minute margin for test execution time
-    
+
     def test_set_new_time_for_each_learning_stage(
         self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words
     ):
@@ -343,15 +343,15 @@ class TestSettingNewTimeToRepeat:
         for stage in range(1, 5):
             for streak in range(1, 5):
                 initial_time_to_repeat = datetime.now(timezone.utc)
-       
+
                 # User answers correctly
                 updated_progress = answer_logic(db_session, True, user_quiz_progress.id)
-     
+
                 expected_minute_increment = settings.REPEAT_INTERVALS[stage][streak]
-       
-                
+
+
                 updated_progress_time = updated_progress.time_to_repeat.astimezone(timezone.utc).replace(second=0, microsecond=0)
-                
+
                 if stage == 1:
                     expected_time = (initial_time_to_repeat + timedelta(minutes=expected_minute_increment)).replace(second=0, microsecond=0)
                 elif stage == 2:
