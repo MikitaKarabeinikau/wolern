@@ -431,7 +431,7 @@ class TestQuizForVocabulary:
         assert quiz_progress1 is not None
         assert quiz_progress2 is not None
         assert quiz_progress3 is not None
-    
+
     def test_get_quiz_by_vocabulary_id(
         self, db_session: Session, test_vocabulary: models.Vocabulary, test_word: models.Words,test_user: models.Users, test_word2: models.Words, test_word3: models.Words
     ):
@@ -463,7 +463,7 @@ class TestQuizForVocabulary:
         updated_quiz_progress = get_quiz_by_vocabulary_id(db_session, vocabulary_id=test_vocabulary.vocabulary_id, user_id=test_user.id)
         updated_ids = [item["id"] for item in updated_quiz_progress]
         print(f"Updated quiz progress IDs: {updated_ids}")
-        
+
         assert updated_ids == [2,3,1]
 
     def test_get_quiz_by_vocabulary_no_words(
@@ -476,7 +476,7 @@ class TestQuizForVocabulary:
         vocab_word1 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word.id)
         vocab_word2 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word2.id)
         vocab_word3 = create_vocabulary_word(db_session, vocabulary_id=test_vocabulary.vocabulary_id, word_id=test_word3.id)
-        
+
         for i in range(15):
             word_status = get_user_word_status_by_vocabulary_word_id(db_session, vocabulary_word_id=vocab_word1.id)
             user_quiz_progress = get_user_quiz_progress(

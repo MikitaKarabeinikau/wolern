@@ -53,13 +53,13 @@ def set_new_time_to_repeat(db:Session, user_quiz_progress:models.UserQuizProgres
             if user_quiz_progress.correct_streak < settings.CORRECT_STREAK_THRESHOLD:
                 streak = user_quiz_progress.correct_streak
             else:
-                streak = settings.CORRECT_STREAK_THRESHOLD 
+                streak = settings.CORRECT_STREAK_THRESHOLD
         else:
             streak = 0
-        learning_stage = user_quiz_progress.learning_stage       
+        learning_stage = user_quiz_progress.learning_stage
         if learning_stage <= 1:
             new_time = settings.REPEAT_INTERVALS[learning_stage][streak]
-            new_repeat_time = datetime.now(timezone.utc) + timedelta(minutes=new_time) 
+            new_repeat_time = datetime.now(timezone.utc) + timedelta(minutes=new_time)
         elif learning_stage == 2:
             new_time = settings.REPEAT_INTERVALS[learning_stage][streak]
             new_repeat_time = datetime.now(timezone.utc) + timedelta(hours=new_time)
@@ -116,7 +116,7 @@ def get_quiz_by_vocabulary_id(db: Session, vocabulary_id: int, user_id: int) -> 
         for i in quiz_data:
             logger.info(f"Retrieved UserQuizProgress: {i}")
         return quiz_data
-    
+
     except NoResultFound:
         logger.warning(f"User quiz progress not found for vocabulary ID '{vocabulary_id}' and user ID '{user_id}'.")
         return None
