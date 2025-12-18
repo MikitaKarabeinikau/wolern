@@ -30,6 +30,24 @@ def get_word_learning_stage(db: Session, user_word_status_id: int) -> int:
         )
         raise
 
+def get_user_quiz_progress(db: Session, user_word_status_id: int) -> Optional[models.UserQuizProgress]:
+    """Retrieve UserQuizProgress by user_word_status_id."""
+    try:
+        quiz_progress = (
+            db.query(models.UserQuizProgress)
+            .filter(models.UserQuizProgress.user_word_status_id == user_word_status_id)
+            .one()
+        )
+        return quiz_progress
+    except NoResultFound:
+        logger.warning(f"UserQuizProgress for user_word_status_id '{user_word_status_id}' not found.")
+        return None
+    except Exception as e:
+        logger.error(
+            f"Error retrieving UserQuizProgress for user_word_status_id '{user_word_status_id}': {e}",
+            exc_info=True,
+        )
+        raise
 
 def get_all_words_by_learning_stage(
     db: Session, user_id: int, learning_stage: int

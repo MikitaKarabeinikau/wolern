@@ -138,6 +138,7 @@ def change_vocabulary(db: Session, word_id, new_vocabulary_id: int, old_vocabula
     db.commit()
     return create_vocabulary_word
 
+
 def get_word_translations(db: Session, word_id: int) -> Optional[models.Words]:
     """
     Get complete word data with translations eagerly loaded.

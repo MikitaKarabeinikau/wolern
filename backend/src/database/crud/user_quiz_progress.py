@@ -25,6 +25,27 @@ def create_user_quiz_progress(db: Session, user_word_status_id: int) -> models.U
         raise
 
 
+def get_user_quiz_progress_by_id(db: Session, user_quiz_progress_id: int) -> models.UserQuizProgress:
+    """Retrieve UserQuizProgress by its ID."""
+    try:
+        progress = (
+            db.query(models.UserQuizProgress)
+            .filter(models.UserQuizProgress.id == user_quiz_progress_id)
+            .one()
+        )
+        return progress
+    except NoResultFound:
+        logger.warning(
+            f"User quiz progress with id '{user_quiz_progress_id}' not found."
+        )
+        return None
+    except Exception as e:
+        logger.error(
+            f"Error retrieving UserQuizProgress for id '{user_quiz_progress_id}': {e}",
+            exc_info=True,
+        )
+        raise
+
 def get_user_quiz_progress(db: Session, user_word_status_id: int) -> models.UserQuizProgress:
     """Retrieve UserQuizProgress by UserWordStatus ID."""
     try:

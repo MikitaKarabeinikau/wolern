@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 from functools import lru_cache
 from typing import Dict
 from dotenv import load_dotenv
@@ -100,8 +100,10 @@ class Settings:
         2: "GOOD",
         3: "EXCELLENT",
         4: "KNOWN",
+        5: "MASTERED",
     }
     CORRECT_STREAK_THRESHOLD: int = 5
+    REPEAT_INTERVALS: List[List[int]] = [5,5,5,5,5], [5,10,15,30,60], [1,2,3,5,7], [1,2,3,4,5], [1,2,3,4,5]
 
     # ============================================================================
     # ENUMS
@@ -123,7 +125,7 @@ class Settings:
     # ============================================================================
     # VOCABULARY SETTINGS
     # ===========================================================================
-    MAX_VOCABULARIES_PER_USER: int = 25
+    MAX_VOCABULARIES_PER_USER: int = 15
     DEFAULT_VOCABULARIES: list[str] = ["NEW_WORDS", "LEARNING", "KNOWN"]
 
     # ============================================================================
