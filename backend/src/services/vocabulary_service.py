@@ -90,3 +90,21 @@ def get_all_words_in_vocabulary_with_data(db: Session, vocabulary_id: int) -> li
         word_schema = WordWithFullDataResponse.model_validate(word_data)
         words_data[word_schema.word] = word_schema.model_dump()
     return words_data
+
+def get_sorted_vocabulary_words(db: Session, vocabulary_id: int, sorted_by: str, order: str = "asc") -> list[models.VocabularyWords]:
+    """Get vocabulary words sorted by a specific attribute."""
+    valid_sort_attributes = {
+        "word": models.Words.word,
+        "date_added": models.VocabularyWords.date_added,
+    }
+    if sorted_by not in valid_sort_attributes:
+        raise ValueError(f"Invalid sort attribute: {sorted_by}")
+    sort_column = valid_sort_attributes[sorted_by]
+    vocab_words = (
+        db.query(models.VocabularyWords)
+        .join(models.Words, models.VocabularyWords.word_id == models.Words.id)
+        .filter(models.VocabularyWords.vocabulary_id == vocabulary_id)
+        .order_by(sort_column)
+        .all()
+    )
+    return vocab_words
