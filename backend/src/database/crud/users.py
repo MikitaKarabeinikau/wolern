@@ -18,7 +18,7 @@ def create_user(
     username: str = None,
     native_language: str = "polish",
     preferred_language: str = "english",
-    
+
     role: str = "user",
 ) -> models.Users:
     """

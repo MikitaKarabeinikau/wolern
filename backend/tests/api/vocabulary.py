@@ -80,10 +80,10 @@ def client(db_session):
             pass
 
     app.dependency_overrides[get_db] = override_get_db
-    
+
     with TestClient(app) as test_client:
         yield test_client
-    
+
     app.dependency_overrides.clear()
 
 
@@ -100,9 +100,9 @@ class TestGetVocabularyById:
     def test_get_vocabulary_by_id_success(self, client, test_vocabulary, test_user):
         """Test successfully retrieving a vocabulary by ID."""
         app.dependency_overrides[get_current_user] = mock_get_current_user(test_user.id)
-        
+
         response = client.get(f"/vocabularies/{test_vocabulary.vocabulary_id}")
-        
+
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
         assert data["success"] is True
@@ -120,16 +120,16 @@ class TestGetVocabularyById:
         word2 = models.Words(word="goodbye", language="english")
         db_session.add_all([word1, word2])
         db_session.commit()
-        
+
         vocab_word1 = models.VocabularyWords(vocabulary_id=test_vocabulary_with_words.vocabulary_id, word_id=word1.id)
         vocab_word2 = models.VocabularyWords(vocabulary_id=test_vocabulary_with_words.vocabulary_id, word_id=word2.id)
         db_session.add_all([vocab_word1, vocab_word2])
         db_session.commit()
-        
+
         app.dependency_overrides[get_current_user] = mock_get_current_user(test_user.id)
-        
+
         response = client.get(f"/vocabularies/{test_vocabulary_with_words.vocabulary_id}")
-        
+
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
         assert data["vocabulary"]["word_count"] == 2
@@ -137,10 +137,10 @@ class TestGetVocabularyById:
     def test_get_vocabulary_by_id_not_found(self, client, test_user):
         """Test retrieving a non-existent vocabulary returns 404."""
         app.dependency_overrides[get_current_user] = mock_get_current_user(test_user.id)
-        
+
         non_existent_id = 99999
         response = client.get(f"/vocabularies/{non_existent_id}")
-        
+
         assert response.status_code == status.HTTP_404_NOT_FOUND
         data = response.json()
         assert "detail" in data
@@ -149,9 +149,9 @@ class TestGetVocabularyById:
     def test_get_vocabulary_by_id_unauthorized_user(self, client, test_vocabulary, test_user_2):
         """Test user cannot retrieve another user's vocabulary."""
         app.dependency_overrides[get_current_user] = mock_get_current_user(test_user_2.id)
-        
+
         response = client.get(f"/vocabularies/{test_vocabulary.vocabulary_id}")
-        
+
         assert response.status_code == status.HTTP_404_NOT_FOUND
         data = response.json()
         assert "detail" in data
@@ -159,18 +159,18 @@ class TestGetVocabularyById:
     def test_get_vocabulary_by_id_invalid_id_format(self, client, test_user):
         """Test retrieving vocabulary with invalid ID format."""
         app.dependency_overrides[get_current_user] = mock_get_current_user(test_user.id)
-        
+
         response = client.get("/vocabularies/invalid_id")
-        
+
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
     def test_get_vocabulary_by_id_without_authentication(self, client, test_vocabulary):
         """Test retrieving vocabulary without authentication fails."""
         # Don't override get_current_user, simulating no auth
         app.dependency_overrides.clear()
-        
+
         response = client.get(f"/vocabularies/{test_vocabulary.vocabulary_id}")
-        
+
         # Should return 401 or 403 depending on your auth implementation
         assert response.status_code in [status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN]
 
@@ -179,9 +179,9 @@ class TestGetVocabularyById:
         """Test database error handling returns 500."""
         app.dependency_overrides[get_current_user] = mock_get_current_user(test_user.id)
         mock_get_vocab.side_effect = Exception("Database connection error")
-        
+
         response = client.get("/vocabularies/1")
-        
+
         assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
         data = response.json()
         assert "detail" in data
@@ -190,15 +190,15 @@ class TestGetVocabularyById:
     def test_get_vocabulary_by_id_zero_id(self, client, test_user):
         """Test retrieving vocabulary with ID 0."""
         app.dependency_overrides[get_current_user] = mock_get_current_user(test_user.id)
-        
+
         response = client.get("/vocabularies/0")
-        
+
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_get_vocabulary_by_id_negative_id(self, client, test_user):
         """Test retrieving vocabulary with negative ID."""
         app.dependency_overrides[get_current_user] = mock_get_current_user(test_user.id)
-        
+
         response = client.get("/vocabularies/-1")
-        
+
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY

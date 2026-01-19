@@ -5,9 +5,9 @@ MVP V1
     - Create new vocabulary
     - View vocabulary list
     - Sort vocabularies by name and date created
-    - View words in vocabulary 
+    - View words in vocabulary
     endpoints: /v1/vocabularies, /v1/user-words
-    
+
 - Add basic Quiz feature
     - Quiz user words from selected vocabulary
     - Show mistakes during quiz

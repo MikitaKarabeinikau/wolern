@@ -25,12 +25,12 @@ async def clerk_webhook(request: Request, db: Session = Depends(get_db)):
     """Handle Clerk webhook events."""
     logger.info("=" * 50)
     logger.info("WEBHOOK RECEIVED!")
-    
+
     try:
         # Get webhook secret from environment
         webhook_secret = os.getenv("CLERK_WEBHOOK_SECRET")
         logger.info(f"Webhook secret exists: {bool(webhook_secret)}")
-        
+
         if not webhook_secret:
             logger.error("CLERK_WEBHOOK_SECRET not configured")
             raise HTTPException(status_code=500, detail="Webhook secret not configured")
@@ -72,7 +72,7 @@ async def clerk_webhook(request: Request, db: Session = Depends(get_db)):
             result = await handle_user_created(db, payload)
             logger.info(f"User created result: {result}")
             return result
-        
+
         logger.info(f"Ignoring event: {event_type}")
         return {"status": "ignored", "event": event_type}
 
@@ -88,12 +88,12 @@ async def handle_user_created(db: Session, data: dict) -> dict:
     """Handle user.created webhook event from Clerk."""
     logger.info("=" * 50)
     logger.info("HANDLING USER CREATED EVENT")
-    
+
     try:
         user_data = data.get("data", {})
         clerk_user_id = user_data.get("id")
         logger.info(f"Clerk User Data: {user_data}")
-        
+
         logger.info(f"Clerk User ID: {clerk_user_id}")
 
         # Extract email
