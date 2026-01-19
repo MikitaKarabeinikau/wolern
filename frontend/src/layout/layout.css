@@ -18,7 +18,7 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 1.5rem; 
+  gap: 1.5rem;
 }
 
 .header-content h1 {
@@ -28,7 +28,7 @@
 }
 
 .nav-links {
-  display: flex; 
+  display: flex;
   align-items: center;
 }
 
@@ -40,7 +40,7 @@
 }
 
 .nav-links a {
-  
+
   margin-left: 1rem;
   text-decoration: none;
   color: #1f2937; /* gray-800 */

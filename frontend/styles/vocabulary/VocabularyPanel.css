@@ -1,0 +1,41 @@
+.vocabulary-panel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(83, 83, 83);
+}
+
+.vocabulary-add-panel {
+    flex: 0 0 auto;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: red;
+}
+
+.vocabulary-filters-panel {
+    flex: 0 0 auto;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: orange;
+}
+
+.vocabulary-words-header-panel {
+    flex: 0 0 auto;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: yellow;
+}
+
+.vocabulary-words-body-panel {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: green;
+}
+
+.vocabulary-words-footer-panel {
+    flex: 0 0 auto;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    background-color: blue;
+}

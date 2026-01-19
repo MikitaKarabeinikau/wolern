@@ -50,9 +50,9 @@ export const apiClient = async (endpoint, getToken, options = {}) => {
 export const apiCall = async (url, getToken, method = "GET", body = null) => {
   try {
     const token = await getToken();
-    
+
     console.log('Making API call:', { url, method, body });
-    
+
     const response = await fetch(url, {
       method,
       headers: {
@@ -61,15 +61,15 @@ export const apiCall = async (url, getToken, method = "GET", body = null) => {
       },
       ...(body && { body: JSON.stringify(body) }),
     });
-    
+
     console.log('API response status:', response.status);
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('API error:', errorText);
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    
+
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.indexOf("application/json") !== -1) {
       const data = await response.json();

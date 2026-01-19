@@ -51,7 +51,7 @@ exercise-container {
 }
 .exercise-hints {
   flex: 1;
-  
+
 }
 .exercise-container.two-column {
   display: flex;

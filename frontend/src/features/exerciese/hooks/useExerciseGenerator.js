@@ -10,7 +10,7 @@ const API_ENDPOINTS = {
 
 export const useExerciseGenerator = () => {
   const { getToken } = useAuth();
-  
+
   const [exercises, setExercises] = useState(null);
   const [difficulty, setDifficulty] = useState("Beginner");
   const [quota, setQuota] = useState(null);
@@ -36,7 +36,7 @@ export const useExerciseGenerator = () => {
   const fetchWords = useCallback(async () => {
     try {
       const data = await apiClient(API_ENDPOINTS.WORDS, getToken);
-      
+
       if (data.words && data.words.length > 0) {
         setWordList(data.words);
         setCurrentIndex(0);

@@ -305,7 +305,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
   <img src="backend/data/images/wide_version.png" alt="Wolern Banner" width=100% height="300"/>
 </td>
 <td>
-  
+
 Wolern - Language Learning Platform
 A full-stack language learning application built with React and FastAPI, featuring vocabulary management, spaced repetition exercises, and intelligent quiz generation.
 

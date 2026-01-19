@@ -1,25 +1,25 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='wolern', 
-    version='0.0.1', # Start with a version number
-    packages=find_packages(),
-    install_requires=[],
-    package_data={
-        'wolern':[
-            'data/sources/frequencies_source/*.xls',
-            'data/**/*',
+    name="wolern",
+    version="1.0.0",
+    description="Wolern Backend Application",
+    author="Your Name",
+    packages=find_packages(where="backend"),
+    package_dir={"": "backend"},
+    python_requires=">=3.12",
+    install_requires=[
+        [
+            line.strip()
+            for line in open("backend/requirements.txt")
+            if line.strip() and not line.startswith("#")
+        ]
+    ],
+    extras_require={
+        "dev": [
+            "pytest>=8.0.0",
+            "pytest-cov>=4.1.0",
+            "pytest-asyncio>=0.23.0",
         ]
     },
-    author='Mikita Karabeinikau',
-    description='Coming soon...',
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
-    url='https://github.com/MikitaKarabeinikau/wolern', 
-    classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License', # Or whatever license you use
-        'Operating System :: OS Independent',
-    ],
-    python_requires='>=3.8', 
 )

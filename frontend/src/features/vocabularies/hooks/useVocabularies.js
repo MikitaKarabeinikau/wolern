@@ -76,7 +76,7 @@ export function useVocabularies() {
     selectedVocabulary,
     handleVocabularySelect: setSelectedVocabulary, // Directly expose the setter
     handleWordAdded: fetchAllData, // Expose the refetch function
-    getToken, 
+    getToken,
     fetchAllData
   };
 }

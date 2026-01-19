@@ -8,14 +8,12 @@ import { QuizGenerator } from "./features/quiz/QuizGenerator.jsx";
 import { HomePanel } from "./features/home/HomePanel.jsx";
 import { ExercisesPanel } from "./features/exerciese/ExercisesPanel.jsx";
 import { ScannerPanel } from "./features/scanner/ScannerPanel.jsx";
-import { VocabularyProvider } from "./contexts/VocabularyContext.jsx";
 import { LibraryPanel } from "./features/library/LibraryPanel.jsx";
 import "./App.css";
 
 function App() {
   return (
     <ClerkProviderWithRoutes>
-      <VocabularyProvider>
         <Routes>
           <Route path="/sign-in/*" element={<AuthenticationPage />} />
           <Route path="/sign-up" element={<AuthenticationPage />} />
@@ -30,7 +28,6 @@ function App() {
             <Route path="/library" element={<LibraryPanel />} />
           </Route>
         </Routes>
-      </VocabularyProvider>
     </ClerkProviderWithRoutes>
   );
 }
