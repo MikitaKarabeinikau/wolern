@@ -14,10 +14,11 @@ logger = logging.getLogger(__name__)
 def create_user(
     db: Session,
     clerk_id: str,
+    email: str ,
     username: str = None,
     native_language: str = "polish",
     preferred_language: str = "english",
-    email: str = None,
+    
     role: str = "user",
 ) -> models.Users:
     """

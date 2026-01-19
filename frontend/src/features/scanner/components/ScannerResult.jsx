@@ -5,7 +5,6 @@ import { useVocabularies } from "../../vocabularies/hooks/useVocabularies";
 import AnnotationMode from "../modes/annotation/AnnotationMode.jsx";
 import ReadMode from "../modes/reading/ReadMode.jsx";
 import { useScannerVocabularies } from "../hooks/useScannerVocabularies.js";
-import { useVocabularyContext } from "../../../contexts/VocabularyContext.jsx";
 import { transformToWordData } from "../../../utils/wordProcessing.js";
 
 function ScannerResult({ text }) {
